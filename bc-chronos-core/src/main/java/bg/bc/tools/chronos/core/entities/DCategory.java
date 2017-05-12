@@ -1,21 +1,9 @@
 package bg.bc.tools.chronos.core.entities;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public class DCategory {
-
-    // /**
-    // * рндн: Describe...
-    // *
-    // * @author giliev
-    // */
-    // public enum CategoryContext {
-    // CLIENT, // nl
-    // PROJECT, // nl
-    // TASK, // nl
-    // PERFOMER, // nl
-    // BOOKING
-    // }
 
     private long id;
 
@@ -24,8 +12,6 @@ public class DCategory {
     private int sortOrder;
 
     private Collection<DCategoricalEntity> categoricalEntities;
-
-    // private CategoryContext context;
 
     public long getId() {
 	return id;
@@ -51,14 +37,6 @@ public class DCategory {
 	this.sortOrder = sortOrder;
     }
 
-    // public CategoryContext getContext() {
-    // return context;
-    // }
-    //
-    // public void setContext(CategoryContext context) {
-    // this.context = context;
-    // }
-
     public Collection<DCategoricalEntity> getCategoricalEntities() {
 	return categoricalEntities;
     }
@@ -70,5 +48,24 @@ public class DCategory {
     public void addCategoricalEntity(DCategoricalEntity categoricalEntity) {
 	categoricalEntity.setCategory(this);
 	getCategoricalEntities().add(categoricalEntity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == this)
+	    return true;
+	if (!(obj instanceof DCategory)) {
+	    return false;
+	}
+
+	DCategory category = (DCategory) obj;
+	return id == category.id // nl
+		&& Objects.equals(name, category.name) // nl
+		&& sortOrder == category.sortOrder;
+    }
+
+    @Override
+    public int hashCode() {
+	return Objects.hash(id, name, sortOrder);
     }
 }

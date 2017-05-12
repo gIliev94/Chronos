@@ -15,11 +15,11 @@ C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\category\IUpdateCategory.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\task\IAddTask.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\booking\IAddBooking.java
-C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\IExportReportFromMergeField.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\stats\project\IGetProjectStats.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\performer\IRemovePerformer.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\booking\IGetBooking.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\project\IAddProject.java
+C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\performer\ILogoutAsPerformer.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\IShowInactiveSysTrayNotification.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\task\ITaskCrud.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\entities\DBillingRate.java
@@ -30,6 +30,7 @@ C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\stats\IGetStats.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\category\IGetCategory.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\performer\IAddPerformer.java
+C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\report\IExportReportFromMergeField.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\IAssignCategory.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\billingrate\IAddBillingRate.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\entities\DCategory.java
@@ -51,6 +52,7 @@ C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\client\IClientCrud.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\billingrate\IGetBillingRate.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\entities\DCategoricalEntity.java
+C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\performer\ILoginAsPerformer.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\task\IRemoveTask.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\crud\performer\IGetPerformer.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-core\src\main\java\bg\bc\tools\chronos\core\usecases\actions\booking\IStopBooking.java

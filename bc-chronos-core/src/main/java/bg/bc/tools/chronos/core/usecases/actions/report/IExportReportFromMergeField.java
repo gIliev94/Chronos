@@ -1,4 +1,4 @@
-package bg.bc.tools.chronos.core.usecases.actions;
+package bg.bc.tools.chronos.core.usecases.actions.report;
 
 import java.time.LocalDate;
 import java.util.Map;

@@ -10,60 +10,21 @@ import java.util.List;
  */
 public class DTask extends DCategoricalEntity {
 
-    /**
-     * рндн: Describe...
-     * 
-     * @author giliev
-     */
     public enum DTaskPhase {
 	PLANNING, // nl
 	DEVELOPMENT, // nl
 	TESTING
     }
-    //
-    // private long id;
-    //
-    // private String name;
-    //
-    // private String description;
 
     private DTaskPhase phase;
 
     private LocalTime estimatedTime;
-
-    // private DCategory category;
 
     private DProject project;
 
     private List<DBooking> bookings;
 
     private List<DBillingRate> billingRates;
-
-    // TODO: Add other relevant field/s
-
-    // public long getId() {
-    // return id;
-    // }
-    //
-    // public void setId(long id) {
-    // this.id = id;
-    // }
-    //
-    // public String getName() {
-    // return name;
-    // }
-    //
-    // public void setName(String name) {
-    // this.name = name;
-    // }
-    //
-    // public String getDescription() {
-    // return description;
-    // }
-    //
-    // public void setDescription(String description) {
-    // this.description = description;
-    // }
 
     public DTaskPhase getPhase() {
 	return phase;
@@ -80,14 +41,6 @@ public class DTask extends DCategoricalEntity {
     public void setEstimatedTime(LocalTime timeEstimated) {
 	this.estimatedTime = timeEstimated;
     }
-
-    // public DCategory getCategory() {
-    // return category;
-    // }
-    //
-    // public void setCategory(DCategory category) {
-    // this.category = category;
-    // }
 
     public DProject getProject() {
 	return project;

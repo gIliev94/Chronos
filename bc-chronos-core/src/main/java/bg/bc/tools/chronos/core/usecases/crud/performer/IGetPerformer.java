@@ -2,7 +2,6 @@ package bg.bc.tools.chronos.core.usecases.crud.performer;
 
 import java.util.List;
 
-import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DPerformer.DPerformerRole;
 
@@ -15,6 +14,4 @@ interface IGetPerformer {
     List<DPerformer> getPerformers(String name);
 
     List<DPerformer> getPerformers(DPerformerRole role);
-
-    List<DPerformer> getPerformers(DCategory category);
 }

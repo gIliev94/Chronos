@@ -1,5 +1,7 @@
 package bg.bc.tools.chronos.core.entities;
 
+import java.util.Objects;
+
 import bg.bc.tools.chronos.core.entities.DPerformer.DPerformerRole;
 
 public class DBillingRate {
@@ -42,5 +44,24 @@ public class DBillingRate {
 
     public void setTask(DTask task) {
 	this.task = task;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == this)
+	    return true;
+	if (!(obj instanceof DBillingRate)) {
+	    return false;
+	}
+
+	DBillingRate billingRate = (DBillingRate) obj;
+	return id == billingRate.id // nl
+		&& Objects.equals(role, billingRate.role) // nl
+		&& Objects.equals(task, billingRate.task);
+    }
+
+    @Override
+    public int hashCode() {
+	return Objects.hash(id, role, task.getName());
     }
 }

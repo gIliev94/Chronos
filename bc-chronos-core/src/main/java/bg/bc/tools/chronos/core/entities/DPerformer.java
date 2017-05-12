@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.core.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Representation of the basic(core) entity - Performer.
@@ -9,11 +10,6 @@ import java.util.List;
  */
 public class DPerformer {
 
-    /**
-     * рндн: Describe...
-     * 
-     * @author giliev
-     */
     public enum DPerformerRole {
 	MANAGER, // nl
 	DEVELOPER, // nl
@@ -103,5 +99,24 @@ public class DPerformer {
     public void addBooking(DBooking booking) {
 	booking.setPerformer(this);
 	getBookings().add(booking);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == this)
+	    return true;
+	if (!(obj instanceof DPerformer)) {
+	    return false;
+	}
+
+	DPerformer performer = (DPerformer) obj;
+	return id == performer.id // nl
+		&& Objects.equals(handle, performer.handle) // nl
+		&& Objects.equals(email, performer.email);
+    }
+
+    @Override
+    public int hashCode() {
+	return Objects.hash(id, handle, email);
     }
 }

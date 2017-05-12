@@ -8,17 +8,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.IBillingRateService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.IBookingService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ICategoryService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.IClientService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.IPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.IProjectService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ITaskService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.BillingRateService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.BookingService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.CategoryService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.ClientService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.PerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.ProjectService;
-import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
-import bg.bc.tools.chronos.dataprovider.i18n.MessageService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.TaskService;
 
 @Configuration
 public class DataProviderConfig {
+
+    @Bean
+    public ICategoryService categoryService() {
+	return new CategoryService();
+    }
 
     @Bean
     public IClientService clientService() {
@@ -31,13 +42,23 @@ public class DataProviderConfig {
     }
 
     @Bean
-    public IBookingService bookingService() {
-	return new BookingService();
+    public ITaskService taskService() {
+	return new TaskService();
     }
 
     @Bean
-    public IMessageService messageService() {
-	return new MessageService();
+    public IBillingRateService billingRateService() {
+	return new BillingRateService();
+    }
+
+    @Bean
+    public IPerformerService performerService() {
+	return new PerformerService();
+    }
+
+    @Bean
+    public IBookingService bookingService() {
+	return new BookingService();
     }
 
     @Bean

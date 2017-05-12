@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.core.entities;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Representation of the basic(core) entity - Booking.
@@ -87,5 +88,23 @@ public class DBooking {
 
     public void setEffectivelyStopped(boolean isEffectivelyStopped) {
 	this.isEffectivelyStopped = isEffectivelyStopped;
+    }
+
+    public boolean equals(Object obj) {
+	if (obj == this)
+	    return true;
+	if (!(obj instanceof DBooking)) {
+	    return false;
+	}
+
+	DBooking booking = (DBooking) obj;
+	return id == booking.id // nl
+		&& Objects.equals(performer, booking.performer)// nl
+		&& Objects.equals(task, booking.task);
+    }
+
+    @Override
+    public int hashCode() {
+	return Objects.hash(id, performer.getHandle(), task.getName());
     }
 }
