@@ -16,9 +16,10 @@ C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\ma
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\entities\Project.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\entities\Task.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\ifc\ICategoryService.java
+C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\repos\BillingRateRepository.java
+C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IBillingRateService.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IBookingService.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\impl\TaskService.java
-C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\repos\BillingScaleRepository.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\entities\mapping\DomainToDbMapper.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\entities\Performer.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\entities\CategoricalEntity.java
@@ -27,4 +28,3 @@ C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\ma
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IProjectService.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\repos\ClientRepository.java
 C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\impl\ClientService.java
-C:\Users\aswor\Documents\EclipseWorkspace\chronos\bc-chronos-dataprovider\src\main\java\bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IBillingScaleService.java

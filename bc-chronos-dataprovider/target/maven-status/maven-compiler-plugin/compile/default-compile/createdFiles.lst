@@ -11,8 +11,6 @@ bg\bc\tools\chronos\dataprovider\db\local\services\ifc\ICategoryService.class
 bg\bc\tools\chronos\dataprovider\i18n\MessageService.class
 bg\bc\tools\chronos\dataprovider\db\local\services\ifc\ITaskService.class
 bg\bc\tools\chronos\dataprovider\db\entities\Performer$PerformerRole.class
-bg\bc\tools\chronos\dataprovider\db\repos\BillingScaleRepository.class
-bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IBillingScaleService.class
 bg\bc\tools\chronos\dataprovider\db\entities\Category.class
 bg\bc\tools\chronos\dataprovider\db\local\services\ifc\IBookingService.class
 bg\bc\tools\chronos\dataprovider\db\entities\BillingRate.class
