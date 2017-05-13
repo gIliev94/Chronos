@@ -3,17 +3,15 @@ package bc.bg.tools.chronos.configuration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-// @EnableConfigurationProperties
 @EnableTransactionManagement
-// TODO: Move to db configs...
-@EnableJpaRepositories("bg.bc.tools.chronos.dataprovider.db.repos")
+// @EnableConfigurationProperties
 // TODO: Add views package here when implemented
 // @ComponentScan
-@Import(value = { LocalDBConfig.class, RemoteDBConfig.class, DataProviderConfig.class })
+@Import(value = { LocalDBConfig.class, RemoteDBConfig.class, LocalDataProviderConfig.class,
+	RemoteDataProviderConfig.class, I18nConfig.class })
 public class ChronosApplication {
 
     public static void main(String[] args) throws Exception {

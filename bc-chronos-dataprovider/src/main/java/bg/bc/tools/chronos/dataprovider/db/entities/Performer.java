@@ -44,7 +44,7 @@ public class Performer implements Serializable {
     private PerformerRole role;
 
     @Column(unique = false, nullable = false)
-    private boolean isLoggedIn;
+    private boolean isLogged;
 
     @OneToMany(mappedBy = "performer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
@@ -97,12 +97,12 @@ public class Performer implements Serializable {
 	this.role = role;
     }
 
-    public boolean isLoggedIn() {
-	return isLoggedIn;
+    public boolean isLogged() {
+	return isLogged;
     }
 
-    public void setLoggedIn(boolean isAlreadyLoggedIn) {
-	this.isLoggedIn = isAlreadyLoggedIn;
+    public void setLogged(boolean isLogged) {
+	this.isLogged = isLogged;
     }
 
     public List<Booking> getBookings() {

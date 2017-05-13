@@ -28,7 +28,7 @@ public class DPerformer {
 
     private DPerformerRole role;
 
-    private boolean isLoggedIn;
+    private boolean isLogged;
 
     private List<DBooking> bookings;
 
@@ -80,12 +80,12 @@ public class DPerformer {
 	this.role = role;
     }
 
-    public boolean isLoggedIn() {
-	return isLoggedIn;
+    public boolean isLogged() {
+	return isLogged;
     }
 
-    public void setLoggedIn(boolean isLoggedIn) {
-	this.isLoggedIn = isLoggedIn;
+    public void setLogged(boolean isLogged) {
+	this.isLogged = isLogged;
     }
 
     public List<DBooking> getBookings() {

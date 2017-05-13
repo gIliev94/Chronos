@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -18,25 +19,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @PropertySource({ "classpath:remote-db.properties" })
+@EnableJpaRepositories(value = "bg.bc.tools.chronos.dataprovider.db.remote.repos", entityManagerFactoryRef = "remoteEntityManagerFactory", transactionManagerRef = "remoteTransactionManager")
 public class RemoteDBConfig {
-
-    // private static final String HOST = "localhost";
-    // private static final int PORT = 1433;
-    // private static final String DB_NAME = "Chronos";
-    // private static final String USER = "sa-boehringer";
-    // private static final String PASSWORD = "1232";
-    //
-    // private static final String[] ENTITIES_LOOKUP = {
-    // "bg.bc.tools.chronos.dataprovider.db.entities" };
 
     @Autowired
     private Environment env;
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws Exception {
+    public LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-	factoryBean.setDataSource(this.dataSource());
-	// factoryBean.setPackagesToScan(ENTITIES_LOOKUP);
+	factoryBean.setDataSource(this.remoteDataSource());
 	factoryBean.setPackagesToScan(env.getProperty("entities.lookup"));
 
 	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -49,10 +41,6 @@ public class RemoteDBConfig {
     private Properties additionalProperties() {
 	Properties properties = new Properties();
 	// TODO: Recreates schema on each run(change to more appropriate later)
-	// properties.setProperty("hibernate.hbm2ddl.auto", "update");
-	// properties.setProperty("hibernate.hbm2ddl.auto", "create");
-	// properties.setProperty("hibernate.dialect",
-	// SQLServerDialect.class.getName());
 	properties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 	properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
 
@@ -60,13 +48,14 @@ public class RemoteDBConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() throws Exception {
+    public PlatformTransactionManager remoteTransactionManager() throws Exception {
 	JpaTransactionManager transactionManager = new JpaTransactionManager();
-	transactionManager.setEntityManagerFactory(this.entityManagerFactory().getObject());
+	transactionManager.setEntityManagerFactory(this.remoteEntityManagerFactory().getObject());
 
 	return transactionManager;
     }
 
+    // TODO: Need this??
     // @Bean
     // public PersistenceExceptionTranslationPostProcessor
     // exceptionTranslation() {
@@ -74,13 +63,7 @@ public class RemoteDBConfig {
     // }
 
     @Bean
-    public DataSource dataSource() throws Exception {
-	// DriverManagerDataSource mssqlDS = new DriverManagerDataSource(
-	// "jdbc:jtds:sqlserver://" + HOST + ":" + PORT + ";databaseName=" +
-	// DB_NAME);
-	// mssqlDS.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
-	// mssqlDS.setUsername(USER);
-	// mssqlDS.setPassword(PASSWORD);
+    public DataSource remoteDataSource() throws Exception {
 	DriverManagerDataSource mssqlDS = new DriverManagerDataSource(env.getProperty("jdbc.url"));
 	mssqlDS.setDriverClassName(env.getProperty("jdbc.driverClassName"));
 	mssqlDS.setUsername(env.getProperty("jdbc.user"));

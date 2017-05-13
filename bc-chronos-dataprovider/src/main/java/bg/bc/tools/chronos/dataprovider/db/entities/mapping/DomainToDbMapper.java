@@ -66,7 +66,7 @@ public final class DomainToDbMapper {
 	dbPerformer.setPassword(domainPerformer.getPassword());
 	dbPerformer.setName(domainPerformer.getName());
 	dbPerformer.setEmail(domainPerformer.getEmail());
-	dbPerformer.setLoggedIn(domainPerformer.isLoggedIn());
+	dbPerformer.setLogged(domainPerformer.isLogged());
 	dbPerformer.setRole(PerformerRole.valueOf(domainPerformer.getRole().name()));
 
 	return dbPerformer;
