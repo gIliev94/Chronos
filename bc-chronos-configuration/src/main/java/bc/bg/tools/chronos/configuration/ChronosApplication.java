@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 // @EnableConfigurationProperties
 // TODO: Add views package here when implemented
 // @ComponentScan
-@Import(value = { LocalDBConfig.class, RemoteDBConfig.class, LocalDataProviderConfig.class,
+@Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class, RemoteDBConfig.class,
 	RemoteDataProviderConfig.class, I18nConfig.class })
+// @Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class,
+// I18nConfig.class })
 public class ChronosApplication {
 
     public static void main(String[] args) throws Exception {

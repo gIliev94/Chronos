@@ -29,6 +29,7 @@ public class RemoteDBConfig {
     public LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	factoryBean.setDataSource(this.remoteDataSource());
+	factoryBean.setPersistenceUnitName("remotePersistenceUnit");
 	factoryBean.setPackagesToScan(env.getProperty("entities.lookup"));
 
 	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

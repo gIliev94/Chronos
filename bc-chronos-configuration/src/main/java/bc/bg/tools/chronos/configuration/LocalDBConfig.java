@@ -31,6 +31,7 @@ public class LocalDBConfig {
     public LocalContainerEntityManagerFactoryBean localEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	factoryBean.setDataSource(this.localDataSource());
+	factoryBean.setPersistenceUnitName("localPersistenceUnit");
 	factoryBean.setPackagesToScan(env.getProperty("entities.lookup"));
 
 	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
