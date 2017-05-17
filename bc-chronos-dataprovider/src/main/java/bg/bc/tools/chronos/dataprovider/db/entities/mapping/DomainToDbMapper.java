@@ -1,36 +1,40 @@
 package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 
-import bg.bc.tools.chronos.core.entities.DBillingRate;
+import java.time.ZoneId;
+import java.util.Date;
+
+import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
-import bg.bc.tools.chronos.core.entities.DClient;
+import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DProject;
+import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
-import bg.bc.tools.chronos.dataprovider.db.entities.BillingRate;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
-import bg.bc.tools.chronos.dataprovider.db.entities.Client;
+import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.PerformerRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
+import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
-import bg.bc.tools.chronos.dataprovider.db.entities.Task.TaskPhase;
 
 public final class DomainToDbMapper {
 
     private DomainToDbMapper() {
     }
 
-    public static Client domainToDbClient(DClient domainClient) {
-	Client dbClient = new Client();
-	dbClient.setId(domainClient.getId());
-	dbClient.setName(domainClient.getName());
-	dbClient.setDescription(domainClient.getDescription());
+    public static Customer domainToDbCustomer(DCustomer domainCustomer) {
+	Customer dbCustomer = new Customer();
+	dbCustomer.setId(domainCustomer.getId());
+	dbCustomer.setName(domainCustomer.getName());
+	dbCustomer.setDescription(domainCustomer.getDescription());
 
-	domainToDbCategory(domainClient.getCategory()).addCategoricalEntity(dbClient);
+	domainToDbCategory(domainCustomer.getCategory()).addCategoricalEntity(dbCustomer);
 
-	return dbClient;
+	return dbCustomer;
     }
 
     public static Project domainToDbProject(DProject domainProject) {
@@ -39,7 +43,7 @@ public final class DomainToDbMapper {
 	dbProject.setName(domainProject.getName());
 	dbProject.setDescription(domainProject.getDescription());
 
-	domainToDbClient(domainProject.getClient()).addProject(dbProject);
+	domainToDbCustomer(domainProject.getCustomer()).addProject(dbProject);
 	domainToDbCategory(domainProject.getCategory()).addCategoricalEntity(dbProject);
 
 	return dbProject;
@@ -50,8 +54,7 @@ public final class DomainToDbMapper {
 	dbTask.setId(domainTask.getId());
 	dbTask.setName(domainTask.getName());
 	dbTask.setDescription(domainTask.getDescription());
-	dbTask.setPhase(TaskPhase.valueOf(domainTask.getPhase().name()));
-	dbTask.setEstimatedTime(domainTask.getEstimatedTime());
+	dbTask.setEstimatedTimeHours(domainTask.getEstimatedTimeHours());
 
 	domainToDbProject(domainTask.getProject()).addTask(dbTask);
 	domainToDbCategory(domainTask.getCategory()).addCategoricalEntity(dbTask);
@@ -67,7 +70,6 @@ public final class DomainToDbMapper {
 	dbPerformer.setName(domainPerformer.getName());
 	dbPerformer.setEmail(domainPerformer.getEmail());
 	dbPerformer.setLogged(domainPerformer.isLogged());
-	dbPerformer.setRole(PerformerRole.valueOf(domainPerformer.getRole().name()));
 
 	return dbPerformer;
     }
@@ -76,15 +78,29 @@ public final class DomainToDbMapper {
 	Booking dbBooking = new Booking();
 	dbBooking.setId(domainBooking.getId());
 	dbBooking.setDescription(domainBooking.getDescription());
-	dbBooking.setStartTime(domainBooking.getStartTime());
-	dbBooking.setEndTime(domainBooking.getEndTime());
-	dbBooking.setOvertime(domainBooking.isOvertime());
-	dbBooking.setEffectivelyStopped(domainBooking.isEffectivelyStopped());
+	dbBooking.setStartTime(Date.from(domainBooking.getStartTime().atZone(ZoneId.systemDefault()).toInstant()));
+	dbBooking.setEndTime(Date.from(domainBooking.getEndTime().atZone(ZoneId.systemDefault()).toInstant()));
+	// dbBooking.setOvertime(domainBooking.isOvertime());
+	// dbBooking.setEffectivelyStopped(domainBooking.isEffectivelyStopped());
 
 	domainToDbPerformer(domainBooking.getPerformer()).addBooking(dbBooking);
 	domainToDbTask(domainBooking.getTask()).addBooking(dbBooking);
 
 	return dbBooking;
+    }
+
+    public static Role domainToDRole(DRole domainRole) {
+	Role dbRole = new Role();
+	dbRole.setId(domainRole.getId());
+	dbRole.setName(domainRole.getName());
+	dbRole.setBillingRate(domainRole.getBillingRate());
+
+	dbRole.setBooking(domainToDbBooking(domainRole.getBooking()));
+	domainToDbBooking(domainRole.getBooking()).setRole(dbRole);
+
+	domainToDbCategory(domainRole.getCategory()).addCategoricalEntity(dbRole);
+
+	return dbRole;
     }
 
     public static Category domainToDbCategory(DCategory domainCategory) {
@@ -96,14 +112,15 @@ public final class DomainToDbMapper {
 	return dbCategory;
     }
 
-    public static BillingRate domainToDbBillingRate(DBillingRate domainBillingRate) {
-	BillingRate dbBillingRate = new BillingRate();
-	dbBillingRate.setId(domainBillingRate.getId());
-	dbBillingRate.setRate(domainBillingRate.getRate());
-	dbBillingRate.setRole(PerformerRole.valueOf(domainBillingRate.getRole().name()));
+    public static BillingRateModifier domainToDbBillingRateModifier(DBillingRateModifier domainBillingRateModifier) {
+	BillingRateModifier dbBillingRateModifier = new BillingRateModifier();
+	dbBillingRateModifier.setId(domainBillingRateModifier.getId());
+	dbBillingRateModifier
+		.setModifierAction(ModifierAction.valueOf(domainBillingRateModifier.getModifierAction().name()));
+	dbBillingRateModifier.setModifierValue(domainBillingRateModifier.getModifierValue());
 
-	domainToDbTask(domainBillingRate.getTask()).addBillingRate(dbBillingRate);
+	domainToDbBooking(domainBillingRateModifier.getBooking()).addBillingRateModifier(dbBillingRateModifier);
 
-	return dbBillingRate;
+	return dbBillingRateModifier;
     }
 }

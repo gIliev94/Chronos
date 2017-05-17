@@ -10,12 +10,6 @@ import java.util.Objects;
  */
 public class DPerformer {
 
-    public enum DPerformerRole {
-	MANAGER, // nl
-	DEVELOPER, // nl
-	TESTER
-    }
-
     private long id;
 
     private String name;
@@ -26,7 +20,7 @@ public class DPerformer {
 
     private String email;
 
-    private DPerformerRole role;
+    // private DPerformerRole role;
 
     private boolean isLogged;
 
@@ -70,14 +64,6 @@ public class DPerformer {
 
     public void setEmail(String email) {
 	this.email = email;
-    }
-
-    public DPerformerRole getRole() {
-	return role;
-    }
-
-    public void setRole(DPerformerRole role) {
-	this.role = role;
     }
 
     public boolean isLogged() {

@@ -1,8 +1,8 @@
 package bg.bc.tools.chronos.core.usecases.crud.client;
 
-import bg.bc.tools.chronos.core.entities.DClient;
+import bg.bc.tools.chronos.core.entities.DCustomer;
 
 interface IAddClient {
 
-    boolean addClient(DClient client);
+    boolean addClient(DCustomer client);
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
-import bg.bc.tools.chronos.core.entities.DClient;
+import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
@@ -48,9 +48,9 @@ public class RemoteProjectService implements IRemoteProjectService {
     }
 
     @Override
-    public List<DProject> getProjects(DClient client) {
+    public List<DProject> getProjects(DCustomer client) {
 	return ((List<Project>) projectRepo.findAll()).stream() // nl
-		.filter(c -> Objects.equals(client, c.getClient())) // nl
+		.filter(c -> Objects.equals(client, c.getCustomer())) // nl
 		.map(DbToDomainMapper::dbToDomainProject) // nl
 		.collect(Collectors.toList());
     }
@@ -104,7 +104,7 @@ public class RemoteProjectService implements IRemoteProjectService {
     }
 
     @Override
-    public boolean removeProjectsByClient(DClient client) {
+    public boolean removeProjectsByClient(DCustomer client) {
 	try {
 	    client.getProjects().forEach(p -> projectRepo.delete(DomainToDbMapper.domainToDbProject(p)));
 	} catch (Exception e) {

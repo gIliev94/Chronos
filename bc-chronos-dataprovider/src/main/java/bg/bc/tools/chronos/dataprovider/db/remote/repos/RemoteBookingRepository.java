@@ -11,9 +11,9 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
 public interface RemoteBookingRepository extends CrudRepository<Booking, Long> {
 
-    Collection<Booking> findByIsOvertime(boolean isOvertime);
+    // Collection<Booking> findByIsOvertime(boolean isOvertime);
 
-    Booking findByIsEffectivelyStopped(boolean isEffectivelyStopped);
+    // Booking findByIsEffectivelyStopped(boolean isEffectivelyStopped);
 
     Collection<Booking> findByStartTimeBetween(LocalDateTime lowerBound, LocalDateTime upperBound);
 

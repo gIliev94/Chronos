@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.PerformerRole;
 
 public interface RemotePerformerRepository extends CrudRepository<Performer, Long> {
 
@@ -17,5 +16,5 @@ public interface RemotePerformerRepository extends CrudRepository<Performer, Lon
 
     Collection<Performer> findByName(String name);
 
-    Collection<Performer> findByRole(PerformerRole role);
+    // Collection<Performer> findByRole(PerformerRole role);
 }

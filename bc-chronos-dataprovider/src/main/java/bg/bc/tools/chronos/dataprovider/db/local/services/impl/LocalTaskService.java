@@ -5,7 +5,6 @@ import java.util.List;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.core.entities.DTask;
-import bg.bc.tools.chronos.core.entities.DTask.DTaskPhase;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 
 public class LocalTaskService implements ILocalTaskService {
@@ -23,12 +22,6 @@ public class LocalTaskService implements ILocalTaskService {
 
     @Override
     public List<DTask> getTasks(String name) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public List<DTask> getTasks(DTaskPhase type) {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -74,11 +67,4 @@ public class LocalTaskService implements ILocalTaskService {
 	// TODO Auto-generated method stub
 	return false;
     }
-
-    @Override
-    public boolean removeTasksByType(DTaskPhase type) {
-	// TODO Auto-generated method stub
-	return false;
-    }
-
 }

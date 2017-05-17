@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,6 @@ import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBookingRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBookingService;
-import de.jollyday.Holiday;
-import de.jollyday.HolidayCalendar;
-import de.jollyday.HolidayManager;
-import de.jollyday.ManagerParameters;
 
 public class RemoteBookingService implements IRemoteBookingService {
 
@@ -31,13 +26,14 @@ public class RemoteBookingService implements IRemoteBookingService {
     @Override
     public boolean addBooking(DBooking booking) {
 	// TODO: REFACTOR
-	final HolidayManager holidayManager = HolidayManager
-		.getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
-	final Set<Holiday> holidays = holidayManager.getHolidays(booking.getStartTime().toLocalDate(),
-		booking.getEndTime().toLocalDate());
-
-	booking.setOvertime(!holidays.isEmpty());
-	booking.setEffectivelyStopped(false);
+	// final HolidayManager holidayManager = HolidayManager
+	// .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
+	// final Set<Holiday> holidays =
+	// holidayManager.getHolidays(booking.getStartTime().toLocalDate(),
+	// booking.getEndTime().toLocalDate());
+	//
+	// booking.setOvertime(!holidays.isEmpty());
+	// booking.setEffectivelyStopped(false);
 
 	if (bookingRepo.exists(booking.getId())) {
 	    // LOGGER.error(...);
@@ -61,7 +57,9 @@ public class RemoteBookingService implements IRemoteBookingService {
 
     @Override
     public DBooking getEffectivelyStoppedBooking(boolean isEffectivelyStopped) {
-	return DbToDomainMapper.dbToDomainBooking(bookingRepo.findByIsEffectivelyStopped(isEffectivelyStopped));
+	// return
+	// DbToDomainMapper.dbToDomainBooking(bookingRepo.findByIsEffectivelyStopped(isEffectivelyStopped));
+	return null;
     }
 
     @Override
@@ -114,9 +112,10 @@ public class RemoteBookingService implements IRemoteBookingService {
 
     @Override
     public List<DBooking> getOvertimeBookings(boolean isOvertime) {
-	return bookingRepo.findByIsOvertime(isOvertime).stream() // nl
-		.map(DbToDomainMapper::dbToDomainBooking) // nl
-		.collect(Collectors.toList());
+	// return bookingRepo.findByIsOvertime(isOvertime).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainBooking) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override

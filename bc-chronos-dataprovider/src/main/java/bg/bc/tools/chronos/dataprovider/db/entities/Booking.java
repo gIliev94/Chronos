@@ -1,13 +1,19 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
-import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity(name = "Booking")
 public class Booking {
@@ -19,23 +25,31 @@ public class Booking {
     @Column(unique = false, nullable = true)
     private String description;
 
-    @Column(unique = false, nullable = true)
-    private LocalDateTime startTime;
+    @Column(unique = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
 
-    @Column(unique = false, nullable = true)
-    private LocalDateTime endTime;
+    @Column(unique = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Performer performer;
 
+    @OneToOne(optional = false, orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Role role;
+
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Task task;
 
-    @Column(unique = false, nullable = false)
-    private boolean isOvertime;
+    @OneToMany(mappedBy = "booking", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Collection<BillingRateModifier> billingRateModifiers;
 
-    @Column(unique = false, nullable = false)
-    private boolean isEffectivelyStopped;
+    // @Column(unique = false, nullable = false)
+    // private boolean isOvertime;
+    //
+    // @Column(unique = false, nullable = false)
+    // private boolean isEffectivelyStopped;
 
     public long getId() {
 	return id;
@@ -53,20 +67,20 @@ public class Booking {
 	this.description = description;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
 	return startTime;
     }
 
-    public void setStartTime(LocalDateTime start) {
-	this.startTime = start;
+    public void setStartTime(Date startTime) {
+	this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
 	return endTime;
     }
 
-    public void setEndTime(LocalDateTime end) {
-	this.endTime = end;
+    public void setEndTime(Date endTime) {
+	this.endTime = endTime;
     }
 
     public Performer getPerformer() {
@@ -77,6 +91,14 @@ public class Booking {
 	this.performer = performer;
     }
 
+    public Role getRole() {
+	return role;
+    }
+
+    public void setRole(Role role) {
+	this.role = role;
+    }
+
     public Task getTask() {
 	return task;
     }
@@ -85,19 +107,32 @@ public class Booking {
 	this.task = task;
     }
 
-    public boolean isOvertime() {
-	return isOvertime;
+    // public boolean isOvertime() {
+    // return isOvertime;
+    // }
+    //
+    // public void setOvertime(boolean isOvertime) {
+    // this.isOvertime = isOvertime;
+    // }
+    //
+    // public boolean isEffectivelyStopped() {
+    // return isEffectivelyStopped;
+    // }
+    //
+    // public void setEffectivelyStopped(boolean isEffectivelyStopped) {
+    // this.isEffectivelyStopped = isEffectivelyStopped;
+    // }
+
+    public Collection<BillingRateModifier> getBillingRateModifiers() {
+	return billingRateModifiers;
     }
 
-    public void setOvertime(boolean isOvertime) {
-	this.isOvertime = isOvertime;
+    public void setBillingRateModifiers(Collection<BillingRateModifier> billingRateModifiers) {
+	this.billingRateModifiers = billingRateModifiers;
     }
 
-    public boolean isEffectivelyStopped() {
-	return isEffectivelyStopped;
-    }
-
-    public void setEffectivelyStopped(boolean isEffectivelyStopped) {
-	this.isEffectivelyStopped = isEffectivelyStopped;
+    public void addBillingRateModifier(BillingRateModifier billingRateModifier) {
+	billingRateModifier.setBooking(this);
+	getBillingRateModifiers().add(billingRateModifier);
     }
 }

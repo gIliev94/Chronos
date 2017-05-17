@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.core.entities.DTask;
-import bg.bc.tools.chronos.core.entities.DTask.DTaskPhase;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteTaskRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteTaskService;
@@ -29,12 +28,6 @@ public class RemoteTaskService implements IRemoteTaskService {
 
     @Override
     public List<DTask> getTasks(String name) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public List<DTask> getTasks(DTaskPhase type) {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -80,11 +73,4 @@ public class RemoteTaskService implements IRemoteTaskService {
 	// TODO Auto-generated method stub
 	return false;
     }
-
-    @Override
-    public boolean removeTasksByType(DTaskPhase type) {
-	// TODO Auto-generated method stub
-	return false;
-    }
-
 }

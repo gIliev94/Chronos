@@ -3,13 +3,13 @@ package bg.bc.tools.chronos.core.usecases.crud.client;
 import java.util.List;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
-import bg.bc.tools.chronos.core.entities.DClient;
+import bg.bc.tools.chronos.core.entities.DCustomer;
 
 interface IGetClient {
 
-    DClient getClient(String name);
+    DCustomer getClient(String name);
 
-    List<DClient> getClients();
+    List<DCustomer> getClients();
 
-    List<DClient> getClients(DCategory category);
+    List<DCustomer> getClients(DCategory category);
 }

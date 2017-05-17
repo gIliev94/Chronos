@@ -10,23 +10,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity(name = "Project")
-// @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Project extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Client client;
+    private Customer customer;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Task> tasks;
 
-    public Client getClient() {
-	return client;
+    public Customer getCustomer() {
+	return customer;
     }
 
-    public void setClient(Client client) {
-	this.client = client;
+    public void setCustomer(Customer customer) {
+	this.customer = customer;
     }
 
     public Collection<Task> getTasks() {

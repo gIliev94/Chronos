@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.core.entities;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -20,11 +21,15 @@ public class DBooking {
 
     private DPerformer performer;
 
+    private DRole role;
+
     private DTask task;
 
-    private boolean isOvertime;
+    // private boolean isOvertime;
+    //
+    // private boolean isEffectivelyStopped;
 
-    private boolean isEffectivelyStopped;
+    private Collection<DBillingRateModifier> billingRateModifiers;
 
     public long getId() {
 	return id;
@@ -66,6 +71,14 @@ public class DBooking {
 	this.performer = performer;
     }
 
+    public DRole getRole() {
+	return role;
+    }
+
+    public void setRole(DRole role) {
+	this.role = role;
+    }
+
     public DTask getTask() {
 	return task;
     }
@@ -74,20 +87,33 @@ public class DBooking {
 	this.task = task;
     }
 
-    public boolean isOvertime() {
-	return isOvertime;
+    // public boolean isOvertime() {
+    // return isOvertime;
+    // }
+    //
+    // public void setOvertime(boolean isOvertime) {
+    // this.isOvertime = isOvertime;
+    // }
+    //
+    // public boolean isEffectivelyStopped() {
+    // return isEffectivelyStopped;
+    // }
+    //
+    // public void setEffectivelyStopped(boolean isEffectivelyStopped) {
+    // this.isEffectivelyStopped = isEffectivelyStopped;
+    // }
+
+    public Collection<DBillingRateModifier> getBillingRateModifiers() {
+	return billingRateModifiers;
     }
 
-    public void setOvertime(boolean isOvertime) {
-	this.isOvertime = isOvertime;
+    public void setBillingRateModifiers(Collection<DBillingRateModifier> billingRateModifiers) {
+	this.billingRateModifiers = billingRateModifiers;
     }
 
-    public boolean isEffectivelyStopped() {
-	return isEffectivelyStopped;
-    }
-
-    public void setEffectivelyStopped(boolean isEffectivelyStopped) {
-	this.isEffectivelyStopped = isEffectivelyStopped;
+    public void addBillingRateModifier(DBillingRateModifier billingRateModifier) {
+	billingRateModifier.setBooking(this);
+	getBillingRateModifiers().add(billingRateModifier);
     }
 
     public boolean equals(Object obj) {
@@ -100,11 +126,12 @@ public class DBooking {
 	DBooking booking = (DBooking) obj;
 	return id == booking.id // nl
 		&& Objects.equals(performer, booking.performer)// nl
+		&& Objects.equals(role, booking.role)// nl
 		&& Objects.equals(task, booking.task);
     }
 
     @Override
     public int hashCode() {
-	return Objects.hash(id, performer.getHandle(), task.getName());
+	return Objects.hash(id, performer.getHandle(), role.getName(), task.getName());
     }
 }

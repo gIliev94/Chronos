@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,12 +15,6 @@ import javax.persistence.OneToMany;
 public class Performer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    public enum PerformerRole {
-	MANAGER, // nl
-	DEVELOPER, // nl
-	TESTER
-    }
 
     @Id
     @GeneratedValue
@@ -39,9 +31,6 @@ public class Performer implements Serializable {
 
     @Column(unique = true, nullable = true)
     private String email;
-
-    @Enumerated(EnumType.STRING)
-    private PerformerRole role;
 
     @Column(unique = false, nullable = false)
     private boolean isLogged;
@@ -87,14 +76,6 @@ public class Performer implements Serializable {
 
     public void setEmail(String email) {
 	this.email = email;
-    }
-
-    public PerformerRole getRole() {
-	return role;
-    }
-
-    public void setRole(PerformerRole role) {
-	this.role = role;
     }
 
     public boolean isLogged() {

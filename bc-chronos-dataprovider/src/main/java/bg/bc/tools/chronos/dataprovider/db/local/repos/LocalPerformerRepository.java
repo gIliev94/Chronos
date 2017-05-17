@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.PerformerRole;
 
 public interface LocalPerformerRepository extends CrudRepository<Performer, Long> {
 
@@ -16,6 +15,4 @@ public interface LocalPerformerRepository extends CrudRepository<Performer, Long
     Performer findByIsLogged(boolean isLogged);
 
     Collection<Performer> findByName(String name);
-
-    Collection<Performer> findByRole(PerformerRole role);
 }

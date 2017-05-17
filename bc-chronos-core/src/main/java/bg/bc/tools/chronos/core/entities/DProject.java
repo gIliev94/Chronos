@@ -8,49 +8,17 @@ import java.util.List;
  * @author giliev
  */
 public class DProject extends DCategoricalEntity {
-
-    // private String name;
-    //
-    // private String description;
-    //
-    // private DCategory category;
-
-    private DClient client;
+    
+    private DCustomer client;
 
     private List<DTask> tasks;
 
-    // TODO: Add other relevant field/s
-    //
-    // public String getName() {
-    // return name;
-    // }
-    //
-    // public void setName(String name) {
-    // this.name = name;
-    // }
-    //
-    // public String getDescription() {
-    // return description;
-    // }
-    //
-    // public void setDescription(String description) {
-    // this.description = description;
-    // }
-    //
-    // public DCategory getCategory() {
-    // return category;
-    // }
-    //
-    // public void setCategory(DCategory category) {
-    // this.category = category;
-    // }
-
-    public DClient getClient() {
+    public DCustomer getCustomer() {
 	return client;
     }
 
-    public void setClient(DClient client) {
-	this.client = client;
+    public void setCustomer(DCustomer customer) {
+	this.client = customer;
     }
 
     public List<DTask> getTasks() {

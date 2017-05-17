@@ -3,17 +3,17 @@ package bc.bg.tools.chronos.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBillingRateService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBookingService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCategoryService;
-import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteClientService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemotePerformerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteProjectService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteTaskService;
-import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteBillingRateService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteBookingService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteCategoryService;
-import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteClientService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemotePerformerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteProjectService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteTaskService;
@@ -26,9 +26,9 @@ public class RemoteDataProviderConfig {
 	return new RemoteCategoryService();
     }
 
-    @Bean(name = "remoteClientService")
-    public IRemoteClientService clientService() {
-	return new RemoteClientService();
+    @Bean(name = "remoteCustomerService")
+    public IRemoteCustomerService customerService() {
+	return new RemoteCustomerService();
     }
 
     @Bean(name = "remoteProjectService")
@@ -41,9 +41,9 @@ public class RemoteDataProviderConfig {
 	return new RemoteTaskService();
     }
 
-    @Bean(name = "remoteBillingRateService")
-    public IRemoteBillingRateService billingRateService() {
-	return new RemoteBillingRateService();
+    @Bean(name = "remoteBillingRateModifierService")
+    public IRemoteBillingRateModifierService billingRateModifierService() {
+	return new RemoteBillingRateModifierService();
     }
 
     @Bean(name = "remotePerformerService")

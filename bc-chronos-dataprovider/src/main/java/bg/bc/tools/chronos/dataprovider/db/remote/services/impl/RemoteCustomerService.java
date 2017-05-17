@@ -7,25 +7,25 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
-import bg.bc.tools.chronos.core.entities.DClient;
-import bg.bc.tools.chronos.dataprovider.db.entities.Client;
+import bg.bc.tools.chronos.core.entities.DCustomer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteClientRepository;
-import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteClientService;
+import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteCustomerRepository;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
 
-public class RemoteClientService implements IRemoteClientService {
+public class RemoteCustomerService implements IRemoteCustomerService {
 
     // private static final Logger LOGGER =
     // Logger.getLogger(ClientService.class);
 
     @Autowired
-    private RemoteClientRepository clientRepo;
+    private RemoteCustomerRepository clientRepo;
 
     @Override
-    public boolean addClient(DClient client) {
+    public boolean addClient(DCustomer client) {
 	try {
-	    clientRepo.save(DomainToDbMapper.domainToDbClient(client));
+	    clientRepo.save(DomainToDbMapper.domainToDbCustomer(client));
 	} catch (Exception e) {
 	    // LOGGER.error(e);
 	    return false;
@@ -35,27 +35,27 @@ public class RemoteClientService implements IRemoteClientService {
     }
 
     @Override
-    public DClient getClient(String name) {
-	return DbToDomainMapper.dbToDomainClient(clientRepo.findByName(name));
+    public DCustomer getClient(String name) {
+	return DbToDomainMapper.dbToDomainCustomer(clientRepo.findByName(name));
     }
 
     @Override
-    public List<DClient> getClients() {
-	return ((List<Client>) clientRepo.findAll()).stream() // nl
-		.map(DbToDomainMapper::dbToDomainClient) // nl
+    public List<DCustomer> getClients() {
+	return ((List<Customer>) clientRepo.findAll()).stream() // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DClient> getClients(DCategory category) {
-	return ((List<Client>) clientRepo.findAll()).stream() // nl
+    public List<DCustomer> getClients(DCategory category) {
+	return ((List<Customer>) clientRepo.findAll()).stream() // nl
 		.filter(c -> Objects.equals(category, c.getCategory())) // nl
-		.map(DbToDomainMapper::dbToDomainClient) // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateClient(DClient client) {
+    public boolean updateClient(DCustomer client) {
 	try {
 	    if (clientRepo.exists(client.getId())) {
 		// LOGGER.info("Updating entity :: " +
@@ -66,7 +66,7 @@ public class RemoteClientService implements IRemoteClientService {
 		// Client.class.getSimpleName() + " ::" + client.getName());
 	    }
 
-	    clientRepo.save(DomainToDbMapper.domainToDbClient(client));
+	    clientRepo.save(DomainToDbMapper.domainToDbCustomer(client));
 
 	} catch (Exception e) {
 	    // LOGGER.error(e);
@@ -77,9 +77,9 @@ public class RemoteClientService implements IRemoteClientService {
     }
 
     @Override
-    public boolean removeClient(DClient client) {
+    public boolean removeClient(DCustomer client) {
 	try {
-	    clientRepo.delete(DomainToDbMapper.domainToDbClient(client));
+	    clientRepo.delete(DomainToDbMapper.domainToDbCustomer(client));
 	} catch (Exception e) {
 	    // LOGGER.error(e);
 	    return false;
@@ -90,8 +90,8 @@ public class RemoteClientService implements IRemoteClientService {
 
     @Override
     public boolean removeClient(String clientName) {
-	Client client = clientRepo.findByName(clientName);
-	return removeClient(DbToDomainMapper.dbToDomainClient(client));
+	Customer client = clientRepo.findByName(clientName);
+	return removeClient(DbToDomainMapper.dbToDomainCustomer(client));
     }
 
 }

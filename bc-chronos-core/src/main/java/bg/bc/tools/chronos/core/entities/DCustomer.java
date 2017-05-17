@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author giliev
  */
-public class DClient extends DCategoricalEntity {
+public class DCustomer extends DCategoricalEntity {
 
     private List<DProject> projects;
 
@@ -20,7 +20,7 @@ public class DClient extends DCategoricalEntity {
     }
 
     public void addProject(DProject project) {
-	project.setClient(this);
+	project.setCustomer(this);
 	getProjects().add(project);
     }
 }

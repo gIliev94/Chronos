@@ -11,25 +11,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.PerformerRole;
-
-@Entity(name = "BillingRate")
-public class BillingRate implements Serializable {
+@Entity(name = "BillingRateModifier")
+public class BillingRateModifier implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public enum ModifierAction {
+	ADD, // nl
+	SUBTRACT, // nl
+	MULTIPLY, // nl
+	DIVIDE
+    }
 
     @Id
     @GeneratedValue
     private long id;
 
     @Enumerated(EnumType.STRING)
-    private PerformerRole role;
+    private ModifierAction modifierAction;
 
     @Column(unique = false, nullable = false)
-    private double rate;
+    private double modifierValue;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    private Task task;
+    private Booking booking;
 
     public long getId() {
 	return id;
@@ -39,27 +44,27 @@ public class BillingRate implements Serializable {
 	this.id = id;
     }
 
-    public PerformerRole getRole() {
-	return role;
+    public ModifierAction getModifierAction() {
+	return modifierAction;
     }
 
-    public void setRole(PerformerRole role) {
-	this.role = role;
+    public void setModifierAction(ModifierAction modifierAction) {
+	this.modifierAction = modifierAction;
     }
 
-    public double getRate() {
-	return rate;
+    public double getModifierValue() {
+	return modifierValue;
     }
 
-    public void setRate(double rate) {
-	this.rate = rate;
+    public void setModifierValue(double modifierValue) {
+	this.modifierValue = modifierValue;
     }
 
-    public Task getTask() {
-	return task;
+    public Booking getBooking() {
+	return booking;
     }
 
-    public void setTask(Task task) {
-	this.task = task;
+    public void setBooking(Booking booking) {
+	this.booking = booking;
     }
 }

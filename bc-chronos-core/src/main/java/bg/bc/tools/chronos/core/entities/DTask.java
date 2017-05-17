@@ -1,6 +1,5 @@
 package bg.bc.tools.chronos.core.entities;
 
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -10,36 +9,34 @@ import java.util.List;
  */
 public class DTask extends DCategoricalEntity {
 
-    public enum DTaskPhase {
-	PLANNING, // nl
-	DEVELOPMENT, // nl
-	TESTING
-    }
+    // public enum DTaskPhase {
+    // PLANNING, // nl
+    // DEVELOPMENT, // nl
+    // TESTING
+    // }
+    //
+    // private DTaskPhase phase;
 
-    private DTaskPhase phase;
-
-    private LocalTime estimatedTime;
+    private int estimatedTimeHours;
 
     private DProject project;
 
     private List<DBooking> bookings;
 
-    private List<DBillingRate> billingRates;
+    // public DTaskPhase getPhase() {
+    // return phase;
+    // }
+    //
+    // public void setPhase(DTaskPhase phase) {
+    // this.phase = phase;
+    // }
 
-    public DTaskPhase getPhase() {
-	return phase;
+    public int getEstimatedTimeHours() {
+	return estimatedTimeHours;
     }
 
-    public void setPhase(DTaskPhase phase) {
-	this.phase = phase;
-    }
-
-    public LocalTime getEstimatedTime() {
-	return estimatedTime;
-    }
-
-    public void setEstimatedTime(LocalTime timeEstimated) {
-	this.estimatedTime = timeEstimated;
+    public void setEstimatedTimeHours(int estimatedTimeHours) {
+	this.estimatedTimeHours = estimatedTimeHours;
     }
 
     public DProject getProject() {
@@ -61,18 +58,5 @@ public class DTask extends DCategoricalEntity {
     public void addBooking(DBooking booking) {
 	booking.setTask(this);
 	getBookings().add(booking);
-    }
-
-    public List<DBillingRate> getBillingRates() {
-	return billingRates;
-    }
-
-    public void setBillingRates(List<DBillingRate> billingRates) {
-	this.billingRates = billingRates;
-    }
-
-    public void addBillingRate(DBillingRate billingRate) {
-	billingRate.setTask(this);
-	getBillingRates().add(billingRate);
     }
 }

@@ -3,17 +3,17 @@ package bc.bg.tools.chronos.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalClientService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBillingRateService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBookingService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCategoryService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalClientService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
@@ -26,9 +26,9 @@ public class LocalDataProviderConfig {
 	return new LocalCategoryService();
     }
 
-    @Bean(name = "localClientService")
-    public ILocalClientService clientService() {
-	return new LocalClientService();
+    @Bean(name = "localCustomerService")
+    public ILocalCustomerService customerService() {
+	return new LocalCustomerService();
     }
 
     @Bean(name = "localProjectService")
@@ -41,9 +41,9 @@ public class LocalDataProviderConfig {
 	return new LocalTaskService();
     }
 
-    @Bean(name = "localBillingRateService")
-    public ILocalBillingRateService billingRateService() {
-	return new LocalBillingRateService();
+    @Bean(name = "localBillingRateModifierService")
+    public ILocalBillingRateModifierService billingRateModiferService() {
+	return new LocalBillingRateModifierService();
     }
 
     @Bean(name = "localPerformerService")
