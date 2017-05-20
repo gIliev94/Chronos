@@ -4,14 +4,18 @@
 	<artifactId>chronos-configuration</artifactId>
 	<version>${children.version}</version>
 	<name>bc-chronos-configuration</name>
-	
+
 	<parent>
 		<groupId>bc.bg.tools</groupId>
 		<artifactId>chronos-toplevel</artifactId>
 		<version>1.0</version>
 		<relativePath>../bc-chronos-toplevel/pom.xml</relativePath>
 	</parent>
-	
+
+	<properties>
+		<start-class>bc.bg.tools.chronos.configuration.ChronosApplication</start-class>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
