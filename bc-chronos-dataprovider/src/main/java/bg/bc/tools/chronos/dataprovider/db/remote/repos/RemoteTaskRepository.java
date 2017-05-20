@@ -14,8 +14,6 @@ public interface RemoteTaskRepository extends CrudRepository<Task, Long> {
 
     Collection<Task> findByNameIgnoreCaseContaining(String name);
 
-    Collection<Task> findByDescriptionIgnoreCaseContaining(String description);
-
     Collection<Task> findByCategoryIsNull();
 
     Collection<Task> findByCategory(Category category);

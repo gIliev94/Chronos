@@ -8,11 +8,17 @@ import bg.bc.tools.chronos.core.entities.DProject;
 
 interface IGetProject {
 
+    DProject getProject(long id);
+
     DProject getProject(String name);
 
     List<DProject> getProjects();
 
-    List<DProject> getProjects(DCustomer client);
+    List<DProject> getProjects(DCustomer customer);
 
     List<DProject> getProjects(DCategory category);
+
+    List<DProject> getProjects(List<DCategory> categories);
+
+    List<DProject> getProjectsContaining(String name);
 }

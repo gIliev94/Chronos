@@ -10,11 +10,21 @@ interface IGetTask {
 
     DTask getTask(long id);
 
-    List<DTask> getTasks(String name);
+    DTask getTask(String name);
 
-    List<DTask> getTasks(DProject project);
+    List<DTask> getTasks();
 
     List<DTask> getTasks(DCategory category);
 
-    List<DTask> getOverdueTasks();
+    List<DTask> getTasks(List<DCategory> categories);
+
+    List<DTask> getTasks(DProject project);
+
+    List<DTask> getTasksContaining(String name);
+
+    List<DTask> getTasksEstimatedBetween(int estimatedTimeHoursLower, int estimatedTimeHoursUpper);
+
+    List<DTask> getTasksEstimatedLessThan(int estimatedTimeHoursLessThan);
+
+    List<DTask> getTasksEstimatedGreaterThan(int estimatedTimeHoursGreaterThan);
 }

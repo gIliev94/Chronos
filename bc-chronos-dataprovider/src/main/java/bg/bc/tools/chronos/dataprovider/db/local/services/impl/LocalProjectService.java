@@ -1,7 +1,6 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
+import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
@@ -35,9 +36,22 @@ public class LocalProjectService implements ILocalProjectService {
 	return true;
     }
 
+    
+    @Override
+    public DProject getProject(long id) {
+	return DbToDomainMapper.dbToDomainProject(projectRepo.findOne(id));
+    }
+    
     @Override
     public DProject getProject(String name) {
 	return DbToDomainMapper.dbToDomainProject(projectRepo.findByName(name));
+    }
+
+    @Override
+    public List<DProject> getProjectsContaining(String name) {
+	return projectRepo.findByNameIgnoreCaseContaining(name).stream() // nl
+		.map(DbToDomainMapper::dbToDomainProject) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
@@ -48,17 +62,30 @@ public class LocalProjectService implements ILocalProjectService {
     }
 
     @Override
-    public List<DProject> getProjects(DCustomer client) {
-	return ((List<Project>) projectRepo.findAll()).stream() // nl
-		.filter(c -> Objects.equals(client, c.getCustomer())) // nl
+    public List<DProject> getProjects(DCustomer customer) {
+	final Customer dbCustomer = DomainToDbMapper.domainToDbCustomer(customer);
+
+	return projectRepo.findByCustomer(dbCustomer).stream() // nl
 		.map(DbToDomainMapper::dbToDomainProject) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
     public List<DProject> getProjects(DCategory category) {
-	return ((List<Project>) projectRepo.findAll()).stream() // nl
-		.filter(c -> Objects.equals(category, c.getCategory())) // nl
+	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
+
+	return projectRepo.findByCategory(dbCategory).stream() // nl
+		.map(DbToDomainMapper::dbToDomainProject) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DProject> getProjects(List<DCategory> categories) {
+	final List<Category> dbCategories = categories.stream() // nl
+		.map(DomainToDbMapper::domainToDbCategory) // nl
+		.collect(Collectors.toList());
+
+	return projectRepo.findByCategoryIn(dbCategories).stream() // nl
 		.map(DbToDomainMapper::dbToDomainProject) // nl
 		.collect(Collectors.toList());
     }

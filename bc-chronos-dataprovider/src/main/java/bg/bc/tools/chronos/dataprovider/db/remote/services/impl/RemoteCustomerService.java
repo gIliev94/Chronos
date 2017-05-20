@@ -1,13 +1,14 @@
 package bg.bc.tools.chronos.dataprovider.db.remote.services.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
@@ -16,8 +17,7 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerSe
 
 public class RemoteCustomerService implements IRemoteCustomerService {
 
-    // private static final Logger LOGGER =
-    // Logger.getLogger(CustomerService.class);
+    private static final Logger LOGGER = Logger.getLogger(RemoteCustomerService.class);
 
     @Autowired
     private RemoteCustomerRepository customerRepo;
@@ -27,7 +27,7 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 	try {
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -35,8 +35,20 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     }
 
     @Override
+    public DCustomer getCustomer(long id) {
+	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findOne(id));
+    }
+
+    @Override
     public DCustomer getCustomer(String name) {
 	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findByName(name));
+    }
+
+    @Override
+    public List<DCustomer> getCustomersContaining(String name) {
+	return customerRepo.findByNameIgnoreCaseContaining(name).stream() // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
@@ -48,8 +60,20 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 
     @Override
     public List<DCustomer> getCustomers(DCategory category) {
-	return ((List<Customer>) customerRepo.findAll()).stream() // nl
-		.filter(c -> Objects.equals(category, c.getCategory())) // nl
+	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
+
+	return customerRepo.findByCategory(dbCategory).stream() // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DCustomer> getCustomers(List<DCategory> categories) {
+	final List<Category> dbCategories = categories.stream() // nl
+		.map(DomainToDbMapper::domainToDbCategory) // nl
+		.collect(Collectors.toList());
+
+	return customerRepo.findByCategoryIn(dbCategories).stream() // nl
 		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
@@ -58,18 +82,16 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     public boolean updateCustomer(DCustomer customer) {
 	try {
 	    if (customerRepo.exists(customer.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Customer.class.getSimpleName() + " ::" + customer.getName());
-
+		LOGGER.info("Updating entity :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Customer.class.getSimpleName() + " ::" + customer.getName());
+		LOGGER.info(
+			"No entity found to update :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
 	    }
 
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -81,7 +103,7 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 	try {
 	    customerRepo.delete(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -90,8 +112,7 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 
     @Override
     public boolean removeCustomer(String customerName) {
-	Customer customer = customerRepo.findByName(customerName);
+	final Customer customer = customerRepo.findByName(customerName);
 	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(customer));
     }
-
 }

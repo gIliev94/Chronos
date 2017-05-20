@@ -1,7 +1,6 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
@@ -35,8 +35,20 @@ public class LocalCustomerService implements ILocalCustomerService {
     }
 
     @Override
-    public DCustomer getCustomer(String customerName) {
-	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findByName(customerName));
+    public DCustomer getCustomer(long id) {
+	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findOne(id));
+    }
+    
+    @Override
+    public DCustomer getCustomer(String name) {
+	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findByName(name));
+    }
+
+    @Override
+    public List<DCustomer> getCustomersContaining(String name) {
+	return customerRepo.findByNameIgnoreCaseContaining(name).stream() // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
@@ -48,8 +60,20 @@ public class LocalCustomerService implements ILocalCustomerService {
 
     @Override
     public List<DCustomer> getCustomers(DCategory category) {
-	return ((List<Customer>) customerRepo.findAll()).stream() // nl
-		.filter(c -> Objects.equals(category, c.getCategory())) // nl
+	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
+
+	return customerRepo.findByCategory(dbCategory).stream() // nl
+		.map(DbToDomainMapper::dbToDomainCustomer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DCustomer> getCustomers(List<DCategory> categories) {
+	final List<Category> dbCategories = categories.stream() // nl
+		.map(DomainToDbMapper::domainToDbCategory) // nl
+		.collect(Collectors.toList());
+
+	return customerRepo.findByCategoryIn(dbCategories).stream() // nl
 		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
@@ -88,7 +112,7 @@ public class LocalCustomerService implements ILocalCustomerService {
 
     @Override
     public boolean removeCustomer(String customerName) {
-	Customer customer = customerRepo.findByName(customerName);
+	final Customer customer = customerRepo.findByName(customerName);
 	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(customer));
     }
 

@@ -5,7 +5,7 @@ import bg.bc.tools.chronos.core.entities.DTask;
 
 interface IRemoveTask {
 
-    boolean removeTask(DTask performer);
+    boolean removeTask(DTask task);
 
     boolean removeTask(String taskName);
 

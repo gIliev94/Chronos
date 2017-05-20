@@ -13,8 +13,7 @@ public interface LocalCustomerRepository extends CrudRepository<Customer, Long> 
 
     Collection<Customer> findByNameIgnoreCaseContaining(String name);
 
-    Collection<Customer> findByDescriptionIgnoreCaseContaining(String description);
-
+    //TODO: Useless?
     Collection<Customer> findByCategoryIsNull();
 
     Collection<Customer> findByCategory(Category category);

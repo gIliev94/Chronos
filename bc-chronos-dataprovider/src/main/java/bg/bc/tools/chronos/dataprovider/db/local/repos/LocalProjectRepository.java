@@ -13,9 +13,8 @@ public interface LocalProjectRepository extends CrudRepository<Project, Long> {
     Project findByName(String name);
 
     Collection<Project> findByNameIgnoreCaseContaining(String name);
-
-    Collection<Project> findByDescriptionIgnoreCaseContaining(String description);
-
+    
+    //TODO: Useless?
     Collection<Project> findByCategoryIsNull();
 
     Collection<Project> findByCategory(Category category);

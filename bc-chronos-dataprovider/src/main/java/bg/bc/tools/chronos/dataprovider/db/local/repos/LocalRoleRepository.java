@@ -13,9 +13,7 @@ public interface LocalRoleRepository extends CrudRepository<Role, Long> {
     Role findByName(String name);
 
     Collection<Role> findByNameIgnoreCaseContaining(String name);
-
-    Collection<Role> findByDescriptionIgnoreCaseContaining(String description);
-
+    
     Collection<Role> findByCategoryIsNull();
 
     Collection<Role> findByCategory(Category category);
