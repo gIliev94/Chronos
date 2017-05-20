@@ -8,11 +8,15 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 
 public interface LocalPerformerRepository extends CrudRepository<Performer, Long> {
 
+    Collection<Performer> findByName(String name);
+
+    Collection<Performer> findByNameIgnoreCaseContaining(String name);
+
     Performer findByHandle(String handle);
 
     Performer findByEmail(String email);
 
-    Performer findByIsLogged(boolean isLogged);
+    Collection<Performer> findByIsLoggedTrue();
 
-    Collection<Performer> findByName(String name);
+    Collection<Performer> findByIsLoggedFalse();
 }

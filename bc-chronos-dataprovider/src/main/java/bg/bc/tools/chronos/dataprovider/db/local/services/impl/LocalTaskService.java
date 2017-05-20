@@ -2,12 +2,16 @@ package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 
 public class LocalTaskService implements ILocalTaskService {
+
+    private static final Logger LOGGER = Logger.getLogger(LocalTaskService.class);
 
     @Override
     public boolean addTask(DTask task) {

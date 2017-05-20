@@ -2,11 +2,14 @@ package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DBooking;
@@ -19,6 +22,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
 
 public class LocalBookingService implements ILocalBookingService {
+
+    private static final Logger LOGGER = Logger.getLogger(LocalBookingService.class);
 
     @Autowired
     private LocalBookingRepository bookingRepo;
@@ -43,7 +48,7 @@ public class LocalBookingService implements ILocalBookingService {
 	try {
 	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -87,7 +92,10 @@ public class LocalBookingService implements ILocalBookingService {
 
     @Override
     public List<DBooking> getBookingsIn(LocalDateTime betweenStartTime, LocalDateTime betweenEndTime) {
-	return bookingRepo.findByStartTimeBetween(betweenStartTime, betweenEndTime).stream() // nl
+	final Date fromTime = Date.from(betweenStartTime.atZone(ZoneId.systemDefault()).toInstant());
+	final Date toTime = Date.from(betweenEndTime.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByStartTimeBetween(fromTime, toTime).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }
@@ -122,18 +130,16 @@ public class LocalBookingService implements ILocalBookingService {
     public boolean updateBooking(DBooking booking) {
 	try {
 	    if (bookingRepo.exists(booking.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Booking.class.getSimpleName() + " ::" + booking.getName());
+		LOGGER.info("Updating entity :: " + Booking.class.getSimpleName() + " ::" + booking.getId());
 
 	    } else {
-		// LOGGER.error("No entity found to update :: " +
-		// Booking.class.getSimpleName() + " ::" + booking.getName());
+		LOGGER.error("No entity found to update :: " + Booking.class.getSimpleName() + " ::" + booking.getId());
 	    }
 
 	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -145,7 +151,7 @@ public class LocalBookingService implements ILocalBookingService {
 	try {
 	    bookingRepo.delete(DomainToDbMapper.domainToDbBooking(booking));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 

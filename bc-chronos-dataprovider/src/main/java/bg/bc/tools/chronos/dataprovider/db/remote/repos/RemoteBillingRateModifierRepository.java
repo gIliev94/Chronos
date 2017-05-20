@@ -1,21 +1,27 @@
 package bg.bc.tools.chronos.dataprovider.db.remote.repos;
 
+import java.util.Collection;
+
 import org.springframework.data.repository.CrudRepository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
+import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 
 public interface RemoteBillingRateModifierRepository extends CrudRepository<BillingRateModifier, Long> {
+    
+    Collection<BillingRateModifier> findByModifierAction(ModifierAction modifierAction);
 
-    // BillingRate findByTaskAndRole(Task task, PerformerRole role);
+    Collection<BillingRateModifier> findByModifierActionIn(Collection<ModifierAction> modifierAction);
 
-    // Collection<BillingRate> findByTask(Task task);
+    Collection<BillingRateModifier> findByModifierValue(double modifierValue);
 
-    // Collection<BillingRate> findByRole(PerformerRole role);
+    Collection<BillingRateModifier> findByModifierValueLessThan(double lessThanModifierValue);
 
-    // Collection<BillingRate> findByRateLessThan(double rate);
-    //
-    // Collection<BillingRate> findByRateGreaterThan(double rate);
-    //
-    // Collection<BillingRate> findByRateBetween(double rateBottom, double
-    // rateTop);
+    Collection<BillingRateModifier> findByModifierValueGreaterThan(double greaterThanModifierValue);
+
+    Collection<BillingRateModifier> findByModifierValueBetween(double lessThanModifierValue,
+	    double greaterThanModifierValue);
+
+    Collection<BillingRateModifier> findByBooking(Booking booking);
 }

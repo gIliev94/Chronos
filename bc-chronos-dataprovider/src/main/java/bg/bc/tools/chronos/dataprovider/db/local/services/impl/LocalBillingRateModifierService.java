@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
@@ -17,6 +18,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRateModifierR
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
 
 public class LocalBillingRateModifierService implements ILocalBillingRateModifierService {
+
+    private static final Logger LOGGER = Logger.getLogger(LocalBillingRateModifierService.class);
 
     @Autowired
     private LocalBillingRateModifierRepository billingRateModifierRepo;

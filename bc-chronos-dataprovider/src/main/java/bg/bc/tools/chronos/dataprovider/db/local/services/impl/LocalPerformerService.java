@@ -3,6 +3,7 @@ package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DPerformer;
@@ -14,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerSer
 
 public class LocalPerformerService implements ILocalPerformerService {
 
+    private static final Logger LOGGER = Logger.getLogger(LocalPerformerService.class);
+
     @Autowired
     private LocalPerformerRepository performerRepo;
 
@@ -22,7 +25,7 @@ public class LocalPerformerService implements ILocalPerformerService {
 	try {
 	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -52,20 +55,16 @@ public class LocalPerformerService implements ILocalPerformerService {
     public boolean updatePerformer(DPerformer performer) {
 	try {
 	    if (performerRepo.exists(performer.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Performer.class.getSimpleName() + " ::" +
-		// performer.getName());
-
+		LOGGER.info("Updating entity :: " + Performer.class.getSimpleName() + " ::" + performer.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Performer.class.getSimpleName() + " ::" +
-		// performer.getName());
+		LOGGER.info("No entity found to update :: " + Performer.class.getSimpleName() + " ::"
+			+ performer.getName());
 	    }
 
 	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -77,7 +76,7 @@ public class LocalPerformerService implements ILocalPerformerService {
 	try {
 	    performerRepo.delete(DomainToDbMapper.domainToDbPerformer(performer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 

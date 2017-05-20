@@ -30,10 +30,7 @@ public class Task extends CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = false)
     // @Temporal(TemporalType.TIME)
     private int estimatedTimeHours;
-
-    // @Column(unique = false, nullable = false)
-    // private double billingRateModifier;
-
+    
     @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Project project;
 
@@ -55,15 +52,7 @@ public class Task extends CategoricalEntity implements Serializable {
     public void setEstimatedTimeHours(int estimatedTimeHours) {
 	this.estimatedTimeHours = estimatedTimeHours;
     }
-
-    // public double getBillingRateModifier() {
-    // return billingRateModifier;
-    // }
-    //
-    // public void setBillingRateModifier(double billingRateModifier) {
-    // this.billingRateModifier = billingRateModifier;
-    // }
-
+    
     public Project getProject() {
 	return project;
     }

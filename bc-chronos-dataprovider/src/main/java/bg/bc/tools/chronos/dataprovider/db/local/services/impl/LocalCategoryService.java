@@ -3,6 +3,7 @@ package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -14,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryServ
 
 public class LocalCategoryService implements ILocalCategoryService {
 
+    private static final Logger LOGGER = Logger.getLogger(LocalCategoryService.class);
+
     @Autowired
     private LocalCategoryRepository categoryRepo;
 
@@ -22,7 +25,7 @@ public class LocalCategoryService implements ILocalCategoryService {
 	try {
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -59,20 +62,16 @@ public class LocalCategoryService implements ILocalCategoryService {
     public boolean updateCategory(DCategory category) {
 	try {
 	    if (categoryRepo.exists(category.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Category.class.getSimpleName() + " ::" +
-		// category.getName());
-
+		LOGGER.info("Updating entity :: " + Category.class.getSimpleName() + " ::" + category.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Category.class.getSimpleName() + " ::" +
-		// category.getName());
+		LOGGER.info(
+			"No entity found to update :: " + Category.class.getSimpleName() + " ::" + category.getName());
 	    }
 
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -84,7 +83,7 @@ public class LocalCategoryService implements ILocalCategoryService {
 	try {
 	    categoryRepo.delete(DomainToDbMapper.domainToDbCategory(category));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -104,7 +103,7 @@ public class LocalCategoryService implements ILocalCategoryService {
 		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
 	    });
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -118,7 +117,7 @@ public class LocalCategoryService implements ILocalCategoryService {
 		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
 	    });
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 

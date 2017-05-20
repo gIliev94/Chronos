@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -16,18 +17,17 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerServ
 
 public class LocalCustomerService implements ILocalCustomerService {
 
-    // private static final Logger LOGGER =
-    // Logger.getLogger(ClientService.class);
+    private static final Logger LOGGER = Logger.getLogger(LocalCustomerService.class);
 
     @Autowired
-    private LocalCustomerRepository clientRepo;
+    private LocalCustomerRepository customerRepo;
 
     @Override
-    public boolean addClient(DCustomer client) {
+    public boolean addCustomer(DCustomer customer) {
 	try {
-	    clientRepo.save(DomainToDbMapper.domainToDbCustomer(client));
+	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -35,41 +35,39 @@ public class LocalCustomerService implements ILocalCustomerService {
     }
 
     @Override
-    public DCustomer getClient(String name) {
-	return DbToDomainMapper.dbToDomainCustomer(clientRepo.findByName(name));
+    public DCustomer getCustomer(String customerName) {
+	return DbToDomainMapper.dbToDomainCustomer(customerRepo.findByName(customerName));
     }
 
     @Override
-    public List<DCustomer> getClients() {
-	return ((List<Customer>) clientRepo.findAll()).stream() // nl
+    public List<DCustomer> getCustomers() {
+	return ((List<Customer>) customerRepo.findAll()).stream() // nl
 		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DCustomer> getClients(DCategory category) {
-	return ((List<Customer>) clientRepo.findAll()).stream() // nl
+    public List<DCustomer> getCustomers(DCategory category) {
+	return ((List<Customer>) customerRepo.findAll()).stream() // nl
 		.filter(c -> Objects.equals(category, c.getCategory())) // nl
 		.map(DbToDomainMapper::dbToDomainCustomer) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateClient(DCustomer client) {
+    public boolean updateCustomer(DCustomer customer) {
 	try {
-	    if (clientRepo.exists(client.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Client.class.getSimpleName() + " ::" + client.getName());
-
+	    if (customerRepo.exists(customer.getId())) {
+		LOGGER.info("Updating entity :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Client.class.getSimpleName() + " ::" + client.getName());
+		LOGGER.info(
+			"No entity found to update :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
 	    }
 
-	    clientRepo.save(DomainToDbMapper.domainToDbCustomer(client));
+	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -77,11 +75,11 @@ public class LocalCustomerService implements ILocalCustomerService {
     }
 
     @Override
-    public boolean removeClient(DCustomer client) {
+    public boolean removeCustomer(DCustomer customer) {
 	try {
-	    clientRepo.delete(DomainToDbMapper.domainToDbCustomer(client));
+	    customerRepo.delete(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -89,9 +87,9 @@ public class LocalCustomerService implements ILocalCustomerService {
     }
 
     @Override
-    public boolean removeClient(String clientName) {
-	Customer client = clientRepo.findByName(clientName);
-	return removeClient(DbToDomainMapper.dbToDomainCustomer(client));
+    public boolean removeCustomer(String customerName) {
+	Customer customer = customerRepo.findByName(customerName);
+	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(customer));
     }
 
 }

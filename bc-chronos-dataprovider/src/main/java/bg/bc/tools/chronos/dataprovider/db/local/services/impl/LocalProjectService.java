@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -17,8 +18,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectServi
 
 public class LocalProjectService implements ILocalProjectService {
 
-    // private static final Logger LOGGER =
-    // Logger.getLogger(ClientService.class);
+    private static final Logger LOGGER = Logger.getLogger(LocalProjectService.class);
 
     @Autowired
     private LocalProjectRepository projectRepo;
@@ -28,7 +28,7 @@ public class LocalProjectService implements ILocalProjectService {
 	try {
 	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -67,18 +67,16 @@ public class LocalProjectService implements ILocalProjectService {
     public boolean updateProject(DProject project) {
 	try {
 	    if (projectRepo.exists(project.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Project.class.getSimpleName() + " ::" + project.getName());
-
+		LOGGER.info("Updating entity :: " + Project.class.getSimpleName() + " ::" + project.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Project.class.getSimpleName() + " ::" + project.getName());
+		LOGGER.info(
+			"No entity found to update :: " + Project.class.getSimpleName() + " ::" + project.getName());
 	    }
 
 	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -90,7 +88,7 @@ public class LocalProjectService implements ILocalProjectService {
 	try {
 	    projectRepo.delete(DomainToDbMapper.domainToDbProject(project));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -108,7 +106,7 @@ public class LocalProjectService implements ILocalProjectService {
 	try {
 	    client.getProjects().forEach(p -> projectRepo.delete(DomainToDbMapper.domainToDbProject(p)));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 

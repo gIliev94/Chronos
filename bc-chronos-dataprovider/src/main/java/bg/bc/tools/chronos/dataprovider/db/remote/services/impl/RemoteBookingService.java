@@ -2,7 +2,9 @@ package bg.bc.tools.chronos.dataprovider.db.remote.services.impl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -87,7 +89,10 @@ public class RemoteBookingService implements IRemoteBookingService {
 
     @Override
     public List<DBooking> getBookingsIn(LocalDateTime betweenStartTime, LocalDateTime betweenEndTime) {
-	return bookingRepo.findByStartTimeBetween(betweenStartTime, betweenEndTime).stream() // nl
+	final Date fromTime = Date.from(betweenStartTime.atZone(ZoneId.systemDefault()).toInstant());
+	final Date toTime = Date.from(betweenEndTime.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByStartTimeBetween(fromTime, toTime).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }
