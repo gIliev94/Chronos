@@ -25,7 +25,7 @@ public class RemoteDBConfig {
     @Autowired
     private Environment env;
 
-    @Bean
+    @Bean(name = "remoteEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	factoryBean.setDataSource(this.remoteDataSource());
@@ -48,7 +48,7 @@ public class RemoteDBConfig {
 	return properties;
     }
 
-    @Bean
+    @Bean(name = "remoteTransactionManager")
     public PlatformTransactionManager remoteTransactionManager() throws Exception {
 	JpaTransactionManager transactionManager = new JpaTransactionManager();
 	transactionManager.setEntityManagerFactory(this.remoteEntityManagerFactory().getObject());

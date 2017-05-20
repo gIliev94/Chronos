@@ -26,7 +26,7 @@ public class LocalDBConfig {
     @Autowired
     private Environment env;
 
-    @Bean
+    @Bean(name = "localEntityManagerFactory")
     @Primary
     public LocalContainerEntityManagerFactoryBean localEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -50,7 +50,7 @@ public class LocalDBConfig {
 	return properties;
     }
 
-    @Bean
+    @Bean(name = "localTransactionManager")
     @Primary
     public PlatformTransactionManager localTransactionManager() throws Exception {
 	JpaTransactionManager transactionManager = new JpaTransactionManager();
