@@ -54,7 +54,7 @@ public final class DomainToDbMapper {
 	dbTask.setId(domainTask.getId());
 	dbTask.setName(domainTask.getName());
 	dbTask.setDescription(domainTask.getDescription());
-	dbTask.setEstimatedTimeHours(domainTask.getEstimatedTimeHours());
+	dbTask.setHoursEstimated(domainTask.getHoursEstimated());
 
 	domainToDbProject(domainTask.getProject()).addTask(dbTask);
 	domainToDbCategory(domainTask.getCategory()).addCategoricalEntity(dbTask);
@@ -80,6 +80,7 @@ public final class DomainToDbMapper {
 	dbBooking.setDescription(domainBooking.getDescription());
 	dbBooking.setStartTime(Date.from(domainBooking.getStartTime().atZone(ZoneId.systemDefault()).toInstant()));
 	dbBooking.setEndTime(Date.from(domainBooking.getEndTime().atZone(ZoneId.systemDefault()).toInstant()));
+	dbBooking.setHoursSpent(domainBooking.getHoursSpent());
 	// dbBooking.setOvertime(domainBooking.isOvertime());
 	// dbBooking.setEffectivelyStopped(domainBooking.isEffectivelyStopped());
 
@@ -89,7 +90,7 @@ public final class DomainToDbMapper {
 	return dbBooking;
     }
 
-    public static Role domainToDRole(DRole domainRole) {
+    public static Role domainToDbRole(DRole domainRole) {
 	Role dbRole = new Role();
 	dbRole.setId(domainRole.getId());
 	dbRole.setName(domainRole.getName());

@@ -4,10 +4,12 @@ import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
 
 interface IRemoveProject {
+    
+    boolean removeProject(long id);
+    
+    boolean removeProject(String name);
 
-    boolean removeProject(DProject performer);
+    boolean removeProject(DProject project);
 
-    boolean removeProject(String projectName);
-
-    boolean removeProjectsByClient(DCustomer client);
+    boolean removeProjects(DCustomer customer);
 }

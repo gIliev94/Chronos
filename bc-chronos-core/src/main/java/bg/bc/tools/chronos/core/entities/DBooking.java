@@ -19,6 +19,8 @@ public class DBooking {
 
     private LocalDateTime endTime;
 
+    private long hoursSpent;
+
     private DPerformer performer;
 
     private DRole role;
@@ -61,6 +63,14 @@ public class DBooking {
 
     public void setEndTime(LocalDateTime end) {
 	this.endTime = end;
+    }
+
+    public long getHoursSpent() {
+	return hoursSpent;
+    }
+
+    public void setHoursSpent(long hoursSpent) {
+	this.hoursSpent = hoursSpent;
     }
 
     public DPerformer getPerformer() {

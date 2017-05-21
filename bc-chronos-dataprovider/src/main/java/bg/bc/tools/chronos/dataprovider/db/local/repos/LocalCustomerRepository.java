@@ -8,13 +8,14 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 
 public interface LocalCustomerRepository extends CrudRepository<Customer, Long> {
-    
+
     Customer findByName(String name);
+
+    // Customer findByNameIgnoreCase(String name);
 
     Collection<Customer> findByNameIgnoreCaseContaining(String name);
 
-    //TODO: Useless?
-    Collection<Customer> findByCategoryIsNull();
+    // Collection<Customer> findByCategoryIsNull();
 
     Collection<Customer> findByCategory(Category category);
 

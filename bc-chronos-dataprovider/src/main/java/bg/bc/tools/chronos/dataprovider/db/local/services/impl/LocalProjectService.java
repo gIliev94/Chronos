@@ -36,12 +36,11 @@ public class LocalProjectService implements ILocalProjectService {
 	return true;
     }
 
-    
     @Override
     public DProject getProject(long id) {
 	return DbToDomainMapper.dbToDomainProject(projectRepo.findOne(id));
     }
-    
+
     @Override
     public DProject getProject(String name) {
 	return DbToDomainMapper.dbToDomainProject(projectRepo.findByName(name));
@@ -94,10 +93,10 @@ public class LocalProjectService implements ILocalProjectService {
     public boolean updateProject(DProject project) {
 	try {
 	    if (projectRepo.exists(project.getId())) {
-		LOGGER.info("Updating entity :: " + Project.class.getSimpleName() + " ::" + project.getName());
+		LOGGER.info("Updating entity :: " + Project.class.getSimpleName() + " :: " + project.getName());
 	    } else {
 		LOGGER.info(
-			"No entity found to update :: " + Project.class.getSimpleName() + " ::" + project.getName());
+			"No entity found to update :: " + Project.class.getSimpleName() + " :: " + project.getName());
 	    }
 
 	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
@@ -108,6 +107,12 @@ public class LocalProjectService implements ILocalProjectService {
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removeProject(long id) {
+	final Project project = projectRepo.findOne(id);
+	return removeProject(DbToDomainMapper.dbToDomainProject(project));
     }
 
     @Override
@@ -123,15 +128,16 @@ public class LocalProjectService implements ILocalProjectService {
     }
 
     @Override
-    public boolean removeProject(String projectName) {
-	Project project = projectRepo.findByName(projectName);
-	return removeProject(DbToDomainMapper.dbToDomainProject(project));
+    public boolean removeProject(String name) {
+	final Project dbProject = projectRepo.findByName(name);
+	return removeProject(DbToDomainMapper.dbToDomainProject(dbProject));
     }
 
     @Override
-    public boolean removeProjectsByClient(DCustomer client) {
+    public boolean removeProjects(DCustomer customer) {
 	try {
-	    client.getProjects().forEach(p -> projectRepo.delete(DomainToDbMapper.domainToDbProject(p)));
+	    customer.getProjects() // nl
+		    .forEach(p -> projectRepo.delete(DomainToDbMapper.domainToDbProject(p)));
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

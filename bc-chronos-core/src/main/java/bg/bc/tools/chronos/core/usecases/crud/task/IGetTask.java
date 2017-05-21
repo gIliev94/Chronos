@@ -22,9 +22,9 @@ interface IGetTask {
 
     List<DTask> getTasksContaining(String name);
 
-    List<DTask> getTasksEstimatedBetween(int estimatedTimeHoursLower, int estimatedTimeHoursUpper);
+    List<DTask> getTasksEstimatedBetween(int hoursEstimatedLower, int hoursEstimatedUpper);
 
-    List<DTask> getTasksEstimatedLessThan(int estimatedTimeHoursLessThan);
+    List<DTask> getTasksEstimatedLessThan(int hoursEstimatedLessThan);
 
-    List<DTask> getTasksEstimatedGreaterThan(int estimatedTimeHoursGreaterThan);
+    List<DTask> getTasksEstimatedGreaterThan(int hoursEstimatedGreaterThan);
 }

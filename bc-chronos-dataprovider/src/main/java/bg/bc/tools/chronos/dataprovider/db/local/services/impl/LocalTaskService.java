@@ -24,6 +24,7 @@ public class LocalTaskService implements ILocalTaskService {
     @Autowired
     private LocalTaskRepository taskRepo;
 
+
     @Override
     public boolean addTask(DTask task) {
 	try {
@@ -90,22 +91,22 @@ public class LocalTaskService implements ILocalTaskService {
     }
 
     @Override
-    public List<DTask> getTasksEstimatedBetween(int estimatedTimeHoursLower, int estimatedTimeHoursUpper) {
-	return taskRepo.findByEstimatedTimeHoursIn(estimatedTimeHoursLower, estimatedTimeHoursUpper).stream() // nl
+    public List<DTask> getTasksEstimatedBetween(int hoursEstimatedLower, int hoursEstimatedUpper) {
+	return taskRepo.findByHoursEstimatedBetween(hoursEstimatedLower, hoursEstimatedUpper).stream() // nl
 		.map(DbToDomainMapper::dbToDomainTask) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DTask> getTasksEstimatedLessThan(int estimatedTimeHoursLessThan) {
-	return taskRepo.findByEstimatedTimeHoursLessThan(estimatedTimeHoursLessThan).stream() // nl
+    public List<DTask> getTasksEstimatedLessThan(int hoursEstimatedLessThan) {
+	return taskRepo.findByHoursEstimatedLessThan(hoursEstimatedLessThan).stream() // nl
 		.map(DbToDomainMapper::dbToDomainTask) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DTask> getTasksEstimatedGreaterThan(int estimatedTimeHoursGreaterThan) {
-	return taskRepo.findByEstimatedTimeHoursGreaterThan(estimatedTimeHoursGreaterThan).stream() // nl
+    public List<DTask> getTasksEstimatedGreaterThan(int hoursEstimatedGreaterThan) {
+	return taskRepo.findByHoursEstimatedGreaterThan(hoursEstimatedGreaterThan).stream() // nl
 		.map(DbToDomainMapper::dbToDomainTask) // nl
 		.collect(Collectors.toList());
     }
@@ -114,9 +115,9 @@ public class LocalTaskService implements ILocalTaskService {
     public boolean updateTask(DTask task) {
 	try {
 	    if (taskRepo.exists(task.getId())) {
-		LOGGER.info("Updating entity :: " + Task.class.getSimpleName() + " ::" + task.getName());
+		LOGGER.info("Updating entity :: " + Task.class.getSimpleName() + " :: " + task.getName());
 	    } else {
-		LOGGER.info("No entity found to update :: " + Task.class.getSimpleName() + " ::" + task.getName());
+		LOGGER.info("No entity found to update :: " + Task.class.getSimpleName() + " :: " + task.getName());
 	    }
 
 	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
@@ -127,6 +128,12 @@ public class LocalTaskService implements ILocalTaskService {
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removeTask(long id) {
+	final Task dbTask = taskRepo.findOne(id);
+	return removeTask(DbToDomainMapper.dbToDomainTask(dbTask));
     }
 
     @Override
@@ -142,16 +149,21 @@ public class LocalTaskService implements ILocalTaskService {
     }
 
     @Override
-    public boolean removeTask(String taskName) {
-	final Task task = taskRepo.findByName(taskName);
+    public boolean removeTask(String name) {
+	final Task task = taskRepo.findByName(name);
 	return removeTask(DbToDomainMapper.dbToDomainTask(task));
     }
 
     @Override
-    public boolean removeTasksByProject(DProject project) {
-	final List<Task> dbTasks = project.getTasks().stream().map(DomainToDbMapper::domainToDbTask).collect(Collectors.toList());
-	dbTasks.forEach(t -> removeTask(DbToDomainMapper.dbToDomainTask(t)));
-	
+    public boolean removeTasks(DProject project) {
+	try {
+	    project.getTasks() // nl
+		    .forEach(t -> taskRepo.delete(DomainToDbMapper.domainToDbTask(t)));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
+
 	return true;
     }
 }

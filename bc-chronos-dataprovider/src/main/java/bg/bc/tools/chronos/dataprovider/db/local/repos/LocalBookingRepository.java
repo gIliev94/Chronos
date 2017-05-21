@@ -20,6 +20,12 @@ public interface LocalBookingRepository extends CrudRepository<Booking, Long> {
 
     Collection<Booking> findByDescriptionIgnoreCaseContaining(String description);
 
+    Collection<Booking> findByHoursSpentLessThan(long hoursSpentLessThan);
+
+    Collection<Booking> findByHoursSpentGreaterThan(long hoursSpentGreaterThan);
+
+    Collection<Booking> findByHoursSpentBetween(long hoursSpentLower, long hoursSpentUpper);
+
     Collection<Booking> findByStartTimeBefore(Date startTimeBefore);
 
     Collection<Booking> findByStartTimeAfter(Date startTimeAfter);
@@ -33,8 +39,6 @@ public interface LocalBookingRepository extends CrudRepository<Booking, Long> {
     Collection<Booking> findByEndTimeBetween(Date endTimeLower, Date endTimeUpper);
 
     Collection<Booking> findByPerformer(Performer performer);
-    
-    Collection<Booking> findByRole(Role role);
 
     Collection<Booking> findByPerformerAndRole(Performer performer, Role role);
 

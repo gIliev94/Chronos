@@ -1,9 +1,9 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Collection;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DPerformer;
+import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
@@ -30,7 +34,7 @@ public class LocalBookingService implements ILocalBookingService {
 
     @Override
     public boolean addBooking(DBooking booking) {
-	// TODO: REFACTOR
+	// TODO: Impl at later stage
 	// final HolidayManager holidayManager = HolidayManager
 	// .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
 	// final Set<Holiday> holidays =
@@ -39,11 +43,6 @@ public class LocalBookingService implements ILocalBookingService {
 	//
 	// booking.setOvertime(!holidays.isEmpty());
 	// booking.setEffectivelyStopped(false);
-
-	if (bookingRepo.exists(booking.getId())) {
-	    // LOGGER.error(...);
-	    return false;
-	}
 
 	try {
 	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
@@ -57,14 +56,8 @@ public class LocalBookingService implements ILocalBookingService {
 
     @Override
     public DBooking getBooking(long id) {
-	return DbToDomainMapper.dbToDomainBooking(bookingRepo.findOne(id));
-    }
-
-    @Override
-    public DBooking getEffectivelyStoppedBooking(boolean isEffectivelyStopped) {
-	// return
-	// DbToDomainMapper.dbToDomainBooking(bookingRepo.findByIsEffectivelyStopped(isEffectivelyStopped));
-	return null;
+	final Booking dbBooking = bookingRepo.findOne(id);
+	return DbToDomainMapper.dbToDomainBooking(dbBooking);
     }
 
     @Override
@@ -75,25 +68,62 @@ public class LocalBookingService implements ILocalBookingService {
     }
 
     @Override
+    public List<DBooking> getBookingsContaining(String desription) {
+	return bookingRepo.findByDescriptionIgnoreCaseContaining(desription).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
     public List<DBooking> getBookings(DPerformer performer) {
-	return ((List<Booking>) bookingRepo.findAll()).stream() // nl
-		.filter(b -> Objects.equals(performer, b.getPerformer())) // nl
+	final Performer dbPerformer = DomainToDbMapper.domainToDbPerformer(performer);
+
+	return bookingRepo.findByPerformer(dbPerformer).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookings(DPerformer performer, DRole role) {
+	final Performer dbPerformer = DomainToDbMapper.domainToDbPerformer(performer);
+	final Role dbRole = DomainToDbMapper.domainToDbRole(role);
+
+	return bookingRepo.findByPerformerAndRole(dbPerformer, dbRole).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
     public List<DBooking> getBookings(DTask task) {
-	return ((List<Booking>) bookingRepo.findAll()).stream() // nl
-		.filter(b -> Objects.equals(task, b.getTask())) // nl
+	final Task dbTask = DomainToDbMapper.domainToDbTask(task);
+
+	return bookingRepo.findByTask(dbTask).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DBooking> getBookingsIn(LocalDateTime betweenStartTime, LocalDateTime betweenEndTime) {
-	final Date fromTime = Date.from(betweenStartTime.atZone(ZoneId.systemDefault()).toInstant());
-	final Date toTime = Date.from(betweenEndTime.atZone(ZoneId.systemDefault()).toInstant());
+    public List<DBooking> getBookingsStartedBefore(LocalDateTime startTimeBefore) {
+	final Date beforeTime = Date.from(startTimeBefore.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByStartTimeBefore(beforeTime).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookingsStartedAfter(LocalDateTime startTimeAfter) {
+	final Date afterTime = Date.from(startTimeAfter.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByStartTimeBefore(afterTime).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookingsStartedBetween(LocalDateTime startTimeLower, LocalDateTime startTimeUpper) {
+	final Date fromTime = Date.from(startTimeLower.atZone(ZoneId.systemDefault()).toInstant());
+	final Date toTime = Date.from(startTimeUpper.atZone(ZoneId.systemDefault()).toInstant());
 
 	return bookingRepo.findByStartTimeBetween(fromTime, toTime).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
@@ -101,39 +131,63 @@ public class LocalBookingService implements ILocalBookingService {
     }
 
     @Override
-    public List<DBooking> getBookinsShorterThan(LocalTime timeSpentUnder) {
-	// return ((List<Booking>) bookingRepo.findAll()).stream() // nl
-	// .filter(b ->
-	// b.getStartTime().toLocalTime().plusHours(b.getEndTime().toInstant(null))
-	// < timeSpentUnder.getLong(ChronoUnit.HOURS)) // nl
-	// .map(DbToDomainMapper::dbToDomainBooking) // nl
-	// .collect(Collectors.toList());
+    public List<DBooking> getBookingsFinishedBefore(LocalDateTime endTimeBefore) {
+	final Date beforeTime = Date.from(endTimeBefore.atZone(ZoneId.systemDefault()).toInstant());
 
-	return null;
+	return bookingRepo.findByEndTimeBefore(beforeTime).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DBooking> getBookingsLongerThan(LocalTime timeSpentOver) {
-	// TODO Auto-generated method stub
-	return null;
+    public List<DBooking> getBookingsFinishedAfter(LocalDateTime endTimeAfter) {
+	final Date afterTime = Date.from(endTimeAfter.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByEndTimeAfter(afterTime).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
-    public List<DBooking> getOvertimeBookings(boolean isOvertime) {
-	// return bookingRepo.findByIsOvertime(isOvertime).stream() // nl
-	// .map(DbToDomainMapper::dbToDomainBooking) // nl
-	// .collect(Collectors.toList());
-	return null;
+    public List<DBooking> getBookingsFinishedBetween(LocalDateTime endTimeLower, LocalDateTime endTimeUpper) {
+	final Date fromTime = Date.from(endTimeLower.atZone(ZoneId.systemDefault()).toInstant());
+	final Date toTime = Date.from(endTimeUpper.atZone(ZoneId.systemDefault()).toInstant());
+
+	return bookingRepo.findByEndTimeBetween(fromTime, toTime).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookingsForHoursSpentLessThan(int hoursSpentLessThan) {
+	return bookingRepo.findByHoursSpentLessThan(hoursSpentLessThan).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookingsForHoursSpentGreaterThan(int hoursSpentGreaterThan) {
+	return bookingRepo.findByHoursSpentGreaterThan(hoursSpentGreaterThan).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBooking> getBookingsForHoursSpentBetween(int hoursSpentLower, int hoursSpentUpper) {
+	return bookingRepo.findByHoursSpentBetween(hoursSpentLower, hoursSpentUpper).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBooking) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
     public boolean updateBooking(DBooking booking) {
 	try {
 	    if (bookingRepo.exists(booking.getId())) {
-		LOGGER.info("Updating entity :: " + Booking.class.getSimpleName() + " ::" + booking.getId());
+		LOGGER.info("Updating entity :: " + Booking.class.getSimpleName() + " :: " + booking.getId());
 
 	    } else {
-		LOGGER.error("No entity found to update :: " + Booking.class.getSimpleName() + " ::" + booking.getId());
+		LOGGER.error(
+			"No entity found to update :: " + Booking.class.getSimpleName() + " :: " + booking.getId());
 	    }
 
 	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
@@ -144,6 +198,12 @@ public class LocalBookingService implements ILocalBookingService {
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removeBooking(long id) {
+	final Booking dbBooking = bookingRepo.findOne(id);
+	return removeBooking(DbToDomainMapper.dbToDomainBooking(dbBooking));
     }
 
     @Override
@@ -159,86 +219,86 @@ public class LocalBookingService implements ILocalBookingService {
     }
 
     @Override
-    public boolean removeBooking(long id) {
-	final Booking booking = bookingRepo.findOne(id);
-	return removeBooking(DbToDomainMapper.dbToDomainBooking(booking));
-    }
+    public boolean removeBookings(DTask task) {
+	try {
+	    task.getBookings() // nl
+		    .forEach(b -> bookingRepo.delete(DomainToDbMapper.domainToDbBooking(b)));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
 
-    @Override
-    public boolean removeBookingsByTask(DTask task) {
-	final Collection<Booking> bookings = bookingRepo.findByTask(DomainToDbMapper.domainToDbTask(task));
-	bookings.forEach(b -> removeBooking(DbToDomainMapper.dbToDomainBooking(b)));
-
-	// TODO: REFACTOR
 	return true;
     }
 
     @Override
-    public boolean removeBookingsByPerfomer(DPerformer performer) {
-	final Collection<Booking> bookings = bookingRepo
-		.findByPerformer(DomainToDbMapper.domainToDbPerformer(performer));
-	bookings.forEach(b -> removeBooking(DbToDomainMapper.dbToDomainBooking(b)));
+    public boolean removeBookings(DPerformer performer) {
+	try {
+	    performer.getBookings() // nl
+		    .forEach(b -> bookingRepo.delete(DomainToDbMapper.domainToDbBooking(b)));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
 
-	// TODO: REFACTOR
 	return true;
-    }
-
-    @Override
-    public boolean removeBookingsByTimeSpent(LocalTime timeSpent) {
-	// TODO Auto-generated method stub
-	return false;
-    }
-
-    @Override
-    public boolean removeBookingsByOvertime(boolean isOvertime) {
-	getOvertimeBookings(isOvertime).stream() // nl
-		.map(DomainToDbMapper::domainToDbBooking) // nl
-		.forEach(b -> removeBooking(DbToDomainMapper.dbToDomainBooking(b)));
-
-	// TODO: REFACTOR
-	return false;
-    }
-
-    @Override
-    public void stopBooking(DBooking booking) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public void startBooking(DBooking booking) {
-	// TODO Auto-generated method stub
+	booking.setStartTime(LocalDateTime.now());
 
+	updateBooking(booking);
     }
 
     @Override
-    public void scheduleBookingAsDefault(DBooking booking) {
-	// TODO Auto-generated method stub
+    public void stopBooking(DBooking booking) {
+	booking.setEndTime(LocalDateTime.now());
 
-    }
+	final long hoursSpent = Duration.between(booking.getEndTime(), booking.getStartTime()) // nl
+		.get(ChronoUnit.HOURS);
+	booking.setHoursSpent(hoursSpent);
 
-    @Override
-    public void scheduleBookingAfter(DBooking booking, DBooking previousBooking) {
-	// TODO Auto-generated method stub
-
+	updateBooking(booking);
     }
 
     @Override
     public void resumeBooking(DBooking booking) {
-	// TODO Auto-generated method stub
+	if (booking.getEndTime() == null || Objects.equals(booking.getEndTime(), LocalDateTime.MIN)) {
+	    return;
+	}
 
+	booking.setEndTime(LocalDateTime.MIN);
     }
 
     @Override
     public void pauseBooking(DBooking booking) {
-	// TODO Auto-generated method stub
+	if (booking.getStartTime() == null || Objects.equals(booking.getStartTime(), LocalDateTime.MIN)) {
+	    return;
+	}
 
+	stopBooking(booking);
     }
 
     @Override
-    public DBooking mergeBookings(DBooking booking1, DBooking booking2) {
-	// TODO: Refactor
-	return null;
+    public void scheduleBookingAsDefault(DBooking booking) {
+	// TODO: Impl
     }
 
+    @Override
+    public void scheduleBookingAfter(DBooking booking, DBooking previousBooking) {
+	// TODO: Impl
+    }
+
+    // @Override
+    // public void scheduleBookingBefore(DBooking booking, DBooking
+    // previousBooking) {
+    //
+    // }
+
+    @Override
+    public DBooking mergeBookings(DBooking booking1, DBooking booking2) {
+	// TODO: Impl
+	return null;
+    }
 }

@@ -82,10 +82,10 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     public boolean updateCustomer(DCustomer customer) {
 	try {
 	    if (customerRepo.exists(customer.getId())) {
-		LOGGER.info("Updating entity :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
+		LOGGER.info("Updating entity :: " + Customer.class.getSimpleName() + " :: " + customer.getName());
 	    } else {
 		LOGGER.info(
-			"No entity found to update :: " + Customer.class.getSimpleName() + " ::" + customer.getName());
+			"No entity found to update :: " + Customer.class.getSimpleName() + " :: " + customer.getName());
 	    }
 
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
@@ -96,6 +96,12 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removeCustomer(long id) {
+	final Customer dbCustomer = customerRepo.findOne(id);
+	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(dbCustomer));
     }
 
     @Override
@@ -111,8 +117,23 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     }
 
     @Override
-    public boolean removeCustomer(String customerName) {
-	final Customer customer = customerRepo.findByName(customerName);
-	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(customer));
+    public boolean removeCustomer(String name) {
+	final Customer dbCustomer = customerRepo.findByName(name);
+	return removeCustomer(DbToDomainMapper.dbToDomainCustomer(dbCustomer));
+    }
+
+    @Override
+    public boolean removeCustomers(DCategory category) {
+	try {
+	    final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
+
+	    customerRepo.findByCategory(dbCategory) // nl
+		    .forEach(c -> removeCustomer(c.getId()));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
+
+	return true;
     }
 }

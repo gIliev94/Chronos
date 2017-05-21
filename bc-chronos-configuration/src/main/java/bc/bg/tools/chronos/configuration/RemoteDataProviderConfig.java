@@ -9,6 +9,7 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCategorySe
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemotePerformerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteProjectService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteRoleService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteTaskService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteBookingService;
@@ -16,6 +17,7 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteCategorySe
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemotePerformerService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteProjectService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteRoleService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteTaskService;
 
 @Configuration
@@ -56,4 +58,8 @@ public class RemoteDataProviderConfig {
 	return new RemoteBookingService();
     }
 
+    @Bean(name = "remoteRoleService")
+    public IRemoteRoleService roleService() {
+	return new RemoteRoleService();
+    }
 }

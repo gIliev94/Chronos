@@ -29,8 +29,8 @@ public class Task extends CategoricalEntity implements Serializable {
 
     @Column(unique = false, nullable = false)
     // @Temporal(TemporalType.TIME)
-    private int estimatedTimeHours;
-    
+    private long hoursEstimated;
+
     @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Project project;
 
@@ -45,14 +45,14 @@ public class Task extends CategoricalEntity implements Serializable {
     // this.phase = phase;
     // }
 
-    public int getEstimatedTimeHours() {
-	return estimatedTimeHours;
+    public long getHoursEstimated() {
+	return hoursEstimated;
     }
 
-    public void setEstimatedTimeHours(int estimatedTimeHours) {
-	this.estimatedTimeHours = estimatedTimeHours;
+    public void setHoursEstimated(long hoursEstimated) {
+	this.hoursEstimated = hoursEstimated;
     }
-    
+
     public Project getProject() {
 	return project;
     }

@@ -8,9 +8,7 @@ interface IGetCategory {
 
     DCategory getCategory(long id);
 
+    DCategory getCategory(String name);
+
     List<DCategory> getCategories();
-
-    List<DCategory> getCategories(String name);
-
-    List<DCategory> getCategories(String name, int sortOrder);
 }

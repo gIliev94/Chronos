@@ -33,8 +33,19 @@ public class LocalPerformerService implements ILocalPerformerService {
     }
 
     @Override
+    public DPerformer getPerformer(long id) {
+	final Performer dbPerformer = performerRepo.findOne(id);
+	return DbToDomainMapper.dbToDomainPerformer(dbPerformer);
+    }
+
+    @Override
     public DPerformer getPerformer(String handle) {
 	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+    }
+
+    @Override
+    public DPerformer getPerformerByEmail(String email) {
+	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
     }
 
     @Override
@@ -52,12 +63,19 @@ public class LocalPerformerService implements ILocalPerformerService {
     }
 
     @Override
+    public List<DPerformer> getLoggedPerformers() {
+	return performerRepo.findByIsLoggedTrue().stream() // nlS
+		.map(DbToDomainMapper::dbToDomainPerformer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
     public boolean updatePerformer(DPerformer performer) {
 	try {
 	    if (performerRepo.exists(performer.getId())) {
-		LOGGER.info("Updating entity :: " + Performer.class.getSimpleName() + " ::" + performer.getName());
+		LOGGER.info("Updating entity :: " + Performer.class.getSimpleName() + " :: " + performer.getName());
 	    } else {
-		LOGGER.info("No entity found to update :: " + Performer.class.getSimpleName() + " ::"
+		LOGGER.info("No entity found to update :: " + Performer.class.getSimpleName() + " :: "
 			+ performer.getName());
 	    }
 
@@ -69,6 +87,12 @@ public class LocalPerformerService implements ILocalPerformerService {
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removePerformer(long id) {
+	final Performer dbPerformer = performerRepo.findOne(id);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
     }
 
     @Override
@@ -84,8 +108,14 @@ public class LocalPerformerService implements ILocalPerformerService {
     }
 
     @Override
-    public boolean removePerformer(String performerHandle) {
-	Performer performer = performerRepo.findByHandle(performerHandle);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(performer));
+    public boolean removePerformer(String handle) {
+	final Performer dbPerformer = performerRepo.findByHandle(handle);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+    }
+
+    @Override
+    public boolean removePerformerByEmail(String email) {
+	final Performer dbPerformer = performerRepo.findByEmail(email);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
     }
 }

@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Settings" xmlns:tns="http://www.example.org/Settings" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Settings"
+	xmlns:tns="http://www.example.org/Settings" elementFormDefault="qualified">
+	<!-- TODO: Parse all user-specific(view-specific) configuration here(will 
+		not be in DB) -->
+
+	<!-- TODO: Hidden objects here - like categories... -->
+
+
 </schema>

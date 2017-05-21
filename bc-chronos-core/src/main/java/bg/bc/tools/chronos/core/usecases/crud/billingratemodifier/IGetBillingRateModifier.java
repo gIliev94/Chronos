@@ -1,24 +1,34 @@
 package bg.bc.tools.chronos.core.usecases.crud.billingratemodifier;
 
-import java.util.Collection;
+import java.util.List;
 
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
+import bg.bc.tools.chronos.core.entities.DBillingRateModifier.DModifierAction;
 import bg.bc.tools.chronos.core.entities.DBooking;
-import bg.bc.tools.chronos.core.entities.DPerformer;
-import bg.bc.tools.chronos.core.entities.DRole;
-import bg.bc.tools.chronos.core.entities.DTask;
 
 interface IGetBillingRateModifier {
 
     DBillingRateModifier getBillingRateModifier(long id);
 
-    Collection<DBillingRateModifier> getBillingRateModifiers();
+    List<DBillingRateModifier> getBillingRateModifiers();
 
-    Collection<DBillingRateModifier> getBillingRateModifiers(DBooking booking);
+    List<DBillingRateModifier> getBillingRateModifiers(DModifierAction modifierAction);
 
-    Collection<DBillingRateModifier> getBillingRateModifiers(DRole role);
+    List<DBillingRateModifier> getBillingRateModifiers(List<DModifierAction> modifierActions);
 
-    Collection<DBillingRateModifier> getBillingRateModifiers(DPerformer performer);
+    List<DBillingRateModifier> getBillingRateModifiers(DBooking booking);
 
-    Collection<DBillingRateModifier> getBillingRateModifiers(DTask task);
+    List<DBillingRateModifier> getBillingRateModifiers(double modifierValue);
+
+    List<DBillingRateModifier> getBillingRateModifiersLessThan(double modifierValueLessThan);
+
+    List<DBillingRateModifier> getBillingRateModifiersGreaterThan(double modifierValueGreaterThan);
+
+    List<DBillingRateModifier> getBillingRateModifiersBetween(double modifierValueLower, double modifierValueUpper);
+
+    // List<DBillingRateModifier> getBillingRateModifiers(DRole role);
+    //
+    // List<DBillingRateModifier> getBillingRateModifiers(DPerformer performer);
+    //
+    // List<DBillingRateModifier> getBillingRateModifiers(DTask task);
 }

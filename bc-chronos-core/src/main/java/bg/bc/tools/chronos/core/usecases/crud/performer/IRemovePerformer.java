@@ -4,7 +4,11 @@ import bg.bc.tools.chronos.core.entities.DPerformer;
 
 interface IRemovePerformer {
 
-    boolean removePerformer(DPerformer performer);
+    boolean removePerformer(long id);
 
-    boolean removePerformer(String performerHandle);
+    boolean removePerformer(String handle);
+
+    boolean removePerformerByEmail(String email);
+
+    boolean removePerformer(DPerformer performer);
 }

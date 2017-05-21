@@ -14,17 +14,17 @@ public interface RemoteTaskRepository extends CrudRepository<Task, Long> {
 
     Collection<Task> findByNameIgnoreCaseContaining(String name);
 
-    Collection<Task> findByCategoryIsNull();
+    // Collection<Task> findByCategoryIsNull();
 
     Collection<Task> findByCategory(Category category);
 
     Collection<Task> findByCategoryIn(Collection<Category> categories);
 
-    Collection<Task> findByEstimatedTimeHoursIn(int estimatedTimeHoursLower, int estimatedTimeHoursUpper);
+    Collection<Task> findByHoursEstimatedBetween(long hoursEstimatedLower, long hoursEstimatedUpper);
 
-    Collection<Task> findByEstimatedTimeHoursLessThan(int estimatedTimeHoursLessThan);
+    Collection<Task> findByHoursEstimatedLessThan(long hoursEstimatedLessThan);
 
-    Collection<Task> findByEstimatedTimeHoursGreaterThan(int estimatedTimeHoursGreaterThan);
+    Collection<Task> findByHoursEstimatedGreaterThan(long hoursEstimatedGreaterThan);
 
     Collection<Task> findByProject(Project project);
 }

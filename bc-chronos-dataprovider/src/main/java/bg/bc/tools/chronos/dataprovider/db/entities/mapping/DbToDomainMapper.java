@@ -54,7 +54,7 @@ public final class DbToDomainMapper {
 	domainTask.setId(dbTask.getId());
 	domainTask.setName(dbTask.getName());
 	domainTask.setDescription(dbTask.getDescription());
-	domainTask.setEstimatedTimeHours(dbTask.getEstimatedTimeHours());
+	domainTask.setHoursEstimated(dbTask.getHoursEstimated());
 	// TODO: CONVERSION
 	// final Date estimatedTime = dbTask.getEstimatedTime();
 	// final Calendar calendar = Calendar.getInstance();
@@ -87,6 +87,11 @@ public final class DbToDomainMapper {
 	domainBooking
 		.setStartTime(LocalDateTime.ofInstant(dbBooking.getStartTime().toInstant(), ZoneId.systemDefault()));
 	domainBooking.setEndTime(LocalDateTime.ofInstant(dbBooking.getEndTime().toInstant(), ZoneId.systemDefault()));
+	domainBooking.setHoursSpent(dbBooking.getHoursSpent());
+	// TODO: CACL way
+	// Duration.between(domainBooking.getEndTime(),
+	// domainBooking.getStartTime()).get(ChronoUnit.HOURS)
+
 	// domainBooking.setOvertime(dbBooking.isOvertime());
 	// domainBooking.setEffectivelyStopped(dbBooking.isEffectivelyStopped());
 
@@ -104,7 +109,7 @@ public final class DbToDomainMapper {
 
 	domainRole.setBooking(dbToDomainBooking(dbRole.getBooking()));
 	dbToDomainBooking(dbRole.getBooking()).setRole(domainRole);
-	
+
 	dbToDomainCategory(dbRole.getCategory()).addCategoricalEntity(domainRole);
 
 	return domainRole;

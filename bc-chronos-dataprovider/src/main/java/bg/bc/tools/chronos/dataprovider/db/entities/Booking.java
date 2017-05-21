@@ -33,6 +33,9 @@ public class Booking {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    @Column(unique = false, nullable = false)
+    private long hoursSpent;
+
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Performer performer;
 
@@ -81,6 +84,14 @@ public class Booking {
 
     public void setEndTime(Date endTime) {
 	this.endTime = endTime;
+    }
+
+    public long getHoursSpent() {
+	return hoursSpent;
+    }
+
+    public void setHoursSpent(long hoursSpent) {
+	this.hoursSpent = hoursSpent;
     }
 
     public Performer getPerformer() {

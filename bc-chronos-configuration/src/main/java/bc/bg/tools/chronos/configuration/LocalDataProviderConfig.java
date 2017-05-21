@@ -9,6 +9,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryServ
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBookingService;
@@ -16,6 +17,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCategoryServ
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 
 @Configuration
@@ -56,4 +58,8 @@ public class LocalDataProviderConfig {
 	return new LocalBookingService();
     }
 
+    @Bean(name = "localRoleService")
+    public ILocalRoleService roleService() {
+	return new LocalRoleService();
+    }
 }

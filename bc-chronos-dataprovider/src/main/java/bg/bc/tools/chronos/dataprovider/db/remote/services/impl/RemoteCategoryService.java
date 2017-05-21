@@ -3,6 +3,7 @@ package bg.bc.tools.chronos.dataprovider.db.remote.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -14,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCategorySe
 
 public class RemoteCategoryService implements IRemoteCategoryService {
 
+    private static final Logger LOGGER = Logger.getLogger(RemoteCategoryService.class);
+
     @Autowired
     private RemoteCategoryRepository categoryRepo;
 
@@ -22,7 +25,7 @@ public class RemoteCategoryService implements IRemoteCategoryService {
 	try {
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -35,22 +38,13 @@ public class RemoteCategoryService implements IRemoteCategoryService {
     }
 
     @Override
+    public DCategory getCategory(String name) {
+	return DbToDomainMapper.dbToDomainCategory(categoryRepo.findByName(name));
+    }
+
+    @Override
     public List<DCategory> getCategories() {
 	return ((List<Category>) categoryRepo.findAll()).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCategory) // nl
-		.collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DCategory> getCategories(String name) {
-	return categoryRepo.findByName(name).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCategory) // nl
-		.collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DCategory> getCategories(String name, int sortOrder) {
-	return categoryRepo.findByNameAndSortOrder(name, sortOrder).stream() // nl
 		.map(DbToDomainMapper::dbToDomainCategory) // nl
 		.collect(Collectors.toList());
     }
@@ -59,32 +53,16 @@ public class RemoteCategoryService implements IRemoteCategoryService {
     public boolean updateCategory(DCategory category) {
 	try {
 	    if (categoryRepo.exists(category.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Category.class.getSimpleName() + " ::" +
-		// category.getName());
-
+		LOGGER.info("Updating entity :: " + Category.class.getSimpleName() + " ::" + category.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Category.class.getSimpleName() + " ::" +
-		// category.getName());
+		LOGGER.info(
+			"No entity found to update :: " + Category.class.getSimpleName() + " ::" + category.getName());
 	    }
 
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
-    }
-
-    @Override
-    public boolean removeCategory(DCategory category) {
-	try {
-	    categoryRepo.delete(DomainToDbMapper.domainToDbCategory(category));
-	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -93,36 +71,25 @@ public class RemoteCategoryService implements IRemoteCategoryService {
 
     @Override
     public boolean removeCategory(long id) {
-	final Category category = categoryRepo.findOne(id);
-	return removeCategory(DbToDomainMapper.dbToDomainCategory(category));
+	final Category dbCategory = categoryRepo.findOne(id);
+	return removeCategory(DbToDomainMapper.dbToDomainCategory(dbCategory));
     }
 
     @Override
     public boolean removeCategory(String name) {
-	try {
-	    categoryRepo.findByName(name).forEach(c -> {
-		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
-	    });
-	} catch (Exception e) {
-	    // LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+	final Category dbCategory = categoryRepo.findByName(name);
+	return removeCategory(DbToDomainMapper.dbToDomainCategory(dbCategory));
     }
 
     @Override
-    public boolean removeCategory(String name, int sortOrder) {
+    public boolean removeCategory(DCategory category) {
 	try {
-	    categoryRepo.findByNameAndSortOrder(name, sortOrder).forEach(c -> {
-		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
-	    });
+	    categoryRepo.delete(DomainToDbMapper.domainToDbCategory(category));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
 	return true;
     }
-
 }

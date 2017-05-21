@@ -38,22 +38,13 @@ public class LocalCategoryService implements ILocalCategoryService {
     }
 
     @Override
+    public DCategory getCategory(String name) {
+	return DbToDomainMapper.dbToDomainCategory(categoryRepo.findByName(name));
+    }
+
+    @Override
     public List<DCategory> getCategories() {
 	return ((List<Category>) categoryRepo.findAll()).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCategory) // nl
-		.collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DCategory> getCategories(String name) {
-	return categoryRepo.findByName(name).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCategory) // nl
-		.collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DCategory> getCategories(String name, int sortOrder) {
-	return categoryRepo.findByNameAndSortOrder(name, sortOrder).stream() // nl
 		.map(DbToDomainMapper::dbToDomainCategory) // nl
 		.collect(Collectors.toList());
     }
@@ -62,10 +53,10 @@ public class LocalCategoryService implements ILocalCategoryService {
     public boolean updateCategory(DCategory category) {
 	try {
 	    if (categoryRepo.exists(category.getId())) {
-		LOGGER.info("Updating entity :: " + Category.class.getSimpleName() + " ::" + category.getName());
+		LOGGER.info("Updating entity :: " + Category.class.getSimpleName() + " :: " + category.getName());
 	    } else {
 		LOGGER.info(
-			"No entity found to update :: " + Category.class.getSimpleName() + " ::" + category.getName());
+			"No entity found to update :: " + Category.class.getSimpleName() + " :: " + category.getName());
 	    }
 
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
@@ -79,6 +70,18 @@ public class LocalCategoryService implements ILocalCategoryService {
     }
 
     @Override
+    public boolean removeCategory(long id) {
+	final Category dbCategory = categoryRepo.findOne(id);
+	return removeCategory(DbToDomainMapper.dbToDomainCategory(dbCategory));
+    }
+
+    @Override
+    public boolean removeCategory(String name) {
+	final Category dbCategory = categoryRepo.findByName(name);
+	return removeCategory(DbToDomainMapper.dbToDomainCategory(dbCategory));
+    }
+
+    @Override
     public boolean removeCategory(DCategory category) {
 	try {
 	    categoryRepo.delete(DomainToDbMapper.domainToDbCategory(category));
@@ -89,39 +92,4 @@ public class LocalCategoryService implements ILocalCategoryService {
 
 	return true;
     }
-
-    @Override
-    public boolean removeCategory(long id) {
-	final Category category = categoryRepo.findOne(id);
-	return removeCategory(DbToDomainMapper.dbToDomainCategory(category));
-    }
-
-    @Override
-    public boolean removeCategory(String name) {
-	try {
-	    categoryRepo.findByName(name).forEach(c -> {
-		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
-	    });
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
-    }
-
-    @Override
-    public boolean removeCategory(String name, int sortOrder) {
-	try {
-	    categoryRepo.findByNameAndSortOrder(name, sortOrder).forEach(c -> {
-		removeCategory(DbToDomainMapper.dbToDomainCategory(c));
-	    });
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
-    }
-
 }

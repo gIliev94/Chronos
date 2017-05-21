@@ -17,7 +17,7 @@ public class DTask extends DCategoricalEntity {
     //
     // private DTaskPhase phase;
 
-    private int estimatedTimeHours;
+    private long hoursEstimated;
 
     private DProject project;
 
@@ -31,12 +31,12 @@ public class DTask extends DCategoricalEntity {
     // this.phase = phase;
     // }
 
-    public int getEstimatedTimeHours() {
-	return estimatedTimeHours;
+    public long getHoursEstimated() {
+	return hoursEstimated;
     }
 
-    public void setEstimatedTimeHours(int estimatedTimeHours) {
-	this.estimatedTimeHours = estimatedTimeHours;
+    public void setHoursEstimated(long hoursEstimated) {
+	this.hoursEstimated = hoursEstimated;
     }
 
     public DProject getProject() {

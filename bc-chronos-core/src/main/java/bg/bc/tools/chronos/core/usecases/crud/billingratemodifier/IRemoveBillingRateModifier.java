@@ -2,9 +2,6 @@ package bg.bc.tools.chronos.core.usecases.crud.billingratemodifier;
 
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBooking;
-import bg.bc.tools.chronos.core.entities.DPerformer;
-import bg.bc.tools.chronos.core.entities.DRole;
-import bg.bc.tools.chronos.core.entities.DTask;
 
 interface IRemoveBillingRateModifier {
 
@@ -14,10 +11,10 @@ interface IRemoveBillingRateModifier {
 
     boolean removeBillingRateModifiers(DBooking booking);
 
-    boolean removeBillingRateModifiers(DRole role);
-
-    boolean removeBillingRateModifiers(DPerformer performer);
-
-    boolean removeBillingRateModifiers(DTask task);
+    // boolean removeBillingRateModifiers(DRole role);
+    //
+    // boolean removeBillingRateModifiers(DPerformer performer);
+    //
+    // boolean removeBillingRateModifiers(DTask task);
 
 }

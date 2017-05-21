@@ -5,9 +5,11 @@ import bg.bc.tools.chronos.core.entities.DTask;
 
 interface IRemoveTask {
 
+    boolean removeTask(long id);
+
     boolean removeTask(DTask task);
 
-    boolean removeTask(String taskName);
+    boolean removeTask(String name);
 
-    boolean removeTasksByProject(DProject project);
+    boolean removeTasks(DProject project);
 }

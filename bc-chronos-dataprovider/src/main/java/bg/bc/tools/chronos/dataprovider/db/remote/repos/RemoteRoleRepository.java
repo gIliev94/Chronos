@@ -13,18 +13,18 @@ public interface RemoteRoleRepository extends CrudRepository<Role, Long> {
     Role findByName(String name);
 
     Collection<Role> findByNameIgnoreCaseContaining(String name);
-    
-    Collection<Role> findByCategoryIsNull();
+
+    // Collection<Role> findByCategoryIsNull();
 
     Collection<Role> findByCategory(Category category);
 
     Collection<Role> findByCategoryIn(Collection<Category> categories);
 
-    Collection<Role> findByBillingRateIn(double billingRateLower, double billingRateUpper);
-
     Collection<Role> findByBillingRateLessThan(double billingRateLessThan);
 
     Collection<Role> findByBillingRateGreaterThan(double billingRateGreaterThan);
+
+    Collection<Role> findByBillingRateBetween(double billingRateLower, double billingRateUpper);
 
     Role findByBooking(Booking booking);
 }

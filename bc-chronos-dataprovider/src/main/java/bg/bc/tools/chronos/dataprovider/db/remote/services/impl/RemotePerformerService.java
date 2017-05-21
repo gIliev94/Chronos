@@ -3,6 +3,7 @@ package bg.bc.tools.chronos.dataprovider.db.remote.services.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DPerformer;
@@ -14,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemotePerformerS
 
 public class RemotePerformerService implements IRemotePerformerService {
 
+    private static final Logger LOGGER = Logger.getLogger(RemotePerformerService.class);
+
     @Autowired
     private RemotePerformerRepository performerRepo;
 
@@ -22,7 +25,7 @@ public class RemotePerformerService implements IRemotePerformerService {
 	try {
 	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -30,8 +33,19 @@ public class RemotePerformerService implements IRemotePerformerService {
     }
 
     @Override
+    public DPerformer getPerformer(long id) {
+	final Performer dbPerformer = performerRepo.findOne(id);
+	return DbToDomainMapper.dbToDomainPerformer(dbPerformer);
+    }
+
+    @Override
     public DPerformer getPerformer(String handle) {
 	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+    }
+
+    @Override
+    public DPerformer getPerformerByEmail(String email) {
+	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
     }
 
     @Override
@@ -49,27 +63,36 @@ public class RemotePerformerService implements IRemotePerformerService {
     }
 
     @Override
+    public List<DPerformer> getLoggedPerformers() {
+	return performerRepo.findByIsLoggedTrue().stream() // nlS
+		.map(DbToDomainMapper::dbToDomainPerformer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
     public boolean updatePerformer(DPerformer performer) {
 	try {
 	    if (performerRepo.exists(performer.getId())) {
-		// LOGGER.info("Updating entity :: " +
-		// Performer.class.getSimpleName() + " ::" +
-		// performer.getName());
-
+		LOGGER.info("Updating entity :: " + Performer.class.getSimpleName() + " :: " + performer.getName());
 	    } else {
-		// LOGGER.info("No entity found to update :: " +
-		// Performer.class.getSimpleName() + " ::" +
-		// performer.getName());
+		LOGGER.info("No entity found to update :: " + Performer.class.getSimpleName() + " :: "
+			+ performer.getName());
 	    }
 
 	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
 	return true;
+    }
+
+    @Override
+    public boolean removePerformer(long id) {
+	final Performer dbPerformer = performerRepo.findOne(id);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
     }
 
     @Override
@@ -77,7 +100,7 @@ public class RemotePerformerService implements IRemotePerformerService {
 	try {
 	    performerRepo.delete(DomainToDbMapper.domainToDbPerformer(performer));
 	} catch (Exception e) {
-	    // LOGGER.error(e);
+	    LOGGER.error(e);
 	    return false;
 	}
 
@@ -85,8 +108,14 @@ public class RemotePerformerService implements IRemotePerformerService {
     }
 
     @Override
-    public boolean removePerformer(String performerHandle) {
-	Performer performer = performerRepo.findByHandle(performerHandle);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(performer));
+    public boolean removePerformer(String handle) {
+	final Performer dbPerformer = performerRepo.findByHandle(handle);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+    }
+
+    @Override
+    public boolean removePerformerByEmail(String email) {
+	final Performer dbPerformer = performerRepo.findByEmail(email);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
     }
 }

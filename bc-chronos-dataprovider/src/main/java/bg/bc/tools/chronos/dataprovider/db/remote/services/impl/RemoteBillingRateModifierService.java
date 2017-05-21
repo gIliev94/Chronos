@@ -1,208 +1,159 @@
 package bg.bc.tools.chronos.dataprovider.db.remote.services.impl;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
+import bg.bc.tools.chronos.core.entities.DBillingRateModifier.DModifierAction;
 import bg.bc.tools.chronos.core.entities.DBooking;
-import bg.bc.tools.chronos.core.entities.DPerformer;
-import bg.bc.tools.chronos.core.entities.DRole;
-import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
+import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
+import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBillingRateModifierRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBillingRateModifierService;
 
 public class RemoteBillingRateModifierService implements IRemoteBillingRateModifierService {
 
+    private static final Logger LOGGER = Logger.getLogger(RemoteBillingRateModifierService.class);
+
     @Autowired
     private RemoteBillingRateModifierRepository billingRateModifierRepo;
 
-    // @Override
-    // public boolean addBillingRate(DBillingRateModifier billingRateModifier) {
-    // try {
-    // billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
-    // } catch (Exception e) {
-    // // LOGGER.error(e);
-    // return false;
-    // }
-    //
-    // return true;
-    // }
-    //
-    // @Override
-    // public DBillingRate getBillingRate(long id) {
-    // return
-    // DbToDomainMapper.dbToDomainBillingRate(billingRateModifierRepo.findOne(id));
-    // }
-    //
-    // @Override
-    // public DBillingRate getBillingRate(DTask task, DPerformerRole role) {
-    // return DbToDomainMapper.dbToDomainBillingRate(billingRateModifierRepo
-    // .findByTaskAndRole(DomainToDbMapper.domainToDbTask(task),
-    // PerformerRole.valueOf(role.name())));
-    // }
-    //
-    // @Override
-    // public Collection<DBillingRate> getBillingRates() {
-    // return ((List<BillingRate>) billingRateModifierRepo.findAll()).stream()
-    // // nl
-    // .map(DbToDomainMapper::dbToDomainBillingRate) // nl
-    // .collect(Collectors.toList());
-    // }
-    //
-    // @Override
-    // public Collection<DBillingRate> getBillingRates(DTask task) {
-    // return
-    // billingRateModifierRepo.findByTask(DomainToDbMapper.domainToDbTask(task)).stream()
-    // // nl
-    // .map(DbToDomainMapper::dbToDomainBillingRate) // nl
-    // .collect(Collectors.toList());
-    // }
-    //
-    // @Override
-    // public boolean updateBillingRate(DBillingRate billingRate) {
-    // try {
-    // if (billingRateModifierRepo.exists(billingRate.getId())) {
-    // // LOGGER.info("Updating entity :: " +
-    // // BillingRate.class.getSimpleName() + " ::" +
-    // // billingRate.getName());
-    //
-    // } else {
-    // // LOGGER.info("No entity found to update :: " +
-    // // BillingRate.class.getSimpleName() + " ::" +
-    // // billingRate.getName());
-    // }
-    //
-    // billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRate(billingRate));
-    //
-    // } catch (Exception e) {
-    // // LOGGER.error(e);
-    // return false;
-    // }
-    //
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean removeBillingRate(long id) {
-    // final BillingRate billingRate = billingRateModifierRepo.findOne(id);
-    // return
-    // removeBillingRate(DbToDomainMapper.dbToDomainBillingRate(billingRate));
-    // }
-    //
-    // @Override
-    // public boolean removeBillingRate(DBillingRate billingRate) {
-    // try {
-    // billingRateModifierRepo.delete(DomainToDbMapper.domainToDbBillingRate(billingRate));
-    // } catch (Exception e) {
-    // // LOGGER.error(e);
-    // return false;
-    // }
-    //
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean removeBillingRate(DTask task) {
-    // try {
-    // billingRateModifierRepo.findByTask(DomainToDbMapper.domainToDbTask(task)).forEach(b
-    // -> {
-    // removeBillingRate(DbToDomainMapper.dbToDomainBillingRate(b));
-    // });
-    // } catch (Exception e) {
-    // // LOGGER.error(e);
-    // return false;
-    // }
-    //
-    // return true;
-    // }
-
     @Override
     public boolean addBillingRateModifier(DBillingRateModifier billingRateModifier) {
-	// TODO Auto-generated method stub
-	return false;
+	try {
+	    billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
+
+	return true;
     }
 
     @Override
     public DBillingRateModifier getBillingRateModifier(long id) {
-	return DbToDomainMapper.dbToDomainBillingRateModifier(billingRateModifierRepo.findOne(id));
+	final BillingRateModifier dbBillingRateModifier = billingRateModifierRepo.findOne(id);
+	return DbToDomainMapper.dbToDomainBillingRateModifier(dbBillingRateModifier);
     }
 
     @Override
-    public Collection<DBillingRateModifier> getBillingRateModifiers() {
+    public List<DBillingRateModifier> getBillingRateModifiers() {
 	return ((List<BillingRateModifier>) billingRateModifierRepo.findAll()).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
 		.collect(Collectors.toList());
     }
 
     @Override
-    public Collection<DBillingRateModifier> getBillingRateModifiers(DBooking booking) {
-	// TODO Auto-generated method stub
-	return null;
+    public List<DBillingRateModifier> getBillingRateModifiers(DModifierAction modifierAction) {
+	return billingRateModifierRepo.findByModifierAction(ModifierAction.valueOf(modifierAction.name())).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
-    public Collection<DBillingRateModifier> getBillingRateModifiers(DRole role) {
-	// TODO Auto-generated method stub
-	return null;
+    public List<DBillingRateModifier> getBillingRateModifiers(List<DModifierAction> modifierActions) {
+	final List<ModifierAction> dbModifierActions = modifierActions.stream() // nl
+		.map(a -> ModifierAction.valueOf(a.name())) // nl
+		.collect(Collectors.toList());
+
+	return billingRateModifierRepo.findByModifierActionIn(dbModifierActions).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
-    public Collection<DBillingRateModifier> getBillingRateModifiers(DPerformer performer) {
-	// TODO Auto-generated method stub
-	return null;
+    public List<DBillingRateModifier> getBillingRateModifiers(DBooking booking) {
+	final Booking dbBooking = DomainToDbMapper.domainToDbBooking(booking);
+
+	return billingRateModifierRepo.findByBooking(dbBooking).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
-    public Collection<DBillingRateModifier> getBillingRateModifiers(DTask task) {
-	// TODO Auto-generated method stub
-	return null;
+    public List<DBillingRateModifier> getBillingRateModifiers(double modifierValue) {
+	return billingRateModifierRepo.findByModifierValue(modifierValue).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBillingRateModifier> getBillingRateModifiersLessThan(double modifierValueLessThan) {
+	return billingRateModifierRepo.findByModifierValueLessThan(modifierValueLessThan).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBillingRateModifier> getBillingRateModifiersGreaterThan(double modifierValueGreaterThan) {
+	return billingRateModifierRepo.findByModifierValueGreaterThan(modifierValueGreaterThan).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DBillingRateModifier> getBillingRateModifiersBetween(double modifierValueLower,
+	    double modifierValueUpper) {
+	return billingRateModifierRepo.findByModifierValueBetween(modifierValueLower, modifierValueUpper).stream() // nl
+		.map(DbToDomainMapper::dbToDomainBillingRateModifier) // nl
+		.collect(Collectors.toList());
     }
 
     @Override
     public boolean updateBillingRateModifier(DBillingRateModifier billingRateModifier) {
-	// TODO Auto-generated method stub
-	return false;
+	try {
+	    if (billingRateModifierRepo.exists(billingRateModifier.getId())) {
+		LOGGER.info("Updating entity :: " + BillingRateModifier.class.getSimpleName() + " :: "
+			+ billingRateModifier.getId());
+	    } else {
+		LOGGER.info("No entity found to update :: " + BillingRateModifier.class.getSimpleName() + " :: "
+			+ billingRateModifier.getId());
+	    }
+
+	    billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
+
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
+
+	return true;
     }
 
     @Override
     public boolean removeBillingRateModifier(long id) {
-	// TODO Auto-generated method stub
-	return false;
+	final BillingRateModifier dbBillingRateModifier = billingRateModifierRepo.findOne(id);
+	return removeBillingRateModifier(DbToDomainMapper.dbToDomainBillingRateModifier(dbBillingRateModifier));
     }
 
     @Override
     public boolean removeBillingRateModifier(DBillingRateModifier billingRateModifier) {
-	// TODO Auto-generated method stub
-	return false;
+	try {
+	    billingRateModifierRepo.delete(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
+
+	return true;
     }
 
     @Override
     public boolean removeBillingRateModifiers(DBooking booking) {
-	// TODO Auto-generated method stub
-	return false;
-    }
+	try {
+	    booking.getBillingRateModifiers() // nl
+		    .forEach(m -> billingRateModifierRepo.delete(DomainToDbMapper.domainToDbBillingRateModifier(m)));
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    return false;
+	}
 
-    @Override
-    public boolean removeBillingRateModifiers(DRole role) {
-	// TODO Auto-generated method stub
-	return false;
+	return true;
     }
-
-    @Override
-    public boolean removeBillingRateModifiers(DPerformer performer) {
-	// TODO Auto-generated method stub
-	return false;
-    }
-
-    @Override
-    public boolean removeBillingRateModifiers(DTask task) {
-	// TODO Auto-generated method stub
-	return false;
-    }
-
 }
