@@ -17,6 +17,9 @@ import javax.persistence.TemporalType;
 
 @Entity(name = "Booking")
 public class Booking {
+    
+    @Column(unique = true, nullable = false)
+    private String syncKey;
 
     @Id
     @GeneratedValue
@@ -54,6 +57,14 @@ public class Booking {
     // @Column(unique = false, nullable = false)
     // private boolean isEffectivelyStopped;
 
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
+    
     public long getId() {
 	return id;
     }

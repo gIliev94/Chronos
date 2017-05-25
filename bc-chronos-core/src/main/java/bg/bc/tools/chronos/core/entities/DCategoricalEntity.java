@@ -3,6 +3,8 @@ package bg.bc.tools.chronos.core.entities;
 import java.util.Objects;
 
 public abstract class DCategoricalEntity {
+    
+    private String syncKey;
 
     private long id;
 
@@ -12,6 +14,14 @@ public abstract class DCategoricalEntity {
 
     private DCategory category;
 
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
+    
     public long getId() {
 	return id;
     }

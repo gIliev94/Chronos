@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 public class Project extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Customer customer;
 

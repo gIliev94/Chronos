@@ -28,6 +28,7 @@ public final class DbToDomainMapper {
 
     public static DCustomer dbToDomainCustomer(Customer dbCustomer) {
 	DCustomer domainCustomer = new DCustomer();
+	domainCustomer.setSyncKey(dbCustomer.getSyncKey());
 	domainCustomer.setId(dbCustomer.getId());
 	domainCustomer.setName(dbCustomer.getName());
 	domainCustomer.setDescription(dbCustomer.getDescription());
@@ -39,6 +40,7 @@ public final class DbToDomainMapper {
 
     public static DProject dbToDomainProject(Project dbProject) {
 	DProject domainProject = new DProject();
+	domainProject.setSyncKey(dbProject.getSyncKey());
 	domainProject.setId(dbProject.getId());
 	domainProject.setName(dbProject.getName());
 	domainProject.setDescription(dbProject.getDescription());
@@ -51,6 +53,7 @@ public final class DbToDomainMapper {
 
     public static DTask dbToDomainTask(Task dbTask) {
 	DTask domainTask = new DTask();
+	domainTask.setSyncKey(dbTask.getSyncKey());
 	domainTask.setId(dbTask.getId());
 	domainTask.setName(dbTask.getName());
 	domainTask.setDescription(dbTask.getDescription());
@@ -70,6 +73,7 @@ public final class DbToDomainMapper {
 
     public static DPerformer dbToDomainPerformer(Performer dbPerformer) {
 	DPerformer domainPerformer = new DPerformer();
+	domainPerformer.setSyncKey(dbPerformer.getSyncKey());
 	domainPerformer.setId(dbPerformer.getId());
 	domainPerformer.setHandle(dbPerformer.getHandle());
 	domainPerformer.setPassword(dbPerformer.getPassword());
@@ -82,6 +86,7 @@ public final class DbToDomainMapper {
 
     public static DBooking dbToDomainBooking(Booking dbBooking) {
 	DBooking domainBooking = new DBooking();
+	domainBooking.setSyncKey(dbBooking.getSyncKey());
 	domainBooking.setId(dbBooking.getId());
 	domainBooking.setDescription(dbBooking.getDescription());
 	domainBooking
@@ -103,6 +108,7 @@ public final class DbToDomainMapper {
 
     public static DRole dbToDomainRole(Role dbRole) {
 	DRole domainRole = new DRole();
+	domainRole.setSyncKey(dbRole.getSyncKey());
 	domainRole.setId(dbRole.getId());
 	domainRole.setName(dbRole.getName());
 	domainRole.setBillingRate(dbRole.getBillingRate());
@@ -117,6 +123,7 @@ public final class DbToDomainMapper {
 
     public static DCategory dbToDomainCategory(Category dbCategory) {
 	DCategory domainCategory = new DCategory();
+	domainCategory.setSyncKey(dbCategory.getSyncKey());
 	domainCategory.setId(dbCategory.getId());
 	domainCategory.setName(dbCategory.getName());
 	domainCategory.setSortOrder(dbCategory.getSortOrder());
@@ -126,6 +133,7 @@ public final class DbToDomainMapper {
 
     public static DBillingRateModifier dbToDomainBillingRateModifier(BillingRateModifier dbBillingRateModifier) {
 	DBillingRateModifier domainBillingRateModifier = new DBillingRateModifier();
+	domainBillingRateModifier.setSyncKey(dbBillingRateModifier.getSyncKey());
 	domainBillingRateModifier.setId(dbBillingRateModifier.getId());
 	domainBillingRateModifier
 		.setModifierAction(DModifierAction.valueOf(dbBillingRateModifier.getModifierAction().name()));

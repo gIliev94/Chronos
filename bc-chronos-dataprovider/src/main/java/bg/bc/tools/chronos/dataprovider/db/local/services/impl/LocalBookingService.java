@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -45,6 +46,7 @@ public class LocalBookingService implements ILocalBookingService {
 	// booking.setEffectivelyStopped(false);
 
 	try {
+	    booking.setSyncKey(UUID.randomUUID().toString());
 	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -184,14 +186,12 @@ public class LocalBookingService implements ILocalBookingService {
 	try {
 	    if (bookingRepo.exists(booking.getId())) {
 		LOGGER.info("Updating entity :: " + Booking.class.getSimpleName() + " :: " + booking.getId());
-
+		booking.setSyncKey(UUID.randomUUID().toString());
+		bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
 	    } else {
 		LOGGER.error(
 			"No entity found to update :: " + Booking.class.getSimpleName() + " :: " + booking.getId());
 	    }
-
-	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

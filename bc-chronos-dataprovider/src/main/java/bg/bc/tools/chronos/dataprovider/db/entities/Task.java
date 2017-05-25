@@ -14,21 +14,8 @@ import javax.persistence.OneToMany;
 public class Task extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    // public enum TaskPhase {
-    // PLANNING, // nl
-    // DEVELOPMENT, // nl
-    // TESTING
-    // }
-    //
-    // @Enumerated(EnumType.STRING)
-    // private TaskPhase phase;
-
-    // @Column(unique = false, nullable = false)
-    // private LocalTime estimatedTime;
-
+    
     @Column(unique = false, nullable = false)
-    // @Temporal(TemporalType.TIME)
     private long hoursEstimated;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -36,14 +23,6 @@ public class Task extends CategoricalEntity implements Serializable {
 
     @OneToMany(mappedBy = "task", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Booking> bookings;
-
-    // public TaskPhase getPhase() {
-    // return phase;
-    // }
-    //
-    // public void setPhase(TaskPhase phase) {
-    // this.phase = phase;
-    // }
 
     public long getHoursEstimated() {
 	return hoursEstimated;

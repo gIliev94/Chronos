@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +43,8 @@ public class RemoteDBConfig {
     private Properties additionalProperties() {
 	Properties properties = new Properties();
 	// TODO: Recreates schema on each run(change to more appropriate later)
-	properties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-	properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
+	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
 
 	return properties;
     }

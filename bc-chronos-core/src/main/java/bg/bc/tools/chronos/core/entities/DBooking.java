@@ -10,6 +10,8 @@ import java.util.Objects;
  * @author giliev
  */
 public class DBooking {
+    
+    private String syncKey;
 
     private long id;
 
@@ -33,6 +35,14 @@ public class DBooking {
 
     private Collection<DBillingRateModifier> billingRateModifiers;
 
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
+    
     public long getId() {
 	return id;
     }

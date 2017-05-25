@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ public class LocalRoleService implements ILocalRoleService {
     @Override
     public boolean addRole(DRole role) {
 	try {
+	    role.setSyncKey(UUID.randomUUID().toString());
 	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -112,12 +114,11 @@ public class LocalRoleService implements ILocalRoleService {
 	try {
 	    if (roleRepo.exists(role.getId())) {
 		LOGGER.info("Updating entity :: " + Role.class.getSimpleName() + " :: " + role.getName());
+		role.setSyncKey(UUID.randomUUID().toString());
+		roleRepo.save(DomainToDbMapper.domainToDbRole(role));
 	    } else {
 		LOGGER.info("No entity found to update :: " + Role.class.getSimpleName() + " :: " + role.getName());
 	    }
-
-	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

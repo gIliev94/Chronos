@@ -22,6 +22,9 @@ public class BillingRateModifier implements Serializable {
 	MULTIPLY, // nl
 	DIVIDE
     }
+    
+    @Column(unique = true, nullable = false)
+    private String syncKey;
 
     @Id
     @GeneratedValue
@@ -35,6 +38,14 @@ public class BillingRateModifier implements Serializable {
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Booking booking;
+    
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
 
     public long getId() {
 	return id;

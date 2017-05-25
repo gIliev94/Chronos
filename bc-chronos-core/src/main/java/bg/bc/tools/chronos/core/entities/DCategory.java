@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 public class DCategory {
+    
+    private String syncKey;
 
     private long id;
 
@@ -13,6 +15,14 @@ public class DCategory {
 
     private Collection<DCategoricalEntity> categoricalEntities;
 
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
+    
     public long getId() {
 	return id;
     }

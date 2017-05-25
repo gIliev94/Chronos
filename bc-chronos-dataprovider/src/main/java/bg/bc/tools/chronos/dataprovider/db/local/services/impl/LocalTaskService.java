@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -24,10 +25,10 @@ public class LocalTaskService implements ILocalTaskService {
     @Autowired
     private LocalTaskRepository taskRepo;
 
-
     @Override
     public boolean addTask(DTask task) {
 	try {
+	    task.setSyncKey(UUID.randomUUID().toString());
 	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -116,12 +117,11 @@ public class LocalTaskService implements ILocalTaskService {
 	try {
 	    if (taskRepo.exists(task.getId())) {
 		LOGGER.info("Updating entity :: " + Task.class.getSimpleName() + " :: " + task.getName());
+		task.setSyncKey(UUID.randomUUID().toString());
+		taskRepo.save(DomainToDbMapper.domainToDbTask(task));
 	    } else {
 		LOGGER.info("No entity found to update :: " + Task.class.getSimpleName() + " :: " + task.getName());
 	    }
-
-	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

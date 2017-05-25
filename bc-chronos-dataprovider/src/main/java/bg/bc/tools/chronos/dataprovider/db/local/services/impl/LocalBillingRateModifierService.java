@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ public class LocalBillingRateModifierService implements ILocalBillingRateModifie
     @Override
     public boolean addBillingRateModifier(DBillingRateModifier billingRateModifier) {
 	try {
+	    billingRateModifier.setSyncKey(UUID.randomUUID().toString());
 	    billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -111,13 +113,12 @@ public class LocalBillingRateModifierService implements ILocalBillingRateModifie
 	    if (billingRateModifierRepo.exists(billingRateModifier.getId())) {
 		LOGGER.info("Updating entity :: " + BillingRateModifier.class.getSimpleName() + " :: "
 			+ billingRateModifier.getId());
+		billingRateModifier.setSyncKey(UUID.randomUUID().toString());
+		billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
 	    } else {
 		LOGGER.info("No entity found to update :: " + BillingRateModifier.class.getSimpleName() + " :: "
 			+ billingRateModifier.getId());
 	    }
-
-	    billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

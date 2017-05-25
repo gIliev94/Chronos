@@ -7,6 +7,8 @@ import java.util.Collection;
 public class Phase extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    private long syncKey;
 
     // @OneToMany(mappedBy = "phase", orphanRemoval = true, cascade =
     // CascadeType.ALL, fetch = FetchType.LAZY)

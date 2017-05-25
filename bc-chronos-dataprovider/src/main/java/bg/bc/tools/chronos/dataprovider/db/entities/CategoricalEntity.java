@@ -16,6 +16,9 @@ import javax.persistence.ManyToOne;
 public abstract class CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    @Column(unique = true, nullable = false)
+    private String syncKey;
 
     @Id
     @GeneratedValue
@@ -32,6 +35,14 @@ public abstract class CategoricalEntity implements Serializable {
 
     public CategoricalEntity() {
 	super();
+    }
+    
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
     }
 
     public long getId() {

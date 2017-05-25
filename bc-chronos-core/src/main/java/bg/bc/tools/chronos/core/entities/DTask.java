@@ -9,27 +9,11 @@ import java.util.List;
  */
 public class DTask extends DCategoricalEntity {
 
-    // public enum DTaskPhase {
-    // PLANNING, // nl
-    // DEVELOPMENT, // nl
-    // TESTING
-    // }
-    //
-    // private DTaskPhase phase;
-
     private long hoursEstimated;
 
     private DProject project;
 
     private List<DBooking> bookings;
-
-    // public DTaskPhase getPhase() {
-    // return phase;
-    // }
-    //
-    // public void setPhase(DTaskPhase phase) {
-    // this.phase = phase;
-    // }
 
     public long getHoursEstimated() {
 	return hoursEstimated;

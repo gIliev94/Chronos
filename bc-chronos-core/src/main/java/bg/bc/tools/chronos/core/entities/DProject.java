@@ -8,7 +8,7 @@ import java.util.List;
  * @author giliev
  */
 public class DProject extends DCategoricalEntity {
-    
+
     private DCustomer client;
 
     private List<DTask> tasks;

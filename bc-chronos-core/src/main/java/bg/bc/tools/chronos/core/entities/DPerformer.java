@@ -10,6 +10,8 @@ import java.util.Objects;
  */
 public class DPerformer {
 
+    private String syncKey;
+    
     private long id;
 
     private String name;
@@ -20,11 +22,17 @@ public class DPerformer {
 
     private String email;
 
-    // private DPerformerRole role;
-
     private boolean isLogged;
 
     private List<DBooking> bookings;
+    
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
 
     public long getId() {
 	return id;

@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ public class LocalCustomerService implements ILocalCustomerService {
     @Override
     public boolean addCustomer(DCustomer customer) {
 	try {
+	    customer.setSyncKey(UUID.randomUUID().toString());
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -83,13 +85,12 @@ public class LocalCustomerService implements ILocalCustomerService {
 	try {
 	    if (customerRepo.exists(customer.getId())) {
 		LOGGER.info("Updating entity :: " + Customer.class.getSimpleName() + " :: " + customer.getName());
+		customer.setSyncKey(UUID.randomUUID().toString());
+		customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	    } else {
 		LOGGER.info(
 			"No entity found to update :: " + Customer.class.getSimpleName() + " :: " + customer.getName());
 	    }
-
-	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

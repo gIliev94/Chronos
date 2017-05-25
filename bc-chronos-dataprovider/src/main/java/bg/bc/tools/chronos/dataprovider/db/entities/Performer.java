@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 public class Performer implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    @Column(unique = true, nullable = false)
+    private String syncKey;
 
     @Id
     @GeneratedValue
@@ -37,6 +40,14 @@ public class Performer implements Serializable {
 
     @OneToMany(mappedBy = "performer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
+    
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
 
     public long getId() {
 	return id;

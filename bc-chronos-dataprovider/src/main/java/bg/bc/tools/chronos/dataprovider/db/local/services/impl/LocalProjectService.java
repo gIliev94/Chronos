@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ public class LocalProjectService implements ILocalProjectService {
     @Override
     public boolean addProject(DProject project) {
 	try {
+	    project.setSyncKey(UUID.randomUUID().toString());
 	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -94,13 +96,12 @@ public class LocalProjectService implements ILocalProjectService {
 	try {
 	    if (projectRepo.exists(project.getId())) {
 		LOGGER.info("Updating entity :: " + Project.class.getSimpleName() + " :: " + project.getName());
+		project.setSyncKey(UUID.randomUUID().toString());
+		projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 	    } else {
 		LOGGER.info(
 			"No entity found to update :: " + Project.class.getSimpleName() + " :: " + project.getName());
 	    }
-
-	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

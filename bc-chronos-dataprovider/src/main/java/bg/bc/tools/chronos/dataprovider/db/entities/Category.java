@@ -15,21 +15,31 @@ import javax.persistence.OneToMany;
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    @Column(unique = true, nullable = false)
+    private String syncKey;
+    
     @Id
     @GeneratedValue
     private long id;
 
     @Column(unique = true, nullable = false)
     private String name;
-
-    // TODO: Default to max possible
+    
     @Column(unique = false, nullable = false)
     private int sortOrder;
 
     @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<CategoricalEntity> categoricalEntities;
 
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
+    
     public long getId() {
 	return id;
     }

@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,7 @@ public class LocalPerformerService implements ILocalPerformerService {
     @Override
     public boolean addPerformer(DPerformer performer) {
 	try {
+	    performer.setSyncKey(UUID.randomUUID().toString());
 	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -74,13 +76,12 @@ public class LocalPerformerService implements ILocalPerformerService {
 	try {
 	    if (performerRepo.exists(performer.getId())) {
 		LOGGER.info("Updating entity :: " + Performer.class.getSimpleName() + " :: " + performer.getName());
+		performer.setSyncKey(UUID.randomUUID().toString());
+		performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
 	    } else {
 		LOGGER.info("No entity found to update :: " + Performer.class.getSimpleName() + " :: "
 			+ performer.getName());
 	    }
-
-	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

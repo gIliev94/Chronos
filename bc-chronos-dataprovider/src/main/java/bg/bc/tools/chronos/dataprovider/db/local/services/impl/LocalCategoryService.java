@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,7 @@ public class LocalCategoryService implements ILocalCategoryService {
     @Override
     public boolean addCategory(DCategory category) {
 	try {
+	    category.setSyncKey(UUID.randomUUID().toString());
 	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -54,13 +56,12 @@ public class LocalCategoryService implements ILocalCategoryService {
 	try {
 	    if (categoryRepo.exists(category.getId())) {
 		LOGGER.info("Updating entity :: " + Category.class.getSimpleName() + " :: " + category.getName());
+		category.setSyncKey(UUID.randomUUID().toString());
+		categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
 	    } else {
 		LOGGER.info(
 			"No entity found to update :: " + Category.class.getSimpleName() + " :: " + category.getName());
 	    }
-
-	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
-
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

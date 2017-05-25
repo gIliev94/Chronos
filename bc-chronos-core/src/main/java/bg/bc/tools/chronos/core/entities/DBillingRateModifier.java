@@ -10,6 +10,8 @@ public class DBillingRateModifier {
 	MULTIPLY, // nl
 	DIVIDE
     }
+    
+    private String syncKey;
 
     private long id;
 
@@ -18,6 +20,14 @@ public class DBillingRateModifier {
     private double modifierValue;
 
     private DBooking booking;
+    
+    public String getSyncKey() {
+	return syncKey;
+    }
+    
+    public void setSyncKey(String syncKey) {
+	this.syncKey = syncKey;
+    }
 
     public long getId() {
 	return id;
