@@ -3,6 +3,7 @@ package bc.bg.tools.chronos.configuration.tests.remote.crud;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,6 +40,7 @@ public class CustomerRemoteCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     @Test
+    @Ignore
     public void testLocalCrud() {
 	testCreate();
 

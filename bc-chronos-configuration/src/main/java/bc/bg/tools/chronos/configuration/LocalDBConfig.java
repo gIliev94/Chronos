@@ -48,6 +48,13 @@ public class LocalDBConfig {
 	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
 	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
 
+	// TODO:
+	// properties.setProperty(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER,
+	// "multitenancyConnectionProvider");
+	// properties.setProperty(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER,
+	// "tenantResolver");
+	// properties.setProperty(AvailableSettings.MULTI_TENANT, "DATABASE");
+
 	return properties;
     }
 
