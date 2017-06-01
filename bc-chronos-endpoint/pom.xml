@@ -36,6 +36,13 @@
 	</build>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
 		<!-- <dependency> -->
 		<!-- <groupId>de.roskenet</groupId> -->
 		<!-- <artifactId>springboot-javafx-support</artifactId> -->

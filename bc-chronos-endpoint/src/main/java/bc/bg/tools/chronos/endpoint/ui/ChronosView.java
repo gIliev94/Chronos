@@ -1,21 +1,10 @@
 package bc.bg.tools.chronos.endpoint.ui;
 
-import javafx.scene.Parent;
-import javafx.stage.Stage;
+import javafx.scene.Scene;
 
-public abstract class ChronosView extends Stage implements IChronosView {
+public abstract class ChronosView extends Scene implements IChronosView {
 
-    protected Parent root;
-
-    @Override
-    public Parent getRoot() {
-	return this.root;
-    }
-
-    @Override
-    public void showOnScreen() {
-	if (this.getScene() != null) {
-	    this.show();
-	}
+    public ChronosView(ChronosRoot root, double width, double height) {
+	super(root.getContainer(), width, height);
     }
 }
