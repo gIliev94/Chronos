@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -16,6 +17,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
 
+@Service
 public class LocalCustomerService implements ILocalCustomerService {
 
     private static final Logger LOGGER = Logger.getLogger(LocalCustomerService.class);
@@ -27,6 +29,7 @@ public class LocalCustomerService implements ILocalCustomerService {
     public boolean addCustomer(DCustomer customer) {
 	try {
 	    customer.setSyncKey(UUID.randomUUID().toString());
+	    customer.getCategory().setSyncKey(UUID.randomUUID().toString());
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
 	    LOGGER.error(e);

@@ -37,10 +37,16 @@
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
+		<!-- <dependency> -->
+		<!-- <groupId>javax.inject</groupId> -->
+		<!-- <artifactId>javax.inject</artifactId> -->
+		<!-- <version>1</version> -->
+		<!-- </dependency> -->
+
 		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
+			<groupId>bc.bg.tools</groupId>
+			<artifactId>chronos-dataprovider</artifactId>
+			<version>${children.version}</version>
 		</dependency>
 
 		<!-- <dependency> -->

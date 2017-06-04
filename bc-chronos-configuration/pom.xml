@@ -33,17 +33,17 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>bc.bg.tools</groupId>
-			<artifactId>chronos-core</artifactId>
-			<version>${children.version}</version>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>bc.bg.tools</groupId> -->
+		<!-- <artifactId>chronos-core</artifactId> -->
+		<!-- <version>${children.version}</version> -->
+		<!-- </dependency> -->
 
-		<dependency>
-			<groupId>bc.bg.tools</groupId>
-			<artifactId>chronos-dataprovider</artifactId>
-			<version>${children.version}</version>
-		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>bc.bg.tools</groupId> -->
+		<!-- <artifactId>chronos-dataprovider</artifactId> -->
+		<!-- <version>${children.version}</version> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>bc.bg.tools</groupId>

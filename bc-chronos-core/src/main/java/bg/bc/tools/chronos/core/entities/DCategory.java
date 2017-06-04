@@ -1,10 +1,11 @@
 package bg.bc.tools.chronos.core.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
 public class DCategory {
-    
+
     private String syncKey;
 
     private long id;
@@ -18,11 +19,11 @@ public class DCategory {
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
-    
+
     public long getId() {
 	return id;
     }
@@ -48,7 +49,8 @@ public class DCategory {
     }
 
     public Collection<DCategoricalEntity> getCategoricalEntities() {
-	return categoricalEntities;
+	return categoricalEntities = categoricalEntities != null ? categoricalEntities
+		: new ArrayList<DCategoricalEntity>();
     }
 
     public void setCategoricalEntities(Collection<DCategoricalEntity> categoricalEntities) {

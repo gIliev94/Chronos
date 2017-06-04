@@ -3,6 +3,8 @@ package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import org.apache.log4j.Logger;
+
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier.DModifierAction;
 import bg.bc.tools.chronos.core.entities.DBooking;
@@ -23,10 +25,17 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
 public final class DbToDomainMapper {
 
+    private static final Logger LOGGER = Logger.getLogger(DbToDomainMapper.class);
+
     private DbToDomainMapper() {
     }
 
     public static DCustomer dbToDomainCustomer(Customer dbCustomer) {
+	if (dbCustomer == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DCustomer domainCustomer = new DCustomer();
 	domainCustomer.setSyncKey(dbCustomer.getSyncKey());
 	domainCustomer.setId(dbCustomer.getId());
@@ -39,6 +48,11 @@ public final class DbToDomainMapper {
     }
 
     public static DProject dbToDomainProject(Project dbProject) {
+	if (dbProject == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DProject domainProject = new DProject();
 	domainProject.setSyncKey(dbProject.getSyncKey());
 	domainProject.setId(dbProject.getId());
@@ -52,6 +66,11 @@ public final class DbToDomainMapper {
     }
 
     public static DTask dbToDomainTask(Task dbTask) {
+	if (dbTask == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DTask domainTask = new DTask();
 	domainTask.setSyncKey(dbTask.getSyncKey());
 	domainTask.setId(dbTask.getId());
@@ -72,6 +91,11 @@ public final class DbToDomainMapper {
     }
 
     public static DPerformer dbToDomainPerformer(Performer dbPerformer) {
+	if (dbPerformer == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DPerformer domainPerformer = new DPerformer();
 	domainPerformer.setSyncKey(dbPerformer.getSyncKey());
 	domainPerformer.setId(dbPerformer.getId());
@@ -85,6 +109,11 @@ public final class DbToDomainMapper {
     }
 
     public static DBooking dbToDomainBooking(Booking dbBooking) {
+	if (dbBooking == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DBooking domainBooking = new DBooking();
 	domainBooking.setSyncKey(dbBooking.getSyncKey());
 	domainBooking.setId(dbBooking.getId());
@@ -107,6 +136,11 @@ public final class DbToDomainMapper {
     }
 
     public static DRole dbToDomainRole(Role dbRole) {
+	if (dbRole == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DRole domainRole = new DRole();
 	domainRole.setSyncKey(dbRole.getSyncKey());
 	domainRole.setId(dbRole.getId());
@@ -122,6 +156,11 @@ public final class DbToDomainMapper {
     }
 
     public static DCategory dbToDomainCategory(Category dbCategory) {
+	if (dbCategory == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DCategory domainCategory = new DCategory();
 	domainCategory.setSyncKey(dbCategory.getSyncKey());
 	domainCategory.setId(dbCategory.getId());
@@ -132,6 +171,11 @@ public final class DbToDomainMapper {
     }
 
     public static DBillingRateModifier dbToDomainBillingRateModifier(BillingRateModifier dbBillingRateModifier) {
+	if (dbBillingRateModifier == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
 	DBillingRateModifier domainBillingRateModifier = new DBillingRateModifier();
 	domainBillingRateModifier.setSyncKey(dbBillingRateModifier.getSyncKey());
 	domainBillingRateModifier.setId(dbBillingRateModifier.getId());

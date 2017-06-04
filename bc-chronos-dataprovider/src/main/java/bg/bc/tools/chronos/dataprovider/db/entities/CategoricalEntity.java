@@ -2,9 +2,9 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 public abstract class CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Column(unique = true, nullable = false)
     private String syncKey;
 
@@ -30,17 +30,18 @@ public abstract class CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = true)
     private String description;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    // , fetch = FetchType.LAZY)
     private Category category;
 
     public CategoricalEntity() {
 	super();
     }
-    
+
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
