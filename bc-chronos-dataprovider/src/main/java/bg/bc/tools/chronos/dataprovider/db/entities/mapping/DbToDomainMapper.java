@@ -23,6 +23,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
+//TODO: Refactor null handling
 public final class DbToDomainMapper {
 
     private static final Logger LOGGER = Logger.getLogger(DbToDomainMapper.class);

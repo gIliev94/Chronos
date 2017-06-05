@@ -3,6 +3,8 @@ package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -21,13 +23,21 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
+//TODO: Refactor null handling
 public final class DomainToDbMapper {
+
+    private static final Logger LOGGER = Logger.getLogger(DomainToDbMapper.class);
 
     private DomainToDbMapper() {
     }
 
     public static Customer domainToDbCustomer(DCustomer domainCustomer) {
-	Customer dbCustomer = new Customer();
+	if (domainCustomer == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+
+	final Customer dbCustomer = new Customer();
 	dbCustomer.setSyncKey(domainCustomer.getSyncKey());
 	dbCustomer.setId(domainCustomer.getId());
 	dbCustomer.setName(domainCustomer.getName());
@@ -39,7 +49,12 @@ public final class DomainToDbMapper {
     }
 
     public static Project domainToDbProject(DProject domainProject) {
-	Project dbProject = new Project();
+	if (domainProject == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+
+	final Project dbProject = new Project();
 	dbProject.setSyncKey(domainProject.getSyncKey());
 	dbProject.setId(domainProject.getId());
 	dbProject.setName(domainProject.getName());
@@ -52,7 +67,12 @@ public final class DomainToDbMapper {
     }
 
     public static Task domainToDbTask(DTask domainTask) {
-	Task dbTask = new Task();
+	if (domainTask == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+
+	final Task dbTask = new Task();
 	dbTask.setSyncKey(domainTask.getSyncKey());
 	dbTask.setId(domainTask.getId());
 	dbTask.setName(domainTask.getName());
@@ -66,7 +86,12 @@ public final class DomainToDbMapper {
     }
 
     public static Performer domainToDbPerformer(DPerformer domainPerformer) {
-	Performer dbPerformer = new Performer();
+	if (domainPerformer == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+	
+	final Performer dbPerformer = new Performer();
 	dbPerformer.setSyncKey(domainPerformer.getSyncKey());
 	dbPerformer.setId(domainPerformer.getId());
 	dbPerformer.setHandle(domainPerformer.getHandle());
@@ -79,7 +104,12 @@ public final class DomainToDbMapper {
     }
 
     public static Booking domainToDbBooking(DBooking domainBooking) {
-	Booking dbBooking = new Booking();
+	if (domainBooking == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+	
+	final Booking dbBooking = new Booking();
 	dbBooking.setSyncKey(domainBooking.getSyncKey());
 	dbBooking.setId(domainBooking.getId());
 	dbBooking.setDescription(domainBooking.getDescription());
@@ -96,7 +126,12 @@ public final class DomainToDbMapper {
     }
 
     public static Role domainToDbRole(DRole domainRole) {
-	Role dbRole = new Role();
+	if (domainRole == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+	
+	final Role dbRole = new Role();
 	dbRole.setSyncKey(domainRole.getSyncKey());
 	dbRole.setId(domainRole.getId());
 	dbRole.setName(domainRole.getName());
@@ -111,7 +146,12 @@ public final class DomainToDbMapper {
     }
 
     public static Category domainToDbCategory(DCategory domainCategory) {
-	Category dbCategory = new Category();
+	if (domainCategory == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+	
+	final Category dbCategory = new Category();
 	dbCategory.setSyncKey(domainCategory.getSyncKey());
 	dbCategory.setId(domainCategory.getId());
 	dbCategory.setName(domainCategory.getName());
@@ -121,7 +161,12 @@ public final class DomainToDbMapper {
     }
 
     public static BillingRateModifier domainToDbBillingRateModifier(DBillingRateModifier domainBillingRateModifier) {
-	BillingRateModifier dbBillingRateModifier = new BillingRateModifier();
+	if (domainBillingRateModifier == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+	
+	final BillingRateModifier dbBillingRateModifier = new BillingRateModifier();
 	dbBillingRateModifier.setSyncKey(domainBillingRateModifier.getSyncKey());
 	dbBillingRateModifier.setId(domainBillingRateModifier.getId());
 	dbBillingRateModifier
