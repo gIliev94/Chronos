@@ -28,8 +28,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/bc-chronos-endpoint"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/bc-chronos-dataprovider"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/bc-chronos-core"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

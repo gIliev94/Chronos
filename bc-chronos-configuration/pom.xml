@@ -49,6 +49,7 @@
 			<groupId>bc.bg.tools</groupId>
 			<artifactId>chronos-endpoint</artifactId>
 			<version>${children.version}</version>
+			<type>jar</type>
 		</dependency>
 	</dependencies>
 

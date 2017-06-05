@@ -60,6 +60,7 @@
 			<groupId>bc.bg.tools</groupId>
 			<artifactId>chronos-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
 		</dependency>
 	</dependencies>
 </project>
