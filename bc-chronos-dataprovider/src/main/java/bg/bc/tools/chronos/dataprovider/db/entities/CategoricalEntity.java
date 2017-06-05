@@ -30,6 +30,7 @@ public abstract class CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = true)
     private String description;
 
+    // TODO: Lazy eval not working properly...
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     // , fetch = FetchType.LAZY)
     private Category category;

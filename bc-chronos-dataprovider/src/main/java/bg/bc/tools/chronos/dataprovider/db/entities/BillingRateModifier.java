@@ -20,9 +20,10 @@ public class BillingRateModifier implements Serializable {
 	ADD, // nl
 	SUBTRACT, // nl
 	MULTIPLY, // nl
-	DIVIDE
+	DIVIDE, // nl
+	PERCENT
     }
-    
+
     @Column(unique = true, nullable = false)
     private String syncKey;
 
@@ -38,11 +39,11 @@ public class BillingRateModifier implements Serializable {
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Booking booking;
-    
+
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }

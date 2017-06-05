@@ -1,12 +1,12 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 public class Performer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Column(unique = true, nullable = false)
     private String syncKey;
 
@@ -38,13 +38,14 @@ public class Performer implements Serializable {
     @Column(unique = false, nullable = false)
     private boolean isLogged;
 
-    @OneToMany(mappedBy = "performer", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "performer", cascade = CascadeType.ALL)
+    // ,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Booking> bookings;
-    
+
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
@@ -107,6 +108,11 @@ public class Performer implements Serializable {
 
     public void addBooking(Booking booking) {
 	booking.setPerformer(this);
+	
+	if (getBookings() == null) {
+	    setBookings(new ArrayList<Booking>());
+	}
+
 	getBookings().add(booking);
     }
 }

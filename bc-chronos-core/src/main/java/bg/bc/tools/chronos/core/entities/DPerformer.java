@@ -1,5 +1,6 @@
 package bg.bc.tools.chronos.core.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
 public class DPerformer {
 
     private String syncKey;
-    
+
     private long id;
 
     private String name;
@@ -25,11 +26,11 @@ public class DPerformer {
     private boolean isLogged;
 
     private List<DBooking> bookings;
-    
+
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
@@ -92,6 +93,11 @@ public class DPerformer {
 
     public void addBooking(DBooking booking) {
 	booking.setPerformer(this);
+
+	if (getBookings() == null) {
+	    setBookings(new ArrayList<DBooking>());
+	}
+
 	getBookings().add(booking);
     }
 

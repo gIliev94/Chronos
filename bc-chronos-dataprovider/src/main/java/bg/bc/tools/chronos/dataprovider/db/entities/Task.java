@@ -1,12 +1,12 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -14,14 +14,16 @@ import javax.persistence.OneToMany;
 public class Task extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Column(unique = false, nullable = false)
     private long hoursEstimated;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    // , fetch = FetchType.LAZY)
     private Project project;
 
-    @OneToMany(mappedBy = "task", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    // ,orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Booking> bookings;
 
     public long getHoursEstimated() {
@@ -50,6 +52,11 @@ public class Task extends CategoricalEntity implements Serializable {
 
     public void addBooking(Booking booking) {
 	booking.setTask(this);
+	
+	if (getBookings() == null) {
+	    setBookings(new ArrayList<Booking>());
+	}
+
 	getBookings().add(booking);
     }
 }

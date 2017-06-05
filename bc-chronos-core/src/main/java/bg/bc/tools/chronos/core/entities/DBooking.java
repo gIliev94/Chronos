@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.core.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
  * @author giliev
  */
 public class DBooking {
-    
+
     private String syncKey;
 
     private long id;
@@ -38,11 +39,11 @@ public class DBooking {
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
-    
+
     public long getId() {
 	return id;
     }
@@ -133,6 +134,11 @@ public class DBooking {
 
     public void addBillingRateModifier(DBillingRateModifier billingRateModifier) {
 	billingRateModifier.setBooking(this);
+
+	if (getBillingRateModifiers() == null) {
+	    setBillingRateModifiers(new ArrayList<DBillingRateModifier>());
+	}
+
 	getBillingRateModifiers().add(billingRateModifier);
     }
 

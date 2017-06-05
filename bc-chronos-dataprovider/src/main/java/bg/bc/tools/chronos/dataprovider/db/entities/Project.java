@@ -1,11 +1,11 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -13,11 +13,13 @@ import javax.persistence.OneToMany;
 public class Project extends CategoricalEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(optional = false)
+    // , fetch = FetchType.LAZY)
     private Customer customer;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    // , orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Task> tasks;
 
     public Customer getCustomer() {
@@ -38,6 +40,11 @@ public class Project extends CategoricalEntity implements Serializable {
 
     public void addTask(Task task) {
 	task.setProject(this);
+
+	if (getTasks() == null) {
+	    setTasks(new ArrayList<Task>());
+	}
+
 	getTasks().add(task);
     }
 }

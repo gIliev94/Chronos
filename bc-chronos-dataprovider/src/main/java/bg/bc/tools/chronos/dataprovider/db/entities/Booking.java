@@ -1,12 +1,12 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 
 @Entity(name = "Booking")
 public class Booking {
-    
+
     @Column(unique = true, nullable = false)
     private String syncKey;
 
@@ -42,13 +42,15 @@ public class Booking {
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Performer performer;
 
-    @OneToOne(optional = false, orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    // , orphanRemoval = true , fetch = FetchType.LAZY)
     private Role role;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Task task;
 
-    @OneToMany(mappedBy = "booking", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    // , orphanRemoval = true,fetch = FetchType.LAZY)
     private Collection<BillingRateModifier> billingRateModifiers;
 
     // @Column(unique = false, nullable = false)
@@ -60,11 +62,11 @@ public class Booking {
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
-    
+
     public long getId() {
 	return id;
     }
@@ -155,6 +157,11 @@ public class Booking {
 
     public void addBillingRateModifier(BillingRateModifier billingRateModifier) {
 	billingRateModifier.setBooking(this);
+
+	if (getBillingRateModifiers() == null) {
+	    setBillingRateModifiers(new ArrayList<BillingRateModifier>());
+	}
+
 	getBillingRateModifiers().add(billingRateModifier);
     }
 }

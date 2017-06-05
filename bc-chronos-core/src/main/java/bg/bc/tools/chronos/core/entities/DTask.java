@@ -1,5 +1,6 @@
 package bg.bc.tools.chronos.core.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +42,11 @@ public class DTask extends DCategoricalEntity {
 
     public void addBooking(DBooking booking) {
 	booking.setTask(this);
+
+	if (getBookings() == null) {
+	    setBookings(new ArrayList<DBooking>());
+	}
+
 	getBookings().add(booking);
     }
 }

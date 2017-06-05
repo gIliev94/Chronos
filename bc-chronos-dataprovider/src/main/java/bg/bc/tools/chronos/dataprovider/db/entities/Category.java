@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -30,7 +29,8 @@ public class Category implements Serializable {
     @Column(unique = false, nullable = false)
     private int sortOrder;
 
-    @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    // ,orphanRemoval = true)
     private Collection<CategoricalEntity> categoricalEntities;
 
     public String getSyncKey() {
@@ -76,6 +76,11 @@ public class Category implements Serializable {
 
     public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
 	categoricalEntity.setCategory(this);
+
+	if (getCategoricalEntities() == null) {
+	    setCategoricalEntities(new ArrayList<CategoricalEntity>());
+	}
+
 	getCategoricalEntities().add(categoricalEntity);
     }
 }

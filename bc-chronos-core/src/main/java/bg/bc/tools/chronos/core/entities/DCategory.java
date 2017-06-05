@@ -59,6 +59,11 @@ public class DCategory {
 
     public void addCategoricalEntity(DCategoricalEntity categoricalEntity) {
 	categoricalEntity.setCategory(this);
+	
+	if (getCategoricalEntities() == null) {
+	    setCategoricalEntities(new ArrayList<DCategoricalEntity>());
+	}
+
 	getCategoricalEntities().add(categoricalEntity);
     }
 
