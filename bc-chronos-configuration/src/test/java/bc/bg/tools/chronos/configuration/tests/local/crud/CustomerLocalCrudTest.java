@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import bc.bg.tools.chronos.configuration.tests.local.LocalTestConfiguration;
+import bc.bg.tools.chronos.configuration.LocalDBConfig;
+import bc.bg.tools.chronos.configuration.LocalDataProviderConfig;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
@@ -17,16 +18,14 @@ import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
 
+// TODO: Refactor test methods...
 @SpringBootApplication
-@ContextConfiguration(classes = { LocalTestConfiguration.class })
+@ContextConfiguration(classes = { LocalDBConfig.class, LocalDataProviderConfig.class })
 public class CustomerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     private ILocalCustomerService localCustomerService;
-
-    // @Autowired
-    // private ILocalCategoryService localCategoryService;
-
+    
     private static Customer TEST_CUSTOMER;
     private static Category DEFAULT_CATEGORY;
 
@@ -61,10 +60,6 @@ public class CustomerLocalCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     public void testCreate() {
-	// final boolean categoryAdded = localCategoryService
-	// .addCategory(DbToDomainMapper.dbToDomainCategory(DEFAULT_CATEGORY));
-	// Assert.assertTrue(categoryAdded);
-
 	final boolean customerAdded = localCustomerService
 		.addCustomer(DbToDomainMapper.dbToDomainCustomer(TEST_CUSTOMER));
 	Assert.assertTrue(customerAdded);
