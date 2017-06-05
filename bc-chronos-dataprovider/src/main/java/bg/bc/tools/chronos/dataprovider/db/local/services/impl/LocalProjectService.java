@@ -29,6 +29,7 @@ public class LocalProjectService implements ILocalProjectService {
     public boolean addProject(DProject project) {
 	try {
 	    project.setSyncKey(UUID.randomUUID().toString());
+	    project.getCategory().setSyncKey(UUID.randomUUID().toString());
 	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 	} catch (Exception e) {
 	    LOGGER.error(e);

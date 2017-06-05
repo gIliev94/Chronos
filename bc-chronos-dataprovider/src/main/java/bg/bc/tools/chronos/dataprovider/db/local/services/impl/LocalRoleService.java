@@ -29,6 +29,7 @@ public class LocalRoleService implements ILocalRoleService {
     public boolean addRole(DRole role) {
 	try {
 	    role.setSyncKey(UUID.randomUUID().toString());
+	    role.getCategory().setSyncKey(UUID.randomUUID().toString());
 	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
 	} catch (Exception e) {
 	    LOGGER.error(e);
