@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
+import bg.bc.tools.chronos.dataprovider.i18n.MessageService;
+
 @Configuration
 public class I18nConfig {
 
@@ -45,4 +48,9 @@ public class I18nConfig {
 	return Locale.getDefault();
     }
     //
+
+    @Bean("msgService")
+    public IMessageService messageService() {
+	return new MessageService();
+    }
 }

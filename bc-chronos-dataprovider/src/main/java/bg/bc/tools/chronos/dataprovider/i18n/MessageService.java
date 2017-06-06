@@ -9,19 +9,20 @@ import org.springframework.context.MessageSource;
 public class MessageService implements IMessageService {
 
     @Autowired
-    private MessageSource messages;
+    private MessageSource messageSource;
 
+    //TODO: Obtain dynamically??
     @Autowired
     @Qualifier("EN-US")
     private Locale locale;
 
     @Override
     public String i18n(String msgId, Object[] args) {
-	return messages.getMessage(msgId, args, locale);
+	return messageSource.getMessage(msgId, args, locale);
     }
 
     @Override
     public String i18n(String msgId) {
-	return messages.getMessage(msgId, null, locale);
+	return messageSource.getMessage(msgId, null, locale);
     }
 }
