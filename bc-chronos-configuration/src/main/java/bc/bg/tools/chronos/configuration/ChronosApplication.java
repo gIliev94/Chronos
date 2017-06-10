@@ -39,11 +39,7 @@ public class ChronosApplication extends Application {
 	final ConfigurableApplicationContext context = SpringApplication.run(ChronosApplication.class, new String[0]);
 
 	UIConfig uiConfiguration = context.getBean(UIConfig.class);
-	uiConfiguration.showStartScreen(primaryStage);
-
-	// TODO: TEST - just for experimental purposes...
-	// final SampleView ffsView = context.getBean(SampleView.class);
-	// ffsView.ffs();
+	uiConfiguration.showStartScreen(primaryStage, context);
     }
 
     @PreDestroy

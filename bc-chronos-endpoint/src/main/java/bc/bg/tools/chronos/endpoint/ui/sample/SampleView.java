@@ -36,6 +36,7 @@ public class SampleView extends ChronosView {
     @Autowired
     @Qualifier("localCustomerService")
     private ILocalCustomerService localCustomerService;
+    
     {
 	// // TODO; not working
 	// System.err.println(localCustomerService != null ? "HAS VALUE" :
