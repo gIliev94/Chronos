@@ -2,7 +2,7 @@ package bg.bc.tools.chronos.core.entities;
 
 import java.util.Objects;
 
-public class DBillingRateModifier {
+public class DBillingRateModifier extends DObject {
 
     public enum DModifierAction {
 	ADD, // nl
@@ -10,7 +10,7 @@ public class DBillingRateModifier {
 	MULTIPLY, // nl
 	DIVIDE
     }
-    
+
     private String syncKey;
 
     private long id;
@@ -20,11 +20,11 @@ public class DBillingRateModifier {
     private double modifierValue;
 
     private DBooking booking;
-    
+
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
@@ -60,7 +60,7 @@ public class DBillingRateModifier {
     public void setBooking(DBooking booking) {
 	this.booking = booking;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
 	if (obj == this)
@@ -78,5 +78,10 @@ public class DBillingRateModifier {
     @Override
     public int hashCode() {
 	return Objects.hash(id, modifierAction.name(), booking.getId());
+    }
+
+    @Override
+    public String toString() {
+	return modifierAction + "[" + modifierValue + "]";
     }
 }

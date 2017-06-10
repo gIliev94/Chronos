@@ -11,6 +11,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
 import bg.bc.tools.chronos.dataprovider.i18n.MessageService;
 
+//TODO: May be redundant - i18n is actually done in the UI module...
 @Configuration
 public class I18nConfig {
 

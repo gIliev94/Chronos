@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class DCategory {
+public class DCategory extends DObject {
 
     private String syncKey;
 
@@ -59,7 +59,7 @@ public class DCategory {
 
     public void addCategoricalEntity(DCategoricalEntity categoricalEntity) {
 	categoricalEntity.setCategory(this);
-	
+
 	if (getCategoricalEntities() == null) {
 	    setCategoricalEntities(new ArrayList<DCategoricalEntity>());
 	}
@@ -84,5 +84,10 @@ public class DCategory {
     @Override
     public int hashCode() {
 	return Objects.hash(id, name, sortOrder);
+    }
+
+    @Override
+    public String toString() {
+	return name;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
  * 
  * @author giliev
  */
-public class DBooking {
+public class DBooking extends DObject {
 
     private String syncKey;
 
@@ -159,5 +159,10 @@ public class DBooking {
     @Override
     public int hashCode() {
 	return Objects.hash(id, performer.getHandle(), role.getName(), task.getName());
+    }
+
+    @Override
+    public String toString() {
+	return task + "[" + description + "]";
     }
 }

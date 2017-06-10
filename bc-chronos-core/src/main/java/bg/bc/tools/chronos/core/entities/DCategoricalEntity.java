@@ -2,7 +2,7 @@ package bg.bc.tools.chronos.core.entities;
 
 import java.util.Objects;
 
-public abstract class DCategoricalEntity {
+public abstract class DCategoricalEntity extends DObject {
     
     private String syncKey;
 
@@ -71,5 +71,10 @@ public abstract class DCategoricalEntity {
     @Override
     public int hashCode() {
 	return Objects.hash(id, name, category.getName());
+    }
+    
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -2,6 +2,7 @@ package bc.bg.tools.chronos.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
@@ -20,6 +21,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 
+@Lazy
 @Configuration
 public class LocalDataProviderConfig {
 

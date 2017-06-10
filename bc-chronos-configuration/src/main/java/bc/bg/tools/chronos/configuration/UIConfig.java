@@ -9,12 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import bc.bg.tools.chronos.endpoint.ui.ChronosRoot;
-import bc.bg.tools.chronos.endpoint.ui.ChronosView;
-import bc.bg.tools.chronos.endpoint.ui.sample.MainViewController;
+import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
-import bc.bg.tools.chronos.endpoint.ui.sample.SampleRoot;
-import bc.bg.tools.chronos.endpoint.ui.sample.SampleView;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
@@ -23,9 +19,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 @Configuration
+//TODO: Need?
 @Lazy
 public class UIConfig {
-    //
+    
+    //TODO: Add beans for each view`s Model/Controller instances...
     // @Bean
     // public AdminModel adminModel() {
     // return new AdminModel();
@@ -45,16 +43,6 @@ public class UIConfig {
     // public ICkaPresenter ckaPresenter() {
     // return new CkaPresenter();
     // }
-
-    @Bean(name = "sampleRoot")
-    public ChronosRoot sampleRoot() {
-	return new SampleRoot();
-    }
-
-    @Bean(name = "sampleView")
-    public ChronosView sampleView() {
-	return new SampleView(sampleRoot());
-    }
 
     @Bean(name = "mainViewController")
     public MainViewController mainViewController() {
@@ -81,7 +69,7 @@ public class UIConfig {
 	primaryStage.setScene(new Scene(root, 900, 600));
 	primaryStage.show();
 
-	//TODO: Remove later...
+	// TODO: Remove later...
 	// testSample(primaryStage);
     }
 

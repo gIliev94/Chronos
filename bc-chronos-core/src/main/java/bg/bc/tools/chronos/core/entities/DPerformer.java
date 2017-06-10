@@ -9,7 +9,7 @@ import java.util.Objects;
  * 
  * @author giliev
  */
-public class DPerformer {
+public class DPerformer extends DObject {
 
     private String syncKey;
 
@@ -118,5 +118,10 @@ public class DPerformer {
     @Override
     public int hashCode() {
 	return Objects.hash(id, handle, email);
+    }
+
+    @Override
+    public String toString() {
+	return handle + "[" + name + "]";
     }
 }

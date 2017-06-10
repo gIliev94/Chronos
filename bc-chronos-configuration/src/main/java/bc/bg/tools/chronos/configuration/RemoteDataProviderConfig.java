@@ -2,6 +2,7 @@ package bc.bg.tools.chronos.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteBookingService;
@@ -20,7 +21,8 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteProjectSer
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteRoleService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteTaskService;
 
-@Configuration
+@Lazy
+//@Configuration
 public class RemoteDataProviderConfig {
 
     @Bean(name = "remoteCategoryService")
