@@ -152,23 +152,24 @@
 												</Accordion>
 												<ScrollPane GridPane.columnIndex="1" GridPane.rowIndex="1">
 													<content>
-														<AnchorPane prefHeight="378.0" prefWidth="731.0">
-															<children>
-																<TableView prefHeight="378.0" prefWidth="731.0" tableMenuButtonVisible="true">
-																	<columns>
-																		<TableColumn editable="false" prefWidth="89.0" sortable="false" text="%view.main.tab.workspace.grid.col.task" />
-																		<TableColumn editable="false" prefWidth="73.0" sortable="false" text="%view.main.tab.workspace.grid.col.description" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.starttime" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.endtime" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.duration" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.timespent" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.performer" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.role" />
-																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.rate" />
-																	</columns>
-																</TableView>
-															</children>
-														</AnchorPane>
+      														<AnchorPane prefHeight="378.0" prefWidth="731.0">
+      															<children>
+      																<TableView prefHeight="200.0" prefWidth="731.0" tableMenuButtonVisible="true">
+      																	<columns>
+      																		<TableColumn editable="false" prefWidth="89.0" sortable="false" text="%view.main.tab.workspace.grid.col.task" />
+      																		<TableColumn editable="false" prefWidth="73.0" sortable="false" text="%view.main.tab.workspace.grid.col.description" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.starttime" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.endtime" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.duration" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.timespent" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.performer" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.role" />
+      																		<TableColumn editable="false" prefWidth="75.0" sortable="false" text="%view.main.tab.workspace.grid.col.rate" />
+      																	</columns>
+      																</TableView>
+                                                <VBox fx:id="stackEntityAttributes" layoutY="199.0" prefHeight="159.0" prefWidth="714.0" />
+      															</children>
+      														</AnchorPane>
 													</content>
 												</ScrollPane>
 											</children>
