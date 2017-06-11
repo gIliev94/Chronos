@@ -25,6 +25,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -173,8 +174,8 @@ public class MainViewController implements Initializable {
 	final DObject newValueObj = new_val.getValue();
 	if (newValueObj instanceof DCustomer) {
 	    DCustomer custObj = (DCustomer) newValueObj;
-	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(custObj.getName())));
-	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(custObj.getDescription())));
+	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
+	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
 	} else if (newValueObj instanceof DProject) {
 	    DProject projObj = (DProject) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
@@ -191,5 +192,18 @@ public class MainViewController implements Initializable {
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(roleObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Rate: "), new TextField(String.valueOf(roleObj.getBillingRate()))));
 	}
+    }
+
+    private HBox createHBox(Label label, TextField textField) {
+	final HBox hBox = new HBox();
+	hBox.setFillHeight(true);
+	hBox.setManaged(true);
+	hBox.setPadding(new Insets(5));
+	hBox.setSpacing(5);
+	// hBox.setUserData(value);
+
+	hBox.getChildren().addAll(label, textField);
+
+	return hBox;
     }
 }
