@@ -1,9 +1,9 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -15,6 +15,9 @@ import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DObject;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,13 +33,34 @@ public class MainViewController implements Initializable {
     @FXML
     private TreeView<DObject> treeCustomers;
 
+    @FXML
+    private TreeView<DObject> treeProjects;
+
+    @FXML
+    private TreeView<DObject> treeTasks;
+
+    @FXML
+    private TreeView<DObject> treeRoles;
+
+    @Autowired
+    @Qualifier("localCategoryService")
+    private ILocalCategoryService localCategoryService;
+
     @Autowired
     @Qualifier("localCustomerService")
     private ILocalCustomerService localCustomerService;
 
     @Autowired
-    @Qualifier("localCategoryService")
-    private ILocalCategoryService localCategoryService;
+    @Qualifier("localProjectService")
+    private ILocalProjectService localProjectService;
+
+    @Autowired
+    @Qualifier("localTaskService")
+    private ILocalTaskService localTaskService;
+
+    @Autowired
+    @Qualifier("localRoleService")
+    private ILocalRoleService localRoleService;
 
     // TODO: Maybe use a separate project for REMOTE DB pushing - like a service
     // API
@@ -58,13 +82,17 @@ public class MainViewController implements Initializable {
 
 	// Initialize tree with 'empty' ROOT item...
 	treeCustomers.setRoot(new TreeItem<DObject>());
+	treeProjects.setRoot(new TreeItem<DObject>());
+	treeTasks.setRoot(new TreeItem<DObject>());
+	treeRoles.setRoot(new TreeItem<DObject>());
 
 	// TODO: Test code - clean up later...
-	final TreeItem<DObject> root = treeCustomers.getRoot();
-
 	createTestData();
 
-	testPopulateCustomerTree(root);
+	testPopulateTree(treeCustomers);
+	testPopulateTree(treeProjects);
+	testPopulateTree(treeTasks);
+	testPopulateTree(treeRoles);
     }
 
     private void createTestData() {
@@ -91,12 +119,12 @@ public class MainViewController implements Initializable {
 	localCustomerService.addCustomer(uncategorizedCustomer);
     }
 
-    private void testPopulateCustomerTree(final TreeItem<DObject> root) {
+    private void testPopulateTree(final TreeView<DObject> tree) {
 	// Keep the sorter idea - works nicely...
 	final List<DCategory> categories = localCategoryService.getCategories();
 	categories.sort(Comparator.comparing(DCategory::getSortOrder).thenComparing(DCategory::getName));
 
-	final ObservableList<TreeItem<DObject>> categoryLevel = root.getChildren();
+	final ObservableList<TreeItem<DObject>> categoryLevel = tree.getRoot().getChildren();
 	final boolean categoriesAppended = categoryLevel.addAll(categories.stream() // nl
 		.map(TreeItem<DObject>::new) // nl
 		.collect(Collectors.toList()));
@@ -105,8 +133,18 @@ public class MainViewController implements Initializable {
 		catNode.setExpanded(true);
 
 		final DCategory catObj = (DCategory) catNode.getValue();
-		final Collection<DCustomer> customers = localCustomerService.getCustomers(catObj);
-		customers.stream() // nl
+
+		List<? extends DObject> subEntities = null;
+		if (Objects.equals(tree.getId(), "treeCustomers")) {
+		    subEntities = localCustomerService.getCustomers(catObj);
+		} else if (Objects.equals(tree.getId(), "treeProjects")) {
+		    subEntities = localProjectService.getProjects(catObj);
+		} else if (Objects.equals(tree.getId(), "treeTasks")) {
+		    subEntities = localTaskService.getTasks(catObj);
+		} else if (Objects.equals(tree.getId(), "treeRoles")) {
+		    subEntities = localRoleService.getRoles(catObj);
+		}
+		subEntities.stream() // nl
 			.map(TreeItem<DObject>::new) // nl
 			.forEach(catNode.getChildren()::add);
 	    }
