@@ -19,11 +19,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 @Configuration
-//TODO: Need?
+// TODO: Need?
 @Lazy
 public class UIConfig {
-    
-    //TODO: Add beans for each view`s Model/Controller instances...
+
+    // TODO: Add beans for each view`s Model/Controller instances...
     // @Bean
     // public AdminModel adminModel() {
     // return new AdminModel();
@@ -76,7 +76,7 @@ public class UIConfig {
     @SuppressWarnings("unused")
     private void testSample(Stage primaryStage) {
 	try {
-	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BasicTestUI.fxml"));
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Sample.fxml"));
 	    BorderPane root = loader.load();
 	    SampleController controller = loader.getController();
 
