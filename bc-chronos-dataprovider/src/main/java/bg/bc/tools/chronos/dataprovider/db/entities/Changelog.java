@@ -1,16 +1,20 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity(name = "Changelog")
 public class Changelog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //TODO: How to increment???
     @Id
     @Column(unique = true, nullable = false)
     private long updateCounter;
@@ -18,12 +22,16 @@ public class Changelog implements Serializable {
     @Column(unique = false, nullable = false)
     private String updatedEntityKey;
 
+    @Column(unique = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date changeTime;
+
     public long getUpdateCounter() {
 	return updateCounter;
     }
 
-    public void incrementUpdateCounter() {
-	updateCounter++;
+    public void setUpdateCounter(long updateCounter) {
+	this.updateCounter = updateCounter;
     }
 
     public String getUpdatedEntityKey() {
@@ -32,5 +40,13 @@ public class Changelog implements Serializable {
 
     public void setUpdatedEntityKey(String updatedEntityKey) {
 	this.updatedEntityKey = updatedEntityKey;
+    }
+
+    public Date getChangeTime() {
+	return changeTime;
+    }
+
+    public void setChangeTime(Date changeTime) {
+	this.changeTime = changeTime;
     }
 }
