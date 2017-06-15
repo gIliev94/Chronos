@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DPerformer;
+import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
@@ -117,5 +118,17 @@ public class RemotePerformerService implements IRemotePerformerService {
     public boolean removePerformerByEmail(String email) {
 	final Performer dbPerformer = performerRepo.findByEmail(email);
 	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+    }
+
+    @Override
+    public List<DPerformer> getPerformers(DPriviledge priviledge) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public List<DPerformer> getPerformers(List<DPriviledge> priviledges) {
+	// TODO Auto-generated method stub
+	return null;
     }
 }

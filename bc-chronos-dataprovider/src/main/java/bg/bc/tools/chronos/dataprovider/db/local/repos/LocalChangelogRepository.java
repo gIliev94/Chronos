@@ -8,7 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 
 public interface LocalChangelogRepository extends CrudRepository<Changelog, Long> {
-
+    
+    //TODO: Create use case interfaces(CRUD + more) for this + service for this...
     Collection<Changelog> findByChangeTimeBefore(Date changeTimeBefore);
 
     Collection<Changelog> findByChangeTimeAfter(Date changeTimeAfter);
@@ -21,5 +22,10 @@ public interface LocalChangelogRepository extends CrudRepository<Changelog, Long
 
     Collection<Changelog> findByUpdateCounterBetween(double lessThanUpdateCounter, double greaterThanUpdateCounter);
 
+    Collection<Changelog> findByDeviceNameOrderByUpdateCounterDesc(String deviceName);
+    
     Collection<Changelog> findByUpdatedEntityKey(String updatedEntityKey);
+    
+    //TODO: test http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.limit-query-result
+    Changelog findTopByOrderByUpdateCounterDesc();
 }

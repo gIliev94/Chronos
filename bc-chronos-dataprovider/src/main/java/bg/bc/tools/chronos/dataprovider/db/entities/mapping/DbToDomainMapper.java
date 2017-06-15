@@ -2,6 +2,8 @@ package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -11,6 +13,7 @@ import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DPerformer;
+import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
@@ -105,6 +108,19 @@ public final class DbToDomainMapper {
 	domainPerformer.setName(dbPerformer.getName());
 	domainPerformer.setEmail(dbPerformer.getEmail());
 	domainPerformer.setLogged(dbPerformer.isLogged());
+	domainPerformer.setPrimaryDeviceName(dbPerformer.getPrimaryDeviceName());
+
+	final List<DPriviledge> domainPriviledges = dbPerformer.getPriviledges().stream() // nl
+		.map(p -> p.name()) // nl
+		.map(DPriviledge::valueOf) // nl
+		.collect(Collectors.toList());
+	domainPerformer.setPriviledges(domainPriviledges);
+
+	// final Collection<Priviledge> priviledges =
+	// dbPerformer.getPriviledges();
+	// for (Priviledge priviledge : priviledges) {
+	// domainPerformer.addPriviledge(DPriviledge.valueOf(priviledge.name()));
+	// }
 
 	return domainPerformer;
     }

@@ -25,6 +25,9 @@ public class Changelog implements Serializable {
     @Column(unique = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date changeTime;
+    
+    @Column(unique = false, nullable = false)
+    private String deviceName;
 
     public long getUpdateCounter() {
 	return updateCounter;
@@ -48,5 +51,13 @@ public class Changelog implements Serializable {
 
     public void setChangeTime(Date changeTime) {
 	this.changeTime = changeTime;
+    }
+    
+    public String getDeviceName() {
+	return deviceName;
+    }
+    
+    public void setDeviceName(String deviceName) {
+	this.deviceName = deviceName;
     }
 }

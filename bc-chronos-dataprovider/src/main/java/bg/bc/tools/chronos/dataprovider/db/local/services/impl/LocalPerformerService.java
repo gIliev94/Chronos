@@ -8,7 +8,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DPerformer;
+import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
@@ -67,6 +69,25 @@ public class LocalPerformerService implements ILocalPerformerService {
     @Override
     public List<DPerformer> getLoggedPerformers() {
 	return performerRepo.findByIsLoggedTrue().stream() // nlS
+		.map(DbToDomainMapper::dbToDomainPerformer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DPerformer> getPerformers(DPriviledge priviledge) {
+	return performerRepo.findByPriviledgesContaining(Priviledge.valueOf(priviledge.name())).stream()
+		.map(DbToDomainMapper::dbToDomainPerformer) // nl
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DPerformer> getPerformers(List<DPriviledge> priviledges) {
+	final List<Priviledge> dbPriviledges = priviledges.stream() // nl
+		.map(p -> p.name()) // nl
+		.map(Priviledge::valueOf) // nl
+		.collect(Collectors.toList());
+
+	return performerRepo.findDistinctByPriviledgesIn(dbPriviledges).stream() // nl
 		.map(DbToDomainMapper::dbToDomainPerformer) // nl
 		.collect(Collectors.toList());
     }

@@ -2,6 +2,8 @@ package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +21,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
@@ -90,7 +93,7 @@ public final class DomainToDbMapper {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
-	
+
 	final Performer dbPerformer = new Performer();
 	dbPerformer.setSyncKey(domainPerformer.getSyncKey());
 	dbPerformer.setId(domainPerformer.getId());
@@ -99,6 +102,19 @@ public final class DomainToDbMapper {
 	dbPerformer.setName(domainPerformer.getName());
 	dbPerformer.setEmail(domainPerformer.getEmail());
 	dbPerformer.setLogged(domainPerformer.isLogged());
+	dbPerformer.setPrimaryDeviceName(domainPerformer.getPrimaryDeviceName());
+
+	final List<Priviledge> dbPriviledges = domainPerformer.getPriviledges().stream() // nl
+		.map(p -> p.name()) // nl
+		.map(Priviledge::valueOf) // nl
+		.collect(Collectors.toList());
+	dbPerformer.setPriviledges(dbPriviledges);
+
+	// final Collection<DPriviledge> priviledges =
+	// domainPerformer.getPriviledges();
+	// for (DPriviledge priviledge : priviledges) {
+	// dbPerformer.addPriviledge(Priviledge.valueOf(priviledge.name()));
+	// }
 
 	return dbPerformer;
     }
@@ -108,7 +124,7 @@ public final class DomainToDbMapper {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
-	
+
 	final Booking dbBooking = new Booking();
 	dbBooking.setSyncKey(domainBooking.getSyncKey());
 	dbBooking.setId(domainBooking.getId());
@@ -130,7 +146,7 @@ public final class DomainToDbMapper {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
-	
+
 	final Role dbRole = new Role();
 	dbRole.setSyncKey(domainRole.getSyncKey());
 	dbRole.setId(domainRole.getId());
@@ -150,7 +166,7 @@ public final class DomainToDbMapper {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
-	
+
 	final Category dbCategory = new Category();
 	dbCategory.setSyncKey(domainCategory.getSyncKey());
 	dbCategory.setId(domainCategory.getId());
@@ -165,7 +181,7 @@ public final class DomainToDbMapper {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
-	
+
 	final BillingRateModifier dbBillingRateModifier = new BillingRateModifier();
 	dbBillingRateModifier.setSyncKey(domainBillingRateModifier.getSyncKey());
 	dbBillingRateModifier.setId(domainBillingRateModifier.getId());

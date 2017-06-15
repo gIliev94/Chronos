@@ -11,6 +11,14 @@ import java.util.Objects;
  */
 public class DPerformer extends DObject {
 
+    public enum DPriviledge {
+	READ, // nl
+	WRITE, // nl
+	DELETE, // nl
+	FORCESYNC, // nl
+	ALL
+    }
+
     private String syncKey;
 
     private long id;
@@ -23,7 +31,11 @@ public class DPerformer extends DObject {
 
     private String email;
 
+    private String primaryDeviceName;
+
     private boolean isLogged;
+
+    private List<DPriviledge> priviledges;
 
     private List<DBooking> bookings;
 
@@ -75,12 +87,36 @@ public class DPerformer extends DObject {
 	this.email = email;
     }
 
+    public String getPrimaryDeviceName() {
+	return primaryDeviceName;
+    }
+
+    public void setPrimaryDeviceName(String primaryDeviceName) {
+	this.primaryDeviceName = primaryDeviceName;
+    }
+
     public boolean isLogged() {
 	return isLogged;
     }
 
     public void setLogged(boolean isLogged) {
 	this.isLogged = isLogged;
+    }
+
+    public List<DPriviledge> getPriviledges() {
+	return priviledges;
+    }
+
+    public void setPriviledges(List<DPriviledge> priviledges) {
+	this.priviledges = priviledges;
+    }
+
+    public void addPriviledge(DPriviledge priviledge) {
+	if (getPriviledges() == null) {
+	    setPriviledges(new ArrayList<DPriviledge>());
+	}
+
+	getPriviledges().add(priviledge);
     }
 
     public List<DBooking> getBookings() {
