@@ -2,6 +2,7 @@ package bc.bg.tools.chronos.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
@@ -28,46 +29,55 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 public class LocalDataProviderConfig {
 
     @Bean(name = "localCategoryService")
+    @DependsOn("transactionManager")
     public ILocalCategoryService categoryService() {
 	return new LocalCategoryService();
     }
 
     @Bean(name = "localCustomerService")
+    @DependsOn("transactionManager")
     public ILocalCustomerService customerService() {
 	return new LocalCustomerService();
     }
 
     @Bean(name = "localProjectService")
+    @DependsOn("transactionManager")
     public ILocalProjectService projectService() {
 	return new LocalProjectService();
     }
 
     @Bean(name = "localTaskService")
+    @DependsOn("transactionManager")
     public ILocalTaskService taskService() {
 	return new LocalTaskService();
     }
 
     @Bean(name = "localBillingRateModifierService")
+    @DependsOn("transactionManager")
     public ILocalBillingRateModifierService billingRateModiferService() {
 	return new LocalBillingRateModifierService();
     }
 
     @Bean(name = "localPerformerService")
+    @DependsOn("transactionManager")
     public ILocalPerformerService performerService() {
 	return new LocalPerformerService();
     }
 
     @Bean(name = "localBookingService")
+    @DependsOn("transactionManager")
     public ILocalBookingService bookingService() {
 	return new LocalBookingService();
     }
 
     @Bean(name = "localRoleService")
+    @DependsOn("transactionManager")
     public ILocalRoleService roleService() {
 	return new LocalRoleService();
     }
-    
+
     @Bean(name = "localChangelogService")
+    @DependsOn("transactionManager")
     public ILocalChangelogService changelogService() {
 	return new LocalChangelogService();
     }

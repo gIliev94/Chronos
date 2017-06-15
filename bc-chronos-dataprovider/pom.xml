@@ -56,6 +56,12 @@
 			<version>0.5.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.codehaus.btm/btm -->
+		<dependency>
+			<groupId>org.codehaus.btm</groupId>
+			<artifactId>btm</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>bc.bg.tools</groupId>
 			<artifactId>chronos-core</artifactId>

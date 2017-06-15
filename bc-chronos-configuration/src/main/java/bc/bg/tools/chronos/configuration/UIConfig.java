@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
@@ -44,6 +45,7 @@ public class UIConfig {
     // return new CkaPresenter();
     // }
 
+    @DependsOn("transactionManager")
     @Bean(name = "mainViewController")
     public MainViewController mainViewController() {
 	return new MainViewController();

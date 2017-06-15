@@ -7,8 +7,17 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javax.sql.DataSource;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -22,6 +31,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
+import bitronix.tm.BitronixTransaction;
+import bitronix.tm.BitronixTransactionManager;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -75,10 +86,20 @@ public class MainViewController implements Initializable {
     @Autowired
     @Qualifier("localRoleService")
     private ILocalRoleService localRoleService;
-    
+
     @Autowired
     @Qualifier("remoteCustomerService")
     private IRemoteCustomerService remoteCustomerService;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    private BitronixTransactionManager btm;
+
+    @Autowired
+    @Qualifier("localDataSource")
+    private DataSource localDataSource;
 
     // TODO: Maybe use a separate project for REMOTE DB pushing - like a service
     // API
@@ -113,6 +134,7 @@ public class MainViewController implements Initializable {
 	testPopulateTree(treeRoles);
     }
 
+    @Transactional("transactionManager")
     private void createTestData() {
 	final DCategory defCat = new DCategory();
 	defCat.setName("DEFAULT");
@@ -133,11 +155,60 @@ public class MainViewController implements Initializable {
 	custCat.addCategoricalEntity(categorizedCustomer);
 
 	// TODO: Return Optional<DCustomer> for all add methods...
-	localCustomerService.addCustomer(categorizedCustomer);
-	localCustomerService.addCustomer(uncategorizedCustomer);
-	
-	remoteCustomerService.addCustomer(categorizedCustomer);
-	remoteCustomerService.addCustomer(uncategorizedCustomer);
+
+	// TODO: Does not do shit... no resource enlisted for tracking...
+	try {
+	    BitronixTransaction currentTransaction = btm.getCurrentTransaction();
+	    currentTransaction = currentTransaction != null ? currentTransaction
+		    : (BitronixTransaction) btm.getTransaction();
+
+	    // currentTransaction.enlist(localDataSource);
+
+	    btm.begin();
+
+	    // final TransactionStatus t =
+	    // transactionManager.getTransaction(null);
+	    // final Object savePoint = t.createSavepoint();
+	    // if (t.isNewTransaction() || !t.isCompleted()) {
+	    final boolean lc1_OK = localCustomerService.addCustomer(categorizedCustomer);
+	    final boolean rc1_OK = remoteCustomerService.addCustomer(categorizedCustomer);
+	    if (!lc1_OK || !rc1_OK) {
+		btm.rollback();
+		// transactionManager.rollback(t);
+		// t.rollbackToSavepoint(savePoint);
+		// t.releaseSavepoint(savePoint);
+		return;
+	    }
+
+	    final boolean lc2_OK = localCustomerService.addCustomer(uncategorizedCustomer);
+	    final boolean rc2_OK = remoteCustomerService.addCustomer(uncategorizedCustomer);
+	    if (!lc2_OK || !rc2_OK) {
+		btm.rollback();
+		// transactionManager.rollback(t);
+		// t.rollbackToSavepoint(savePoint);
+		// t.releaseSavepoint(savePoint);
+		return;
+	    }
+
+	    // transactionManager.commit(t);
+	    // }
+
+	    btm.commit();
+	} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+		| HeuristicMixedException | HeuristicRollbackException e) {
+	    e.printStackTrace();
+	}
+
+	// TODO: OLD but working...
+	// final boolean lc1_OK =
+	// localCustomerService.addCustomer(categorizedCustomer);
+	// final boolean rc1_OK =
+	// remoteCustomerService.addCustomer(categorizedCustomer);
+	//
+	// final boolean lc2_OK =
+	// localCustomerService.addCustomer(uncategorizedCustomer);
+	// final boolean rc2_OK =
+	// remoteCustomerService.addCustomer(uncategorizedCustomer);
     }
 
     private void testPopulateTree(final TreeView<DObject> tree) {
