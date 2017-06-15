@@ -9,7 +9,6 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 
 public interface LocalChangelogRepository extends CrudRepository<Changelog, Long> {
     
-    //TODO: Create use case interfaces(CRUD + more) for this + service for this...
     Collection<Changelog> findByChangeTimeBefore(Date changeTimeBefore);
 
     Collection<Changelog> findByChangeTimeAfter(Date changeTimeAfter);

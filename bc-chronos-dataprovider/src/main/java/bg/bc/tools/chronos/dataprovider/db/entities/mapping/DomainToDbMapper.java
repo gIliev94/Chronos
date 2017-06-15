@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
+import bg.bc.tools.chronos.core.entities.DChangelog;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DProject;
@@ -19,6 +20,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
@@ -192,5 +194,20 @@ public final class DomainToDbMapper {
 	domainToDbBooking(domainBillingRateModifier.getBooking()).addBillingRateModifier(dbBillingRateModifier);
 
 	return dbBillingRateModifier;
+    }
+
+    public static Changelog domainToDbChangelog(DChangelog domainChangelog) {	
+	if (domainChangelog == null) {
+	    LOGGER.error("No domain entity(null)!");
+	    return null;
+	}
+
+	final Changelog dbChangelog = new Changelog();
+	dbChangelog.setUpdateCounter(domainChangelog.getUpdateCounter());
+	dbChangelog.setUpdatedEntityKey(domainChangelog.getUpdatedEntityKey());
+	dbChangelog.setDeviceName(domainChangelog.getDeviceName());
+	dbChangelog.setChangeTime(Date.from(domainChangelog.getChangeTime().atZone(ZoneId.systemDefault()).toInstant()));
+
+	return dbChangelog;
     }
 }

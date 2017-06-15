@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalChangelogService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
@@ -15,6 +16,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBillingRateModifierService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalBookingService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCategoryService;
+import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalChangelogService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalCustomerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalPerformerService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectService;
@@ -63,5 +65,10 @@ public class LocalDataProviderConfig {
     @Bean(name = "localRoleService")
     public ILocalRoleService roleService() {
 	return new LocalRoleService();
+    }
+    
+    @Bean(name = "localChangelogService")
+    public ILocalChangelogService changelogService() {
+	return new LocalChangelogService();
     }
 }

@@ -11,6 +11,7 @@ import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier.DModifierAction;
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
+import bg.bc.tools.chronos.core.entities.DChangelog;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
@@ -20,6 +21,7 @@ import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
@@ -203,5 +205,20 @@ public final class DbToDomainMapper {
 	dbToDomainBooking(dbBillingRateModifier.getBooking()).addBillingRateModifier(domainBillingRateModifier);
 
 	return domainBillingRateModifier;
+    }
+    
+    public static DChangelog dbToDomainChangelog(Changelog dbChangelog) {
+	if (dbChangelog == null) {
+	    LOGGER.error("No DB entity(null)!");
+	    return null;
+	}
+
+	final DChangelog domainChangelog = new DChangelog();
+	domainChangelog.setUpdateCounter(dbChangelog.getUpdateCounter());
+	domainChangelog.setUpdatedEntityKey(dbChangelog.getUpdatedEntityKey());
+	domainChangelog.setDeviceName(dbChangelog.getDeviceName());
+	domainChangelog.setChangeTime(LocalDateTime.ofInstant(dbChangelog.getChangeTime().toInstant(), ZoneId.systemDefault()));
+
+	return domainChangelog;
     }
 }

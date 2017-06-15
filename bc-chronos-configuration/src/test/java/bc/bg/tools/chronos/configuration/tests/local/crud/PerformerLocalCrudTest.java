@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +21,15 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import bc.bg.tools.chronos.configuration.LocalDBConfig;
 import bc.bg.tools.chronos.configuration.LocalDataProviderConfig;
+import bg.bc.tools.chronos.core.entities.DChangelog;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalChangelogService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerService;
 
 // TODO: Refactor test methods...
@@ -36,8 +40,12 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
     @Autowired
     private ILocalPerformerService localPerformerService;
 
+    @Autowired
+    private ILocalChangelogService localChangelogService;
+
     private static Performer TEST_PERFORMER;
 
+    //https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java/17956000#17956000
     private static String getComputerName() {
 	Map<String, String> env = System.getenv();
 	if (env.containsKey("COMPUTERNAME")) {
@@ -99,6 +107,21 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 	final boolean performerAdded = localPerformerService
 		.addPerformer(DbToDomainMapper.dbToDomainPerformer(TEST_PERFORMER));
 	Assert.assertTrue(performerAdded);
+
+	final Changelog changeLog = new Changelog();
+	changeLog.setChangeTime(Calendar.getInstance().getTime());
+	changeLog.setDeviceName(TEST_PERFORMER.getPrimaryDeviceName());
+	changeLog.setUpdatedEntityKey(localPerformerService.getPerformer(TEST_PERFORMER.getHandle()).getSyncKey());
+
+	final DChangelog lastChangelog = localChangelogService.getLastChangelog();
+	if (lastChangelog == null) {
+	    changeLog.setUpdateCounter(0);
+	} else {
+	    changeLog.setUpdateCounter(lastChangelog.getUpdateCounter() + 1);
+	}
+	
+	final boolean changelogAdded = localChangelogService.addChangelog(DbToDomainMapper.dbToDomainChangelog(changeLog));
+	Assert.assertTrue(changelogAdded);
     }
 
     public Performer testRead() {
