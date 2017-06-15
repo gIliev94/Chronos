@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -110,6 +113,7 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
+	Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 	changeLog.setDeviceName(TEST_PERFORMER.getPrimaryDeviceName());
 	changeLog.setUpdatedEntityKey(localPerformerService.getPerformer(TEST_PERFORMER.getHandle()).getSyncKey());
 

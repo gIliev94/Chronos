@@ -26,6 +26,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableJpaRepositories(value = "bg.bc.tools.chronos.dataprovider.db.local.repos", entityManagerFactoryRef = "localEntityManagerFactory", transactionManagerRef = "localTransactionManager")
 public class LocalDBConfig {
 
+    private static final String LOCAL_PERSISTENCE_UNIT = "localPersistenceUnit";
+
     @Autowired
     private Environment env;
 
@@ -34,8 +36,10 @@ public class LocalDBConfig {
     public LocalContainerEntityManagerFactoryBean localEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	factoryBean.setDataSource(this.localDataSource());
-	factoryBean.setPersistenceUnitName("localPersistenceUnit");
-	factoryBean.setPackagesToScan(env.getProperty("entities.lookup"));
+	// TODO: Set in case XA transactions don`t work
+	// factoryBean.setJtaDataSource(jtaDataSource);
+	factoryBean.setPersistenceUnitName(LOCAL_PERSISTENCE_UNIT);
+	factoryBean.setPackagesToScan(env.getProperty("local.entities.lookup"));
 
 	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 	factoryBean.setJpaVendorAdapter(vendorAdapter);
@@ -47,8 +51,8 @@ public class LocalDBConfig {
     private Properties additionalProperties() {
 	Properties properties = new Properties();
 	// TODO: Recreates schema on each run(change to more appropriate later)
-	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
-	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
+	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("local.hibernate.hbm2ddl.auto"));
+	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("local.hibernate.dialect"));
 
 	// TODO:
 	// properties.setProperty(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER,
@@ -79,10 +83,10 @@ public class LocalDBConfig {
     @Bean
     @Primary
     public DataSource localDataSource() throws Exception {
-	DriverManagerDataSource sqliteDs = new DriverManagerDataSource(env.getProperty("jdbc.url"));
-	sqliteDs.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-	sqliteDs.setUsername(env.getProperty("jdbc.user"));
-	sqliteDs.setPassword(env.getProperty("jdbc.pass"));
+	DriverManagerDataSource sqliteDs = new DriverManagerDataSource(env.getProperty("local.jdbc.url"));
+	sqliteDs.setDriverClassName(env.getProperty("local.jdbc.driverClassName"));
+	sqliteDs.setUsername(env.getProperty("local.jdbc.user"));
+	sqliteDs.setPassword(env.getProperty("local.jdbc.pass"));
 
 	return sqliteDs;
     }

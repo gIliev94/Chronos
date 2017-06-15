@@ -21,7 +21,8 @@ import javafx.stage.Stage;
 
 // TODO: NEED? Full configuration of DBs +
 // bc.bg.tools.chronos.configuration.ChronosMultitenancyResolver
-@Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class, I18nConfig.class, UIConfig.class })
+@Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class, RemoteDBConfig.class,
+	RemoteDataProviderConfig.class, I18nConfig.class, UIConfig.class })
 public class ChronosApplication extends Application {
 
     private static final Logger LOGGER = Logger.getLogger(ChronosApplication.class);

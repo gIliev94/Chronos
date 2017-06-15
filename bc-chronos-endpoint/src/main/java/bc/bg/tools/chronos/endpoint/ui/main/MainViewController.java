@@ -21,6 +21,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerServ
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
+import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -74,6 +75,10 @@ public class MainViewController implements Initializable {
     @Autowired
     @Qualifier("localRoleService")
     private ILocalRoleService localRoleService;
+    
+    @Autowired
+    @Qualifier("remoteCustomerService")
+    private IRemoteCustomerService remoteCustomerService;
 
     // TODO: Maybe use a separate project for REMOTE DB pushing - like a service
     // API
@@ -130,6 +135,9 @@ public class MainViewController implements Initializable {
 	// TODO: Return Optional<DCustomer> for all add methods...
 	localCustomerService.addCustomer(categorizedCustomer);
 	localCustomerService.addCustomer(uncategorizedCustomer);
+	
+	remoteCustomerService.addCustomer(categorizedCustomer);
+	remoteCustomerService.addCustomer(uncategorizedCustomer);
     }
 
     private void testPopulateTree(final TreeView<DObject> tree) {

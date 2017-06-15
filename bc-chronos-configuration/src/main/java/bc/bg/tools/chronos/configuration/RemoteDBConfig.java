@@ -20,10 +20,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Lazy
-//@Configuration
+@Configuration
 @PropertySource({ "classpath:remote-db.properties" })
 @EnableJpaRepositories(value = "bg.bc.tools.chronos.dataprovider.db.remote.repos", entityManagerFactoryRef = "remoteEntityManagerFactory", transactionManagerRef = "remoteTransactionManager")
 public class RemoteDBConfig {
+
+    private static final String REMOTE_PERSISTENCE_UNIT = "remotePersistenceUnit";
 
     @Autowired
     private Environment env;
@@ -32,8 +34,10 @@ public class RemoteDBConfig {
     public LocalContainerEntityManagerFactoryBean remoteEntityManagerFactory() throws Exception {
 	LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	factoryBean.setDataSource(this.remoteDataSource());
-	factoryBean.setPersistenceUnitName("remotePersistenceUnit");
-	factoryBean.setPackagesToScan(env.getProperty("entities.lookup"));
+	// TODO: Set in case XA transactions don`t work
+	// factoryBean.setJtaDataSource(jtaDataSource);
+	factoryBean.setPersistenceUnitName(REMOTE_PERSISTENCE_UNIT);
+	factoryBean.setPackagesToScan(env.getProperty("remote.entities.lookup"));
 
 	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 	factoryBean.setJpaVendorAdapter(vendorAdapter);
@@ -45,8 +49,8 @@ public class RemoteDBConfig {
     private Properties additionalProperties() {
 	Properties properties = new Properties();
 	// TODO: Recreates schema on each run(change to more appropriate later)
-	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("hibernate.hbm2ddl.auto"));
-	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("hibernate.dialect"));
+	properties.setProperty(AvailableSettings.HBM2DDL_AUTO, env.getProperty("remote.hibernate.hbm2ddl.auto"));
+	properties.setProperty(AvailableSettings.DIALECT, env.getProperty("remote.hibernate.dialect"));
 
 	return properties;
     }
@@ -68,10 +72,10 @@ public class RemoteDBConfig {
 
     @Bean
     public DataSource remoteDataSource() throws Exception {
-	DriverManagerDataSource mssqlDS = new DriverManagerDataSource(env.getProperty("jdbc.url"));
-	mssqlDS.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-	mssqlDS.setUsername(env.getProperty("jdbc.user"));
-	mssqlDS.setPassword(env.getProperty("jdbc.pass"));
+	DriverManagerDataSource mssqlDS = new DriverManagerDataSource(env.getProperty("remote.jdbc.url"));
+	mssqlDS.setDriverClassName(env.getProperty("remote.jdbc.driverClassName"));
+	mssqlDS.setUsername(env.getProperty("remote.jdbc.user"));
+	mssqlDS.setPassword(env.getProperty("remote.jdbc.pass"));
 
 	return mssqlDS;
     }
