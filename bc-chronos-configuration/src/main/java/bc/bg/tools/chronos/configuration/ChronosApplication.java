@@ -10,19 +10,28 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import bitronix.tm.TransactionManagerServices;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-@SpringBootApplication(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
-@EnableAutoConfiguration(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
+//@SpringBootApplication(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
+//@EnableAutoConfiguration(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
+@SpringBootApplication
+@EnableAutoConfiguration
 @EnableTransactionManagement
 // TODO: NEED? Add views package here when implemented
 // @ComponentScan({"bc.bg.tools.chronos.endpoint.ui"})
 
 // TODO: NEED? Full configuration of DBs +
 // bc.bg.tools.chronos.configuration.ChronosMultitenancyResolver
-@Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class, RemoteDBConfig.class,
-	RemoteDataProviderConfig.class, I18nConfig.class, UIConfig.class })
+
+// @Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class,
+// RemoteDBConfig.class,
+// RemoteDataProviderConfig.class, I18nConfig.class, UIConfig.class })
+@Import(value = { CommonDBConfig.class, // nl
+	LocalDBConfig.class, LocalDataProviderConfig.class, // nl
+	RemoteDBConfig.class, RemoteDataProviderConfig.class, // nl
+	I18nConfig.class, UIConfig.class })
 public class ChronosApplication extends Application {
 
     private static final Logger LOGGER = Logger.getLogger(ChronosApplication.class);
@@ -44,6 +53,9 @@ public class ChronosApplication extends Application {
 
     @PreDestroy
     public void destroy() {
+	// TODO: Maybe close transaction manager here - BTM or other??
+	TransactionManagerServices.getTransactionManager().shutdown();
+
 	System.err.println("Pre-destroy beans - do something before garbage collection?");
 	LOGGER.info("Pre-destroy beans - do something before garbage collection?");
     }

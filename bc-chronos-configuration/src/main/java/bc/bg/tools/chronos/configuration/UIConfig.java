@@ -20,7 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 @Configuration
-// TODO: Need?
+// TODO: Test w/wo lazy init...
 @Lazy
 public class UIConfig {
 
@@ -45,12 +45,14 @@ public class UIConfig {
     // return new CkaPresenter();
     // }
 
+    // TODO: Ensure TM is created before referenced in controller...
     @DependsOn("transactionManager")
     @Bean(name = "mainViewController")
     public MainViewController mainViewController() {
 	return new MainViewController();
     }
 
+    // TODO: Refactor paths/resources obtaining method when you get to JavaFx...
     public void showStartScreen(Stage primaryStage, ConfigurableApplicationContext context) {
 	Parent root = null;
 	URL url = null;
@@ -64,6 +66,7 @@ public class UIConfig {
 	    System.out.println("  * url: " + url);
 	    System.out.println("  * " + ex);
 	    System.out.println("    ----------------------------------------\n");
+	    ex.printStackTrace();
 	    return;
 	}
 
@@ -71,10 +74,11 @@ public class UIConfig {
 	primaryStage.setScene(new Scene(root, 900, 600));
 	primaryStage.show();
 
-	// TODO: Remove later...
+	// TODO: Remove later - JavaFx demo...
 	// testSample(primaryStage);
     }
 
+    // TODO: Remove later - JavaFx demo...
     @SuppressWarnings("unused")
     private void testSample(Stage primaryStage) {
 	try {
@@ -89,4 +93,5 @@ public class UIConfig {
 	    e.printStackTrace();
 	}
     }
+    //
 }

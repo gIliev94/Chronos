@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -16,7 +16,6 @@ import javax.transaction.SystemException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
@@ -33,6 +32,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
 import bitronix.tm.BitronixTransaction;
 import bitronix.tm.BitronixTransactionManager;
+import bitronix.tm.internal.XAResourceHolderState;
+import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -67,6 +68,11 @@ public class MainViewController implements Initializable {
     @FXML
     private VBox stackEntityAttributes;
 
+    // TODO: This is being set in case you want to later do manual i18n...
+    @FXML
+    private ResourceBundle resources;
+    //
+
     @Autowired
     @Qualifier("localCategoryService")
     private ILocalCategoryService localCategoryService;
@@ -92,28 +98,20 @@ public class MainViewController implements Initializable {
     private IRemoteCustomerService remoteCustomerService;
 
     @Autowired
-    private PlatformTransactionManager transactionManager;
-
-    @Autowired
     private BitronixTransactionManager btm;
 
     @Autowired
-    @Qualifier("localDataSource")
-    private DataSource localDataSource;
+    @Qualifier("lrcLocalDataSource")
+    private LrcXADataSource lrcLocalDataSource;
 
-    // TODO: Maybe use a separate project for REMOTE DB pushing - like a service
-    // API
-    // OR
-    // Extend dependencies of this project to create an internal Spring app with
-    // remote conf...
+    // TODO: Consider swapping remote LRC source with SQL server XA(like below)
+    @Autowired
+    @Qualifier("lrcRemoteDataSource")
+    private LrcXADataSource lrcRemoteDataSource;
 
     // @Autowired
-    // @Qualifier("remoteCategoryService")
-    // private IRemoteCategoryService remoteCategoryService;
-
-    // TODO: Set if you want to dynamically use i18n...
-    @FXML
-    private ResourceBundle resources;
+    // @Qualifier("lrcRemoteDataSource")
+    // private JtdsDataSource lrcRemoteDataSource;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -132,6 +130,7 @@ public class MainViewController implements Initializable {
 	testPopulateTree(treeProjects);
 	testPopulateTree(treeTasks);
 	testPopulateTree(treeRoles);
+	//
     }
 
     @Transactional("transactionManager")
@@ -154,29 +153,50 @@ public class MainViewController implements Initializable {
 	categorizedCustomer.setDescription("A legitimate company");
 	custCat.addCategoricalEntity(categorizedCustomer);
 
-	// TODO: Return Optional<DCustomer> for all add methods...
-
-	// TODO: Does not do shit... no resource enlisted for tracking...
+	// TODO: First attempt at programatic transaction - does not do shit(no
+	// resource enlisted for tracking)
 	try {
+	    btm.begin();
+
 	    BitronixTransaction currentTransaction = btm.getCurrentTransaction();
 	    currentTransaction = currentTransaction != null ? currentTransaction
 		    : (BitronixTransaction) btm.getTransaction();
 
-	    // currentTransaction.enlist(localDataSource);
+	    // TODO: Invesitage weird behavior - enlist resource lookup finds
+	    // match on SUBSEQUENT passes, but fails initially(hence the endless
+	    // loop)
+	    // while (true) {
+	    // try {
+	    // // final XAConnection remoteConn =
+	    // // lrcRemoteDataSource.getXAConnection();
+	    // // currentTransaction.enlistResource(remoteConn.getXAResource());
+	    //
+	    // final XAConnection localConn =
+	    // lrcLocalDataSource.getXAConnection();
+	    // currentTransaction.enlistResource(localConn.getXAResource());
+	    //
+	    // } catch (SQLException e) {
+	    // e.printStackTrace();
+	    // break;
+	    // } catch (BitronixSystemException bse) {
+	    // if (bse.getMessage().startsWith("unknown XAResource")) {
+	    // continue;
+	    // } else
+	    // break;
+	    // }
+	    // }
 
-	    btm.begin();
+	    // TODO: No resources are enlisted at this time...
+	    final List<XAResourceHolderState> allResources = currentTransaction.getResourceManager().getAllResources();
+	    System.err.println("ALL RESOURCES(CONTROLLER): " + allResources);
+	    final Set<String> collectUniqueNames = currentTransaction.getResourceManager().collectUniqueNames();
+	    System.err.println("UNIQUE NAME INSTANCES(CONTROLLER): " + collectUniqueNames);
 
-	    // final TransactionStatus t =
-	    // transactionManager.getTransaction(null);
-	    // final Object savePoint = t.createSavepoint();
-	    // if (t.isNewTransaction() || !t.isCompleted()) {
+	    // TODO: Return Optional<DCustomer> for all add methods...
 	    final boolean lc1_OK = localCustomerService.addCustomer(categorizedCustomer);
 	    final boolean rc1_OK = remoteCustomerService.addCustomer(categorizedCustomer);
 	    if (!lc1_OK || !rc1_OK) {
 		btm.rollback();
-		// transactionManager.rollback(t);
-		// t.rollbackToSavepoint(savePoint);
-		// t.releaseSavepoint(savePoint);
 		return;
 	    }
 
@@ -184,14 +204,8 @@ public class MainViewController implements Initializable {
 	    final boolean rc2_OK = remoteCustomerService.addCustomer(uncategorizedCustomer);
 	    if (!lc2_OK || !rc2_OK) {
 		btm.rollback();
-		// transactionManager.rollback(t);
-		// t.rollbackToSavepoint(savePoint);
-		// t.releaseSavepoint(savePoint);
 		return;
 	    }
-
-	    // transactionManager.commit(t);
-	    // }
 
 	    btm.commit();
 	} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
@@ -199,7 +213,9 @@ public class MainViewController implements Initializable {
 	    e.printStackTrace();
 	}
 
-	// TODO: OLD but working...
+	// TODO: OLD but working - through entity manager Hibernate/Jpa
+	// transaction(no XA)
+
 	// final boolean lc1_OK =
 	// localCustomerService.addCustomer(categorizedCustomer);
 	// final boolean rc1_OK =
@@ -212,8 +228,8 @@ public class MainViewController implements Initializable {
     }
 
     private void testPopulateTree(final TreeView<DObject> tree) {
-	// Keep the sorter idea - works nicely...
 	final List<DCategory> categories = localCategoryService.getCategories();
+	// TODO; Keep the sorter idea - works nicely...
 	categories.sort(Comparator.comparing(DCategory::getSortOrder).thenComparing(DCategory::getName));
 
 	final ObservableList<TreeItem<DObject>> categoryLevel = tree.getRoot().getChildren();
@@ -279,6 +295,8 @@ public class MainViewController implements Initializable {
 	hBox.setManaged(true);
 	hBox.setPadding(new Insets(5));
 	hBox.setSpacing(5);
+
+	// TODO: Leverage that to pass something maybe...
 	// hBox.setUserData(value);
 
 	hBox.getChildren().addAll(label, textField);

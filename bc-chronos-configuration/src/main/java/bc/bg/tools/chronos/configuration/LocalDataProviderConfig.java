@@ -24,9 +24,12 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 
+//TODO: Test w/wo lazy init...
 @Lazy
 @Configuration
 public class LocalDataProviderConfig {
+    // TODO: Bad attempt of inheritance - remove later...
+    // extends LocalDBConfig {
 
     @Bean(name = "localCategoryService")
     @DependsOn("transactionManager")
@@ -81,4 +84,27 @@ public class LocalDataProviderConfig {
     public ILocalChangelogService changelogService() {
 	return new LocalChangelogService();
     }
+
+    // TODO: Configure this properly
+    // http://www.javaworld.com/article/2077714/java-web-development/xa-transactions-using-spring.html?page=3
+
+    // @Bean(name = "localCustTransactionProxy")
+    // @DependsOn("transactionManager")
+    // @Scope(proxyMode = ScopedProxyMode.INTERFACES)
+    // public TransactionProxyFactoryBean localCustTransactionProxy() {
+    // TransactionProxyFactoryBean abstractProxy = new
+    // TransactionProxyFactoryBean();
+    // abstractProxy.setTransactionManager(localTransactionManager());
+    // abstractProxy.setTarget(customerService());
+    // // abstractProxy.setProxyTargetClass(true);
+    //
+    // Properties properties = new Properties();
+    // properties.setProperty("get", "PROPAGATION_SUPPORTS,readOnly");
+    // properties.setProperty("find", "PROPAGATION_SUPPORTS,readOnly");
+    // properties.setProperty("is", "PROPAGATION_SUPPORTS,readOnly");
+    // properties.setProperty("*", "PROPAGATION_REQUIRED");
+    // abstractProxy.setTransactionAttributes(properties);
+    //
+    // return abstractProxy;
+    // }
 }
