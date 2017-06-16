@@ -150,6 +150,9 @@ public class RemoteDBConfig {
 
 	// TODO: These 2 don`t seem to be doing shit...
 	poolingDs.setAutomaticEnlistingEnabled(true);
+
+	// TODO: Consider setting this to FALSE along with switching to
+	// JtdsDataSource...
 	poolingDs.setAllowLocalTransactions(true);
 
 	// TODO: Play with these 2 if it ever gets to optimizing...

@@ -141,6 +141,7 @@ public class LocalDBConfig {
 	// TODO: These 2 don`t seem to be doing shit...
 	poolingDs.setAutomaticEnlistingEnabled(true);
 	poolingDs.setAllowLocalTransactions(true);
+	poolingDs.setEnableJdbc4ConnectionTest(true);
 
 	// TODO: Play with these 2 if it ever gets to optimizing...
 	// poolingDs.setShareTransactionConnections(true);
