@@ -25,7 +25,6 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
-import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -90,9 +89,9 @@ public class MainViewController implements Initializable {
     @Qualifier("remoteCustomerService")
     private IRemoteCustomerService remoteCustomerService;
 
-    // TODO: First manual transaction attempt-UserTransaction...
-    @Autowired
-    private BitronixTransactionManager btm;
+    // TODO: First manual transaction attempt - UserTransaction...
+    // @Autowired
+    // private BitronixTransactionManager btm;
 
     @Autowired
     public PlatformTransactionManager transactionManager;
@@ -102,17 +101,20 @@ public class MainViewController implements Initializable {
     private LrcXADataSource lrcLocalDataSource;
 
     // TODO: Consider swapping remote LRC source with SQL server XA(like below)
+    //https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/LastResourceCommit2x.adoc
     @Autowired
     @Qualifier("lrcRemoteDataSource")
     private LrcXADataSource lrcRemoteDataSource;
 
+    //https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcXaSupportEvaluation.adoc#msql
     // @Autowired
     // @Qualifier("lrcRemoteDataSource")
     // private JtdsDataSource lrcRemoteDataSource;
 
     // TODO: Needed for manual transaction approach...
-     @Autowired
-     private TransactionTemplate transactionTemplate;
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+    //
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -154,105 +156,60 @@ public class MainViewController implements Initializable {
 	categorizedCustomer.setDescription("A legitimate company");
 	custCat.addCategoricalEntity(categorizedCustomer);
 
-	// TODO: First attempt at programatic transaction - does not do shit(no
-	// resource enlisted for tracking)
-//	try {
-//	    System.err.println("\n\n\n\n\n\tBEFORE BEGIN TRANSACTION\n\n\n\n\n");
-//	    btm.begin();
+	// TODO: This might be the way to go when you want to perform
+	// transaction manually...
+	// transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+	//https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JtaBestPractices.adoc
+	final Boolean txPassed = transactionTemplate.execute(a -> localCustomerService.addCustomer(categorizedCustomer)
+		&& remoteCustomerService.addCustomer(categorizedCustomer)
+		&& localCustomerService.addCustomer(uncategorizedCustomer)
+		&& remoteCustomerService.addCustomer(uncategorizedCustomer));
+	// TODO: Return Optional<DCustomer> for all add* service methods...
+	System.err.println("\n\n\n\tTX PASSED SUCESSFULLY :: " + txPassed + "\n\n\n");
 
-	    // System.err.println("\n\n\n\n\n\tBEFORE OBTAIN CURR
-	    // TRANSACTION\n\n\n\n\n");
-	    // BitronixTransaction currentTransaction =
-	    // btm.getCurrentTransaction();
-	    // currentTransaction = currentTransaction != null ?
-	    // currentTransaction
-	    // : (BitronixTransaction) btm.getTransaction();
-
-	    // TODO: Invesitage weird behavior - enlist resource lookup finds
-	    // match on SUBSEQUENT passes, but fails initially(hence the endless
-	    // loop)
-	    // while (true) {
-	    // try {
-	    // // final XAConnection remoteConn =
-	    // // lrcRemoteDataSource.getXAConnection();
-	    // // currentTransaction.enlistResource(remoteConn.getXAResource());
-	    //
-	    // final XAConnection localConn =
-	    // lrcLocalDataSource.getXAConnection();
-	    // currentTransaction.enlistResource(localConn.getXAResource());
-	    //
-	    // } catch (SQLException e) {
-	    // e.printStackTrace();
-	    // break;
-	    // } catch (BitronixSystemException bse) {
-	    // if (bse.getMessage().startsWith("unknown XAResource")) {
-	    // continue;
-	    // } else
-	    // break;
-	    // }
-	    // }
-
-	    // TODO: No resources are enlisted at this time...
-	    // final List<XAResourceHolderState> allResources =
-	    // currentTransaction.getResourceManager().getAllResources();
-	    // System.err.println("ALL RESOURCES(CONTROLLER): " + allResources);
-	    // final Set<String> collectUniqueNames =
-	    // currentTransaction.getResourceManager().collectUniqueNames();
-	    // System.err.println("UNIQUE NAME INSTANCES(CONTROLLER): " +
-	    // collectUniqueNames);
-
-	    // TODO: Return Optional<DCustomer> for all add methods...
-//	    System.err.println("\n\n\n\n\n\tBEFORE CALL DAO\n\n\n\n\n");
-//	    final boolean lc1_OK = localCustomerService.addCustomer(categorizedCustomer);
-//	    final boolean rc1_OK = remoteCustomerService.addCustomer(categorizedCustomer);
-//	    if (!lc1_OK || !rc1_OK) {
-//		System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
-//		btm.rollback();
-//		return;
-//	    }
-//
-//	    final boolean lc2_OK = localCustomerService.addCustomer(uncategorizedCustomer);
-//	    final boolean rc2_OK = remoteCustomerService.addCustomer(uncategorizedCustomer);
-//	    if (!lc2_OK || !rc2_OK) {
-//		System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
-//		btm.rollback();
-//		return;
-//	    }
-//
-//	    System.err.println("\n\n\n\n\n\tBEFORE COMMIT TRANSACTION\n\n\n\n\n");
-//	    btm.commit();
-//	} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
-//		| HeuristicMixedException | HeuristicRollbackException e) {
-//	    e.printStackTrace();
-//	}
-
-	// TODO: Another unsuccessful approach - but logically speaking this
-//	 might be the way to go when you want to perform transaction
-//	 manually...
-//	 transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-	 final Boolean txPassed = transactionTemplate.execute(a -> localCustomerService.addCustomer(categorizedCustomer)
-	 && remoteCustomerService.addCustomer(categorizedCustomer) && localCustomerService.addCustomer(uncategorizedCustomer)
-	 && remoteCustomerService.addCustomer(uncategorizedCustomer));
-	 System.err.println("\n\n\n\tTX PASSED SUCESS: " + txPassed + " !!!\n\n\n");
-
-	// TODO: OLD but working - through entity manager Hibernate/Jpa
-	// transaction(no XA)
-
+	// TODO: First manual transaction attempt - UserTransaction...
+	// try {
+	// System.err.println("\n\n\n\n\n\tBEFORE BEGIN TRANSACTION\n\n\n\n\n");
+	// btm.begin();
+	// System.err.println("\n\n\n\n\n\tBEFORE CALL DAO\n\n\n\n\n");
 	// final boolean lc1_OK =
 	// localCustomerService.addCustomer(categorizedCustomer);
 	// final boolean rc1_OK =
 	// remoteCustomerService.addCustomer(categorizedCustomer);
+	// if (!lc1_OK || !rc1_OK) {
+	// System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
+	// btm.rollback();
+	// return;
+	// }
 	//
 	// final boolean lc2_OK =
 	// localCustomerService.addCustomer(uncategorizedCustomer);
 	// final boolean rc2_OK =
 	// remoteCustomerService.addCustomer(uncategorizedCustomer);
+	// if (!lc2_OK || !rc2_OK) {
+	// System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
+	// btm.rollback();
+	// return;
+	// }
+	//
+	// System.err.println("\n\n\n\n\n\tBEFORE COMMIT
+	// TRANSACTION\n\n\n\n\n");
+	// btm.commit();
+	// } catch (NotSupportedException | SystemException | SecurityException
+	// | IllegalStateException | RollbackException
+	// | HeuristicMixedException | HeuristicRollbackException e) {
+	// e.printStackTrace();
+	// }
     }
 
     private void testPopulateTree(final TreeView<DObject> tree) {
 	final List<DCategory> categories = localCategoryService.getCategories();
 	// TODO; Keep the sorter idea - works nicely...
-	categories.sort(Comparator.comparing(DCategory::getSortOrder).thenComparing(DCategory::getName));
+	categories.sort( // nl
+		Comparator.comparing(DCategory::getSortOrder) // nl
+			.thenComparing(DCategory::getName) // nl
+	);
+	//
 
 	final ObservableList<TreeItem<DObject>> categoryLevel = tree.getRoot().getChildren();
 	final boolean categoriesAppended = categoryLevel.addAll(categories.stream() // nl

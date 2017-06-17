@@ -23,6 +23,7 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     private RemoteCustomerRepository customerRepo;
 
     @Override
+    // @Transactional
     public boolean addCustomer(DCustomer customer) {
 	try {
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));

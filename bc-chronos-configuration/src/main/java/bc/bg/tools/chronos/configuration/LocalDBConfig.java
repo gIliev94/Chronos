@@ -131,6 +131,8 @@ public class LocalDBConfig {
 	poolingDs.setMaxPoolSize(4);
 
 	// TODO: Try setting name HERE+BEANS+btm.props to be the same...
+	//https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
+	//http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
 	// poolingDs.setUniqueName("localDataSource");
 	// poolingDs.setBeanName("localDataSource");
 	poolingDs.setUniqueName("jdbc/local");

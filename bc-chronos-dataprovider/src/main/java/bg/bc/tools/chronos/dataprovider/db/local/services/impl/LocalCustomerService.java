@@ -26,6 +26,7 @@ public class LocalCustomerService implements ILocalCustomerService {
     private LocalCustomerRepository customerRepo;
 
     @Override
+    // @Transactional
     public boolean addCustomer(DCustomer customer) {
 	try {
 	    customer.setSyncKey(UUID.randomUUID().toString());

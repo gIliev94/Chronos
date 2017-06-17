@@ -30,7 +30,24 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 public class LocalDataProviderConfig {
     // TODO: Bad attempt of inheritance - remove later...
     // extends LocalDBConfig {
-
+    
+    // TODO: Intercept service calls(is this an obsolete approach??)
+    // http://web.archive.org/web/20150520175202/https://docs.codehaus.org/display/BTM/Spring+Framework2x#SpringFramework2x-Step6:Configuredeclarativetransactionmanagement
+    // http://web.archive.org/web/20150504022713/http://docs.spring.io/spring/docs/2.5.x/api/org/springframework/transaction/interceptor/TransactionProxyFactoryBean.html
+    // @Bean(name = "txInterceptor")
+    // @DependsOn("transactionManager")
+    // private TransactionProxyFactoryBean txInterceptor(){
+    // TransactionProxyFactoryBean interceptor = new
+    // TransactionProxyFactoryBean();
+    //
+    // Properties txProps = new Properties();
+    // txProps.setProperty("*", "PROPAGATION_REQUIRED, -Exception");
+    // interceptor.setTransactionAttributes(txProps);
+    // interceptor.setTarget(customerService());
+    //
+    // return interceptor;
+    // }
+    
     @Bean(name = "localCategoryService")
     @DependsOn("transactionManager")
     public ILocalCategoryService categoryService() {
