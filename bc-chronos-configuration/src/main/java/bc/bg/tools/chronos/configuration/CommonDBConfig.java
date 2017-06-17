@@ -22,9 +22,10 @@ public class CommonDBConfig {
 	// TODO: Test with/without(suspecting they always register - msg beans)
 	btmConfig.setDisableJmx(true);
 
-	// TODO: Explicit resource loader - does not work properly(path-wise even)...
-	btmConfig.setResourceConfigurationFilename(
-		"C:/Users/aswor/Documents/EclipseWorkspace/chronos/bc-chronos-configuration/src/main/resources/btm.properties");
+	// TODO: Explicit resource loader - does not work properly(path-wise
+	// even)...
+	// btmConfig.setResourceConfigurationFilename(
+	// "C:/Users/aswor/Documents/EclipseWorkspace/chronos/bc-chronos-configuration/src/main/resources/btm.properties");
 
 	// TODO: Two LRC sources are prohibited usually - disable this when you
 	// fix impl...
@@ -42,7 +43,7 @@ public class CommonDBConfig {
     @DependsOn("btmConfig")
     public BitronixTransactionManager btm() {
 	final BitronixTransactionManager btm = TransactionManagerServices.getTransactionManager();
-	
+
 	// TODO: Debug print - remove later...
 	final Map<String, XAResourceProducer> initialResources = TransactionManagerServices.getResourceLoader()
 		.getResources();
@@ -51,15 +52,18 @@ public class CommonDBConfig {
 	return btm;
     }
 
-    //TODO: Common transaction manager - figure out how to autouse OR get UserTransaction impl...
-    @Bean(name = "transactionManager")
-    @Primary
-    public PlatformTransactionManager localTransactionManager() {
-	JtaTransactionManager transactionManager = new JtaTransactionManager();
-	transactionManager.setTransactionManager(btm());
-	transactionManager.setUserTransaction(btm());
-	// transactionManager.setAllowCustomIsolationLevels(true);
-	
-	return transactionManager;
-    }
+    // TODO: Common transaction manager - figure out how to autouse OR get
+    // UserTransaction impl...
+    // Does not seem to make a difference whether I intialize it or not...
+    
+    // @Bean(name = "transactionManager")
+    // @Primary
+    // public PlatformTransactionManager localTransactionManager() {
+    // JtaTransactionManager transactionManager = new JtaTransactionManager();
+    // transactionManager.setTransactionManager(btm());
+    // transactionManager.setUserTransaction(btm());
+    // // transactionManager.setAllowCustomIsolationLevels(true);
+    //
+    // return transactionManager;
+    // }
 }

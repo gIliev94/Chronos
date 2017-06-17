@@ -53,9 +53,6 @@ public class ChronosApplication extends Application {
 
     @PreDestroy
     public void destroy() {
-	// TODO: Maybe close transaction manager here - BTM or other??
-	TransactionManagerServices.getTransactionManager().shutdown();
-
 	System.err.println("Pre-destroy beans - do something before garbage collection?");
 	LOGGER.info("Pre-destroy beans - do something before garbage collection?");
     }

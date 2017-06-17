@@ -27,6 +27,8 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 	try {
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
+	    // TODO: Debug only - remove later...
+	    e.printStackTrace();
 	    LOGGER.error(e);
 	    return false;
 	}

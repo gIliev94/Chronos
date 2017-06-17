@@ -32,6 +32,8 @@ public class LocalCustomerService implements ILocalCustomerService {
 	    customer.getCategory().setSyncKey(UUID.randomUUID().toString());
 	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
 	} catch (Exception e) {
+	    // TODO: Debug only - remove later...
+	    e.printStackTrace();
 	    LOGGER.error(e);
 	    return false;
 	}

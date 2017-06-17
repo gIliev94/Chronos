@@ -5,18 +5,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -30,9 +25,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
-import bitronix.tm.BitronixTransaction;
 import bitronix.tm.BitronixTransactionManager;
-import bitronix.tm.internal.XAResourceHolderState;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -97,8 +90,12 @@ public class MainViewController implements Initializable {
     @Qualifier("remoteCustomerService")
     private IRemoteCustomerService remoteCustomerService;
 
+    // TODO: First manual transaction attempt-UserTransaction...
     @Autowired
     private BitronixTransactionManager btm;
+
+    @Autowired
+    public PlatformTransactionManager transactionManager;
 
     @Autowired
     @Qualifier("lrcLocalDataSource")
@@ -112,6 +109,10 @@ public class MainViewController implements Initializable {
     // @Autowired
     // @Qualifier("lrcRemoteDataSource")
     // private JtdsDataSource lrcRemoteDataSource;
+
+    // TODO: Needed for manual transaction approach...
+     @Autowired
+     private TransactionTemplate transactionTemplate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -127,9 +128,9 @@ public class MainViewController implements Initializable {
 	createTestData();
 
 	testPopulateTree(treeCustomers);
-	testPopulateTree(treeProjects);
-	testPopulateTree(treeTasks);
-	testPopulateTree(treeRoles);
+	// testPopulateTree(treeProjects);
+	// testPopulateTree(treeTasks);
+	// testPopulateTree(treeRoles);
 	//
     }
 
@@ -155,12 +156,17 @@ public class MainViewController implements Initializable {
 
 	// TODO: First attempt at programatic transaction - does not do shit(no
 	// resource enlisted for tracking)
-	try {
-	    btm.begin();
+//	try {
+//	    System.err.println("\n\n\n\n\n\tBEFORE BEGIN TRANSACTION\n\n\n\n\n");
+//	    btm.begin();
 
-	    BitronixTransaction currentTransaction = btm.getCurrentTransaction();
-	    currentTransaction = currentTransaction != null ? currentTransaction
-		    : (BitronixTransaction) btm.getTransaction();
+	    // System.err.println("\n\n\n\n\n\tBEFORE OBTAIN CURR
+	    // TRANSACTION\n\n\n\n\n");
+	    // BitronixTransaction currentTransaction =
+	    // btm.getCurrentTransaction();
+	    // currentTransaction = currentTransaction != null ?
+	    // currentTransaction
+	    // : (BitronixTransaction) btm.getTransaction();
 
 	    // TODO: Invesitage weird behavior - enlist resource lookup finds
 	    // match on SUBSEQUENT passes, but fails initially(hence the endless
@@ -187,31 +193,47 @@ public class MainViewController implements Initializable {
 	    // }
 
 	    // TODO: No resources are enlisted at this time...
-	    final List<XAResourceHolderState> allResources = currentTransaction.getResourceManager().getAllResources();
-	    System.err.println("ALL RESOURCES(CONTROLLER): " + allResources);
-	    final Set<String> collectUniqueNames = currentTransaction.getResourceManager().collectUniqueNames();
-	    System.err.println("UNIQUE NAME INSTANCES(CONTROLLER): " + collectUniqueNames);
+	    // final List<XAResourceHolderState> allResources =
+	    // currentTransaction.getResourceManager().getAllResources();
+	    // System.err.println("ALL RESOURCES(CONTROLLER): " + allResources);
+	    // final Set<String> collectUniqueNames =
+	    // currentTransaction.getResourceManager().collectUniqueNames();
+	    // System.err.println("UNIQUE NAME INSTANCES(CONTROLLER): " +
+	    // collectUniqueNames);
 
 	    // TODO: Return Optional<DCustomer> for all add methods...
-	    final boolean lc1_OK = localCustomerService.addCustomer(categorizedCustomer);
-	    final boolean rc1_OK = remoteCustomerService.addCustomer(categorizedCustomer);
-	    if (!lc1_OK || !rc1_OK) {
-		btm.rollback();
-		return;
-	    }
+//	    System.err.println("\n\n\n\n\n\tBEFORE CALL DAO\n\n\n\n\n");
+//	    final boolean lc1_OK = localCustomerService.addCustomer(categorizedCustomer);
+//	    final boolean rc1_OK = remoteCustomerService.addCustomer(categorizedCustomer);
+//	    if (!lc1_OK || !rc1_OK) {
+//		System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
+//		btm.rollback();
+//		return;
+//	    }
+//
+//	    final boolean lc2_OK = localCustomerService.addCustomer(uncategorizedCustomer);
+//	    final boolean rc2_OK = remoteCustomerService.addCustomer(uncategorizedCustomer);
+//	    if (!lc2_OK || !rc2_OK) {
+//		System.err.println("\n\n\n\n\n\tBEFORE ROLL BACK\n\n\n\n\n");
+//		btm.rollback();
+//		return;
+//	    }
+//
+//	    System.err.println("\n\n\n\n\n\tBEFORE COMMIT TRANSACTION\n\n\n\n\n");
+//	    btm.commit();
+//	} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
+//		| HeuristicMixedException | HeuristicRollbackException e) {
+//	    e.printStackTrace();
+//	}
 
-	    final boolean lc2_OK = localCustomerService.addCustomer(uncategorizedCustomer);
-	    final boolean rc2_OK = remoteCustomerService.addCustomer(uncategorizedCustomer);
-	    if (!lc2_OK || !rc2_OK) {
-		btm.rollback();
-		return;
-	    }
-
-	    btm.commit();
-	} catch (NotSupportedException | SystemException | SecurityException | IllegalStateException | RollbackException
-		| HeuristicMixedException | HeuristicRollbackException e) {
-	    e.printStackTrace();
-	}
+	// TODO: Another unsuccessful approach - but logically speaking this
+//	 might be the way to go when you want to perform transaction
+//	 manually...
+//	 transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+	 final Boolean txPassed = transactionTemplate.execute(a -> localCustomerService.addCustomer(categorizedCustomer)
+	 && remoteCustomerService.addCustomer(categorizedCustomer) && localCustomerService.addCustomer(uncategorizedCustomer)
+	 && remoteCustomerService.addCustomer(uncategorizedCustomer));
+	 System.err.println("\n\n\n\tTX PASSED SUCESS: " + txPassed + " !!!\n\n\n");
 
 	// TODO: OLD but working - through entity manager Hibernate/Jpa
 	// transaction(no XA)
