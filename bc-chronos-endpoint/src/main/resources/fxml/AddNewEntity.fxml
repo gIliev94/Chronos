@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- <?import java.lang.*?> -->
+<!-- <?import javafx.geometry.*?> -->
+<!-- <?import javafx.scene.control.*?> -->
+<!-- <?import javafx.scene.control.TitledPane?> -->
+<!-- <?import javafx.scene.layout.*?> -->
+<!-- <?import javafx.scene.layout.BorderPane?> -->
+<!-- <?import javafx.scene.layout.Pane?> -->
+
+<!-- <BorderPane xmlns:fx="http://javafx.com/fxml"> -->
+<!-- <center> -->
+<!-- <Pane prefHeight="500.0" prefWidth="500.0"> -->
+<!-- <GridPane alignment="CENTER" hgap="5.0" vgap="5.0" managed="true" -->
+<!-- scaleShape="true"> -->
+<!-- <padding> -->
+<!-- <Insets top="5" right="5" bottom="5" left="5" /> -->
+<!-- </padding> -->
+
+<!-- </GridPane> -->
+<!-- </Pane> -->
+
+
+<!-- fx:controller="bc.bg.tools.chronos.endpoint.ui.sample.SampleController"> -->
+<!-- <bottom> -->
+<!-- <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0"> -->
+<!-- <children> -->
+<!-- <HBox alignment="CENTER" maxWidth="-1.0" prefHeight="-1.0" -->
+<!-- prefWidth="-1.0"> -->
+<!-- <children> -->
+<!-- <ProgressBar fx:id="currentTimeIndicator" maxWidth="1.7976931348623157E308" -->
+<!-- prefWidth="-1.0" progress="0.0" HBox.hgrow="ALWAYS" /> -->
+<!-- </children> -->
+<!-- <padding> -->
+<!-- <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" -->
+<!-- fx:id="x2" /> -->
+<!-- </padding> -->
+<!-- </HBox> -->
+<!-- <Label fx:id="timeLabel" alignment="CENTER" text="Label" /> -->
+<!-- <HBox alignment="CENTER" maxWidth="-1.0" padding="$x2" -->
+<!-- prefHeight="-1.0" prefWidth="-1.0"> -->
+<!-- <children> -->
+<!-- <Slider fx:id="volumeSlider" showTickLabels="true" -->
+<!-- showTickMarks="true" value="50.0" HBox.hgrow="ALWAYS" /> -->
+<!-- </children> -->
+<!-- </HBox> -->
+<!-- <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0"> -->
+<!-- <children> -->
+<!-- <Button fx:id="playButton" disable="true" mnemonicParsing="false" -->
+<!-- text="Play" /> -->
+<!-- </children> -->
+<!-- <padding> -->
+<!-- <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" -->
+<!-- fx:id="x1" /> -->
+<!-- </padding> -->
+<!-- </HBox> -->
+<!-- </children> -->
+<!-- </VBox> -->
+<!-- </bottom> -->
+<!-- <center> -->
+<!-- <TitledPane fx:id="titledPane" animated="false" -->
+<!-- maxHeight="1.7976931348623157E308" text="Files"> -->
+<!-- <BorderPane> -->
+<!-- <center> -->
+<!-- <ListView fx:id="musicList" prefHeight="200.0" prefWidth="200.0" /> -->
+<!-- </center> -->
+<!-- <top> -->
+<!-- <HBox alignment="CENTER" padding="$x1" prefHeight="-1.0" -->
+<!-- prefWidth="-1.0" spacing="15.0" BorderPane.alignment="CENTER"> -->
+<!-- <children> -->
+<!-- <Label fx:id="currentDirectoryLabel" text="" wrapText="true" -->
+<!-- HBox.hgrow="NEVER" /> -->
+<!-- <Button mnemonicParsing="false" onAction="#chooseDirectory" -->
+<!-- text="Browse..." /> -->
+<!-- </children> -->
+<!-- </HBox> -->
+<!-- </top> -->
+<!-- </BorderPane> -->
+<!-- </TitledPane> -->
+
+
+<!-- </center> -->
+<!-- </BorderPane> -->
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<GridPane fx:controller="fxmlexample.FXMLExampleController"
+	xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+	styleClass="root" gridLinesVisible="true" scaleShape="true">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+			percentWidth="-1" prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+			percentWidth="-1" prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+			percentWidth="-1" prefWidth="100.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0"
+			vgrow="SOMETIMES" />
+	</rowConstraints>
+
+	<Text id="welcome-text" text="Welcome" GridPane.columnIndex="0"
+		GridPane.rowIndex="0" GridPane.columnSpan="2" />
+
+	<!-- <FlowPane managed="true" scaleShape="true" orientation="VERTICAL"> -->
+	<!-- <Text id="welcome-text" text="Welcome" GridPane.columnIndex="0" -->
+	<!-- GridPane.rowIndex="0" GridPane.columnSpan="2" /> -->
+	<!-- <Text id="welcome-text2" text="Welcome2" GridPane.columnIndex="0" -->
+	<!-- GridPane.rowIndex="0" GridPane.columnSpan="2" /> -->
+	<!-- </FlowPane> -->
+
+	<!-- http://o7planning.org/en/10633/javafx-stackpane-layout-tutorial -->
+	<!-- <StackPane managed="true" scaleShape="true"> -->
+	<!-- <Text id="welcome-text" text="Welcome" GridPane.columnIndex="0" -->
+	<!-- GridPane.rowIndex="0" GridPane.columnSpan="2" /> -->
+	<!-- <Text id="welcome-text2" text="Welcome2" GridPane.columnIndex="0" -->
+	<!-- GridPane.rowIndex="0" GridPane.columnSpan="2" /> -->
+	<!-- </StackPane> -->
+
+	<Label text="User Name:" GridPane.columnIndex="0"
+		GridPane.rowIndex="1" />
+
+	<TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+	<Label text="Password:" GridPane.columnIndex="0"
+		GridPane.rowIndex="2" />
+
+	<PasswordField fx:id="passwordField"
+		GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+	<HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1"
+		GridPane.rowIndex="4">
+		<Button text="Sign In" onAction="#handleSubmitButtonAction" />
+	</HBox>
+
+	<Text fx:id="actiontarget" GridPane.columnIndex="1"
+		GridPane.rowIndex="6" />
+
+	<Text fx:id="actiontarget2" GridPane.columnIndex="1"
+		GridPane.rowIndex="7" />
+
+	<stylesheets>
+		<URL value="@Login.css" />
+	</stylesheets>
+
+</GridPane>

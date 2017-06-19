@@ -58,7 +58,7 @@ public class UIConfig {
 	URL url = null;
 	ResourceBundle i18nBundle = null;
 	try {
-	    url = getClass().getResource("/fxml/MainWindow.fxml");
+	    url = getClass().getResource("/fxml/MainWindowRefactor.fxml");
 	    i18nBundle = ResourceBundle.getBundle("i18n.Bundle", Locale.getDefault());
 	    root = FXMLLoader.load(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
 	} catch (Exception ex) {
