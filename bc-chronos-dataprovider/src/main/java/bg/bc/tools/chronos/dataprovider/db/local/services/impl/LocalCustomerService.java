@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -26,20 +27,21 @@ public class LocalCustomerService implements ILocalCustomerService {
     private LocalCustomerRepository customerRepo;
 
     @Override
-    // @Transactional
-    public boolean addCustomer(DCustomer customer) {
+    @Transactional
+    public DCustomer addCustomer(DCustomer customer) {
 	try {
 	    customer.setSyncKey(UUID.randomUUID().toString());
-	    customer.getCategory().setSyncKey(UUID.randomUUID().toString());
-	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
+	    if (customer.getCategory().getSyncKey() == null) {
+		customer.getCategory().setSyncKey(UUID.randomUUID().toString());
+	    }
+
+	    final Customer persistedCustomer = customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
+	    return DbToDomainMapper.dbToDomainCustomer(persistedCustomer);
 	} catch (Exception e) {
 	    // TODO: Debug only - remove later...
-	    e.printStackTrace();
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException(e);
 	}
-
-	return true;
     }
 
     @Override

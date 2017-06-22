@@ -24,17 +24,15 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 
     @Override
     // @Transactional
-    public boolean addCustomer(DCustomer customer) {
+    public DCustomer addCustomer(DCustomer customer) {
 	try {
-	    customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
+	    final Customer persistedCustomer = customerRepo.save(DomainToDbMapper.domainToDbCustomer(customer));
+	    return DbToDomainMapper.dbToDomainCustomer(persistedCustomer);
 	} catch (Exception e) {
 	    // TODO: Debug only - remove later...
-	    e.printStackTrace();
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException(e);
 	}
-
-	return true;
     }
 
     @Override

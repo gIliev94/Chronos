@@ -64,9 +64,9 @@ public class CustomerRemoteCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     public void testCreate() {
-	final boolean customerAdded = remoteCustomerService
+	final DCustomer customerAdded = remoteCustomerService
 		.addCustomer(DbToDomainMapper.dbToDomainCustomer(TEST_CUSTOMER));
-	Assert.assertTrue(customerAdded);
+	Assert.assertNotNull(customerAdded);
     }
 
     public Customer testRead() {

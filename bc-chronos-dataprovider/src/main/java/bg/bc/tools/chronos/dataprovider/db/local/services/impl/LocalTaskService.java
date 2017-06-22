@@ -29,7 +29,7 @@ public class LocalTaskService implements ILocalTaskService {
     public boolean addTask(DTask task) {
 	try {
 	    task.setSyncKey(UUID.randomUUID().toString());
-	    task.getCategory().setSyncKey(UUID.randomUUID().toString());
+	    // task.getCategory().setSyncKey(UUID.randomUUID().toString());
 	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
 	} catch (Exception e) {
 	    LOGGER.error(e);

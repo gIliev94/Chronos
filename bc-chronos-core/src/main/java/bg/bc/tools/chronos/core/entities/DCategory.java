@@ -2,6 +2,7 @@ package bg.bc.tools.chronos.core.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public class DCategory extends DObject {
@@ -57,14 +58,38 @@ public class DCategory extends DObject {
 	this.categoricalEntities = categoricalEntities;
     }
 
+    // public void addCategoricalEntity(DCategoricalEntity categoricalEntity) {
+    // categoricalEntity.setCategory(this);
+    //
+    // if (getCategoricalEntities() == null) {
+    // setCategoricalEntities(new ArrayList<DCategoricalEntity>());
+    // }
+    //
+    // getCategoricalEntities().add(categoricalEntity);
+    // }
+
     public void addCategoricalEntity(DCategoricalEntity categoricalEntity) {
-	categoricalEntity.setCategory(this);
+	addCategoricalEntity(categoricalEntity, true);
+    }
 
-	if (getCategoricalEntities() == null) {
-	    setCategoricalEntities(new ArrayList<DCategoricalEntity>());
+    void addCategoricalEntity(DCategoricalEntity categoricalEntity, boolean set) {
+	if (categoricalEntity != null) {
+	    if (getCategoricalEntities().contains(categoricalEntity)) {
+		((List<DCategoricalEntity>) getCategoricalEntities()).set(
+			((List<DCategoricalEntity>) getCategoricalEntities()).indexOf(categoricalEntity),
+			categoricalEntity);
+	    } else {
+		getCategoricalEntities().add(categoricalEntity);
+	    }
+	    if (set) {
+		categoricalEntity.setCategory(this, false);
+	    }
 	}
+    }
 
-	getCategoricalEntities().add(categoricalEntity);
+    public void removeCategoricalEntity(DCategoricalEntity categoricalEntity) {
+	getCategoricalEntities().remove(categoricalEntity);
+	categoricalEntity.setCategory(null);
     }
 
     @Override

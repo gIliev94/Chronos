@@ -3,13 +3,18 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity(name = "Category")
 public class Category implements Serializable {
@@ -29,7 +34,8 @@ public class Category implements Serializable {
     @Column(unique = false, nullable = false)
     private int sortOrder;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     // ,orphanRemoval = true)
     private Collection<CategoricalEntity> categoricalEntities;
 
@@ -74,13 +80,39 @@ public class Category implements Serializable {
 	this.categoricalEntities = categoricalEntities;
     }
 
+    // TODO: Consistency method??
+    // public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
+    // categoricalEntity.setCategory(this);
+    //
+    // if (getCategoricalEntities() == null) {
+    // setCategoricalEntities(new ArrayList<CategoricalEntity>());
+    // }
+    //
+    // getCategoricalEntities().add(categoricalEntity);
+    // }
+
     public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
-	categoricalEntity.setCategory(this);
-
-	if (getCategoricalEntities() == null) {
-	    setCategoricalEntities(new ArrayList<CategoricalEntity>());
-	}
-
-	getCategoricalEntities().add(categoricalEntity);
+	addCategoricalEntity(categoricalEntity, true);
     }
+
+    void addCategoricalEntity(CategoricalEntity categoricalEntity, boolean set) {
+	if (categoricalEntity != null) {
+	    if (getCategoricalEntities().contains(categoricalEntity)) {
+		((List<CategoricalEntity>) getCategoricalEntities()).set(
+			((List<CategoricalEntity>) getCategoricalEntities()).indexOf(categoricalEntity),
+			categoricalEntity);
+	    } else {
+		getCategoricalEntities().add(categoricalEntity);
+	    }
+	    if (set) {
+		categoricalEntity.setCategory(this, false);
+	    }
+	}
+    }
+
+    public void removeCategoricalEntity(CategoricalEntity categoricalEntity) {
+	getCategoricalEntities().remove(categoricalEntity);
+	categoricalEntity.setCategory(null);
+    }
+    //
 }

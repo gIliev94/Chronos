@@ -75,7 +75,20 @@ public abstract class CategoricalEntity implements Serializable {
 	return category;
     }
 
+    // TODO: Consistency method??
+    // public void setCategory(Category category) {
+    // this.category = category;
+    // }
+
     public void setCategory(Category category) {
-	this.category = category;
+	setCategory(category, true);
     }
+
+    void setCategory(Category category, boolean add) {
+	this.category = category;
+	if (category != null && add) {
+	    category.addCategoricalEntity(this, false);
+	}
+    }
+    //
 }

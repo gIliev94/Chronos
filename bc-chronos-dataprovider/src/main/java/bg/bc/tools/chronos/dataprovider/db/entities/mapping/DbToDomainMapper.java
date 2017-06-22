@@ -206,7 +206,7 @@ public final class DbToDomainMapper {
 
 	return domainBillingRateModifier;
     }
-    
+
     public static DChangelog dbToDomainChangelog(Changelog dbChangelog) {
 	if (dbChangelog == null) {
 	    LOGGER.error("No DB entity(null)!");
@@ -217,7 +217,8 @@ public final class DbToDomainMapper {
 	domainChangelog.setUpdateCounter(dbChangelog.getUpdateCounter());
 	domainChangelog.setUpdatedEntityKey(dbChangelog.getUpdatedEntityKey());
 	domainChangelog.setDeviceName(dbChangelog.getDeviceName());
-	domainChangelog.setChangeTime(LocalDateTime.ofInstant(dbChangelog.getChangeTime().toInstant(), ZoneId.systemDefault()));
+	domainChangelog.setChangeTime(
+		LocalDateTime.ofInstant(dbChangelog.getChangeTime().toInstant(), ZoneId.systemDefault()));
 
 	return domainChangelog;
     }

@@ -60,9 +60,9 @@ public class CustomerLocalCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     public void testCreate() {
-	final boolean customerAdded = localCustomerService
+	final DCustomer customerAdded = localCustomerService
 		.addCustomer(DbToDomainMapper.dbToDomainCustomer(TEST_CUSTOMER));
-	Assert.assertTrue(customerAdded);
+	Assert.assertNotNull(customerAdded);
     }
 
     public Customer testRead() {

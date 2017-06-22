@@ -15,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
 
@@ -25,13 +27,27 @@ public class LocalProjectService implements ILocalProjectService {
     @Autowired
     private LocalProjectRepository projectRepo;
 
+    @Autowired
+    private LocalCustomerRepository customerRepo;
+    
+    @Autowired
+    private LocalCategoryRepository categoryRepo;
+
     @Override
+    // @Transactional
     public boolean addProject(DProject project) {
 	try {
 	    project.setSyncKey(UUID.randomUUID().toString());
-	    project.getCategory().setSyncKey(UUID.randomUUID().toString());
-	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
+	    final Category dbCategory = categoryRepo.findByName(project.getCategory().getName());
+	    final Customer dbCustomer = customerRepo.findByName(project.getCustomer().getName());
+	    
+	    final Project dbProject = DomainToDbMapper.domainToDbProject(project);
+	    dbProject.setCustomer(dbCustomer);
+	    dbProject.setCategory(dbCategory);
+	    
+	    projectRepo.save(dbProject);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    LOGGER.error(e);
 	    return false;
 	}

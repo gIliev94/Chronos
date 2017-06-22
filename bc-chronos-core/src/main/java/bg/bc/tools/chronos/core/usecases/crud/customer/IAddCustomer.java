@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DCustomer;
 
 interface IAddCustomer {
 
-    boolean addCustomer(DCustomer customer);
+    DCustomer addCustomer(DCustomer customer);
 }

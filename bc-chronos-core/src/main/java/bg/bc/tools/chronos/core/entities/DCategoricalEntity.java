@@ -3,7 +3,7 @@ package bg.bc.tools.chronos.core.entities;
 import java.util.Objects;
 
 public abstract class DCategoricalEntity extends DObject {
-    
+
     private String syncKey;
 
     private long id;
@@ -17,11 +17,11 @@ public abstract class DCategoricalEntity extends DObject {
     public String getSyncKey() {
 	return syncKey;
     }
-    
+
     public void setSyncKey(String syncKey) {
 	this.syncKey = syncKey;
     }
-    
+
     public long getId() {
 	return id;
     }
@@ -50,8 +50,19 @@ public abstract class DCategoricalEntity extends DObject {
 	return category;
     }
 
+    // public void setCategory(DCategory category) {
+    // this.category = category;
+    // }
+
     public void setCategory(DCategory category) {
+	setCategory(category, true);
+    }
+
+    void setCategory(DCategory category, boolean add) {
 	this.category = category;
+	if (category != null && add) {
+	    category.addCategoricalEntity(this, false);
+	}
     }
 
     @Override
@@ -72,9 +83,9 @@ public abstract class DCategoricalEntity extends DObject {
     public int hashCode() {
 	return Objects.hash(id, name, category.getName());
     }
-    
+
     @Override
     public String toString() {
-        return name;
+	return name;
     }
 }

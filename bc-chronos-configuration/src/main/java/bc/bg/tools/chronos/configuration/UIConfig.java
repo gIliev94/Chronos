@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,12 +62,19 @@ public class UIConfig {
 	    url = getClass().getResource("/fxml/MainWindowRefactor.fxml");
 	    i18nBundle = ResourceBundle.getBundle("i18n.Bundle", Locale.getDefault());
 	    root = FXMLLoader.load(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
+	    // TODO: Load subviews like this... Use the controller to initialize
+	    // forms post-construct
+	    // final FXMLLoader l = new FXMLLoader(url, i18nBundle, new
+	    // JavaFXBuilderFactory(), context::getBean);
+	    // root = l.load();
+	    // final Object ctr = l.getController();
+	    // System.out.println(ctr);
 	} catch (Exception ex) {
 	    System.out.println("Exception on FXMLLoader.load()");
 	    System.out.println("  * url: " + url);
 	    System.out.println("  * " + ex);
 	    System.out.println("    ----------------------------------------\n");
-	    ex.printStackTrace();
+	    ExceptionUtils.printRootCauseStackTrace(ex);
 	    return;
 	}
 
