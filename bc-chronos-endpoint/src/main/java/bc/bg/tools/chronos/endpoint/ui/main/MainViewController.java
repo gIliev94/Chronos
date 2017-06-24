@@ -2,6 +2,7 @@ package bc.bg.tools.chronos.endpoint.ui.main;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -24,12 +25,13 @@ import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
-import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
@@ -140,6 +142,9 @@ public class MainViewController implements Initializable {
 
     @Autowired
     private LocalCategoryRepository categoryRepo;
+
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
     //
 
     @Override
@@ -290,8 +295,22 @@ public class MainViewController implements Initializable {
 	// grandProject.addTask(urgentTask);
 
 	transactionTemplate.execute(txStatus -> {
-	    return persistDomainEntities();
+	    // return persistDomainEntities();
 	    // return persistDbEntities();
+
+	    return persistTrick();
+	});
+
+	// Also works - only displays weird in DB...
+	transactionTemplate.execute(txStatus -> {
+	    final Customer cu = customerRepo.findByName(categorizedCustomer.getName());
+
+	    if (cu != null) {
+		final Collection<Changelog> ffs = changelogRepo.findByUpdatedEntityKey(cu.getSyncKey());
+		return (!ffs.isEmpty() && ffs.size() == 1);
+	    }
+
+	    return false;
 	});
 
 	// TODO: Return Optional<DCustomer> for all add* service methods...
@@ -338,6 +357,93 @@ public class MainViewController implements Initializable {
 
 	// localTaskService.addTask(lenientTask);
 	// localTaskService.addTask(urgentTask);
+    }
+
+    public Boolean persistTrick() {
+	final DCategory defaultCategory = new DCategory();
+	defaultCategory.setSyncKey(UUID.randomUUID().toString());
+	defaultCategory.setName("DEFAULT");
+	defaultCategory.setSortOrder(1);
+
+	final DCategory customCategory = new DCategory();
+	customCategory.setSyncKey(UUID.randomUUID().toString());
+	customCategory.setName("CUSTOM");
+	customCategory.setSortOrder(2);
+
+	final DCustomer uncategorizedCustomer = new DCustomer();
+	uncategorizedCustomer.setSyncKey(UUID.randomUUID().toString());
+	uncategorizedCustomer.setName("PlainCompany");
+	uncategorizedCustomer.setDescription("Just a regular company");
+	uncategorizedCustomer.setCategory(defaultCategory);
+
+	final DCustomer categorizedCustomer = new DCustomer();
+	categorizedCustomer.setSyncKey(UUID.randomUUID().toString());
+	categorizedCustomer.setName("LegitCompany");
+	categorizedCustomer.setDescription("A legitimate company");
+	categorizedCustomer.setCategory(customCategory);
+
+	final DProject smallProject = new DProject();
+	smallProject.setSyncKey(UUID.randomUUID().toString());
+	smallProject.setName("SmallProject");
+	smallProject.setDescription("A small project");
+	smallProject.setCategory(customCategory);
+	smallProject.setCustomer(categorizedCustomer);
+	//// categorizedCustomer.addProject(smallProject);
+
+	final DProject grandProject = new DProject();
+	grandProject.setSyncKey(UUID.randomUUID().toString());
+	grandProject.setName("GrandProject");
+	grandProject.setDescription("A grand project");
+	grandProject.setCategory(customCategory);
+	grandProject.setCustomer(categorizedCustomer);
+	// categorizedCustomer.addProject(grandProject);
+
+	final DTask lenientTask = new DTask();
+	lenientTask.setSyncKey(UUID.randomUUID().toString());
+	lenientTask.setDescription("A low prior task");
+	lenientTask.setName("Lenient task");
+	lenientTask.setHoursEstimated(15);
+	lenientTask.setCategory(defaultCategory);
+	lenientTask.setProject(smallProject);
+
+	final DTask urgentTask = new DTask();
+	urgentTask.setSyncKey(UUID.randomUUID().toString());
+	urgentTask.setDescription("A high prior task");
+	urgentTask.setName("Urgent task");
+	urgentTask.setHoursEstimated(5);
+	urgentTask.setCategory(defaultCategory);
+	urgentTask.setProject(grandProject);
+
+	try {
+	    // Works with/without(only referenced in customer does the
+	    // saving...) - sometimes fails with so better not use it like
+	    // this...
+	    // localCategoryService.addCategory(defaultCategory);
+	    // localCategoryService.addCategory(customCategory);
+	    //
+
+	    // localCustomerService.addCustomer(categorizedCustomer);
+	    // localCustomerService.addCustomer(uncategorizedCustomer);
+	    final DCustomer readyCatCust = localCustomerService.addCustomerWithReferences(categorizedCustomer,
+		    customCategory);
+	    System.err.println(readyCatCust.getName() + " :: " + readyCatCust.getId());
+	    final DCustomer readyUncatCust = localCustomerService.addCustomerWithReferences(uncategorizedCustomer,
+		    defaultCategory);
+	    System.err.println(readyUncatCust.getName() + " :: " + readyUncatCust.getId());
+
+	    // localProjectService.addProject(smallProject);
+	    // localProjectService.addProject(grandProject);
+
+	    // localTaskService.addTask(lenientTask);
+	    // localTaskService.addTask(urgentTask);
+	} catch (NestedRuntimeException jpaNestedExc) {
+	    ExceptionUtils.printRootCauseStackTrace(jpaNestedExc);
+	} catch (Exception ex) {
+	    ExceptionUtils.printRootCauseStackTrace(ex);
+	    return false;
+	}
+
+	return true;
     }
 
     public Boolean persistDomainEntities() {

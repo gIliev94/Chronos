@@ -15,6 +15,8 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
 
@@ -25,12 +27,28 @@ public class LocalTaskService implements ILocalTaskService {
     @Autowired
     private LocalTaskRepository taskRepo;
 
+    @Autowired
+    private LocalProjectRepository projectRepo;
+
+    @Autowired
+    private LocalCategoryRepository categoryRepo;
+
     @Override
     public boolean addTask(DTask task) {
 	try {
+	    // task.setSyncKey(UUID.randomUUID().toString());
+	    // // task.getCategory().setSyncKey(UUID.randomUUID().toString());
+	    // taskRepo.save(DomainToDbMapper.domainToDbTask(task));
 	    task.setSyncKey(UUID.randomUUID().toString());
-	    // task.getCategory().setSyncKey(UUID.randomUUID().toString());
-	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
+
+	    final Category dbCategory = categoryRepo.findByName(task.getCategory().getName());
+	    final Project dbProject = projectRepo.findByName(task.getProject().getName());
+
+	    final Task dbTask = DomainToDbMapper.domainToDbTask(task);
+	    dbTask.setProject(dbProject);
+	    dbTask.setCategory(dbCategory);
+
+	    taskRepo.save(dbTask);
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

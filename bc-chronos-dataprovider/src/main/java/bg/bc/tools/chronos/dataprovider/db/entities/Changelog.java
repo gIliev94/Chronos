@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,9 +15,10 @@ public class Changelog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //TODO: How to increment???
+    // TODO: How to increment???
     @Id
-    @Column(unique = true, nullable = false)
+    @GeneratedValue
+    // @Column(unique = true, nullable = false)
     private long updateCounter;
 
     @Column(unique = false, nullable = false)
@@ -25,7 +27,7 @@ public class Changelog implements Serializable {
     @Column(unique = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date changeTime;
-    
+
     @Column(unique = false, nullable = false)
     private String deviceName;
 
@@ -52,11 +54,11 @@ public class Changelog implements Serializable {
     public void setChangeTime(Date changeTime) {
 	this.changeTime = changeTime;
     }
-    
+
     public String getDeviceName() {
 	return deviceName;
     }
-    
+
     public void setDeviceName(String deviceName) {
 	this.deviceName = deviceName;
     }

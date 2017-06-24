@@ -38,6 +38,7 @@ public class LocalProjectService implements ILocalProjectService {
     public boolean addProject(DProject project) {
 	try {
 	    project.setSyncKey(UUID.randomUUID().toString());
+	    
 	    final Category dbCategory = categoryRepo.findByName(project.getCategory().getName());
 	    final Customer dbCustomer = customerRepo.findByName(project.getCustomer().getName());
 	    

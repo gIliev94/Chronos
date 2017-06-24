@@ -79,8 +79,8 @@ public class LocalDBConfig {
 	// TODO: Somewhat ok JTA config - can`t tell if it works - try w/wo...
 	properties.setProperty("javax.persistence.transactionType", "JTA");
 	properties.setProperty("hibernate.current_session_context_class", "jta");
-	// <entry key="hibernate.transaction.manager_lookup_class"
-	// value="org.hibernate.transaction.WebSphereExtendedJTATransactionLookup"/>
+	properties.setProperty("hibernate.transaction.jta.platform",
+		"org.hibernate.service.jta.platform.internal.BitronixJtaPlatform");
 
 	// TODO: DB multitenancy - irrevant in non-web app I think...
 	// properties.setProperty(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER,
@@ -127,12 +127,13 @@ public class LocalDBConfig {
     public DataSource localDataSource() throws Exception {
 	PoolingDataSourceBean poolingDs = new PoolingDataSourceBean();
 	poolingDs.setDataSource(lrcLocalDataSource());
-	poolingDs.setMinPoolSize(1);
-	poolingDs.setMaxPoolSize(4);
-
+	// TODO: No more than 1 connection for an SQLITE database...
+	poolingDs.setMinPoolSize(0);
+	poolingDs.setMaxPoolSize(1);
+	
 	// TODO: Try setting name HERE+BEANS+btm.props to be the same...
-	//https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
-	//http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
+	// https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
+	// http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
 	// poolingDs.setUniqueName("localDataSource");
 	// poolingDs.setBeanName("localDataSource");
 	poolingDs.setUniqueName("jdbc/local");
@@ -142,12 +143,16 @@ public class LocalDBConfig {
 
 	// TODO: These 2 don`t seem to be doing shit...
 	poolingDs.setAutomaticEnlistingEnabled(true);
-	poolingDs.setAllowLocalTransactions(true);
-	poolingDs.setEnableJdbc4ConnectionTest(true);
+	// poolingDs.setAllowLocalTransactions(true);
+
+	poolingDs.setEnableJdbc4ConnectionTest(false);
+	poolingDs.setTestQuery("SELECT current_timestamp");
 
 	// TODO: Play with these 2 if it ever gets to optimizing...
 	// poolingDs.setShareTransactionConnections(true);
 	// poolingDs.setTwoPcOrderingPosition(2);
+	// poolingDs.setDeferConnectionRelease(true);
+	// poolingDs.setAcquisitionInterval(0);
 
 	// TODO: Is this the more correct approach to use???
 	// BitronixXADataSourceWrapper xaDsWrapper = new
