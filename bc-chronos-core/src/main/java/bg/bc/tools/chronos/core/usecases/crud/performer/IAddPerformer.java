@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DPerformer;
 
 interface IAddPerformer {
 
-    boolean addPerformer(DPerformer performer);
+    DPerformer addPerformer(DPerformer performer);
 }

@@ -15,7 +15,7 @@ public class Changelog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // TODO: How to increment???
+    // TODO: How to increment - use generated value for now???
     @Id
     @GeneratedValue
     // @Column(unique = true, nullable = false)

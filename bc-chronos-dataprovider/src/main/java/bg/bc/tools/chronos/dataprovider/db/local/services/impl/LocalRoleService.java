@@ -1,22 +1,31 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
+import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalRoleService implements ILocalRoleService {
 
@@ -25,18 +34,51 @@ public class LocalRoleService implements ILocalRoleService {
     @Autowired
     private LocalRoleRepository roleRepo;
 
+    @Autowired
+    private LocalCategoryRepository categoryRepo;
+
+    @Autowired
+    private LocalBookingRepository bookingRepo;
+
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Override
-    public boolean addRole(DRole role) {
+    public DRole addRole(DRole role) {
+	role.setSyncKey(UUID.randomUUID().toString());
+
 	try {
-	    role.setSyncKey(UUID.randomUUID().toString());
-	    role.getCategory().setSyncKey(UUID.randomUUID().toString());
-	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
+	    // final Category dbCategory = transactionTemplate
+	    // .execute(txDef ->
+	    // categoryRepo.findByName(role.getCategory().getName()));
+	    //
+	    // final Booking dbBooking = transactionTemplate
+	    // .execute(txDef ->
+	    // bookingRepo.findByName(role.getBooking().getName()));
+	    //
+	    // final Role dbRole = DomainToDbMapper.domainToDbRole(role);
+	    // dbRole.setCategory(dbCategory);
+	    // dbRole.setBooking(dbBooking);
+	    //
+	    // final Role managedNewRole = transactionTemplate.execute(t ->
+	    // roleRepo.save(dbRole));
+	    //
+	    // final Changelog changeLog = new Changelog();
+	    // changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    // changeLog.setDeviceName(EntityHelper.getComputerName());
+	    // changeLog.setUpdatedEntityKey(managedNewRole.getSyncKey());
+	    // changelogRepo.save(changeLog);
+	    //
+	    // return DbToDomainMapper.dbToDomainRole(managedNewRole);
+
+	    throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
 	} catch (Exception e) {
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
-
-	return true;
     }
 
     @Override

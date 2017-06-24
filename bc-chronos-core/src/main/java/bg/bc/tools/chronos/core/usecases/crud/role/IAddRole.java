@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DRole;
 
 interface IAddRole {
 
-    boolean addRole(DRole role);
+    DRole addRole(DRole role);
 }

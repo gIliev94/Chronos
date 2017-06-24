@@ -294,12 +294,24 @@ public class MainViewController implements Initializable {
 	// custCat.addCategoricalEntity(urgentTask);
 	// grandProject.addTask(urgentTask);
 
-	transactionTemplate.execute(txStatus -> {
-	    // return persistDomainEntities();
-	    // return persistDbEntities();
+	// try {
+	// Statement statement =
+	// lrcLocalDataSource.getXAConnection().getConnection().createStatement();
+	// statement.execute("PRAGMA journal_mode = WAL;");
+	// statement.close();
+	// } catch (SQLException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
 
-	    return persistTrick();
-	});
+	// transactionTemplate.execute(txStatus -> {
+	// // return persistDomainEntities();
+	// // return persistDbEntities();
+	//
+	// return persistTrick();
+	// });
+
+	persistTrick();
 
 	// Also works - only displays weird in DB...
 	transactionTemplate.execute(txStatus -> {
@@ -418,24 +430,30 @@ public class MainViewController implements Initializable {
 	    // Works with/without(only referenced in customer does the
 	    // saving...) - sometimes fails with so better not use it like
 	    // this...
-	    // localCategoryService.addCategory(defaultCategory);
-	    // localCategoryService.addCategory(customCategory);
+	    localCategoryService.addCategory(defaultCategory);
+	    localCategoryService.addCategory(customCategory);
 	    //
 
-	    // localCustomerService.addCustomer(categorizedCustomer);
-	    // localCustomerService.addCustomer(uncategorizedCustomer);
-	    final DCustomer readyCatCust = localCustomerService.addCustomerWithReferences(categorizedCustomer,
-		    customCategory);
-	    System.err.println(readyCatCust.getName() + " :: " + readyCatCust.getId());
-	    final DCustomer readyUncatCust = localCustomerService.addCustomerWithReferences(uncategorizedCustomer,
-		    defaultCategory);
-	    System.err.println(readyUncatCust.getName() + " :: " + readyUncatCust.getId());
+	    localCustomerService.addCustomer(categorizedCustomer);
+	    localCustomerService.addCustomer(uncategorizedCustomer);
 
-	    // localProjectService.addProject(smallProject);
-	    // localProjectService.addProject(grandProject);
+	    // final DCustomer readyCatCust =
+	    // localCustomerService.addCustomerWithReferences(categorizedCustomer,
+	    // customCategory);
+	    // System.err.println(readyCatCust.getName() + " :: " +
+	    // readyCatCust.getId());
+	    // final DCustomer readyUncatCust =
+	    // localCustomerService.addCustomerWithReferences(uncategorizedCustomer,
+	    // defaultCategory);
+	    // System.err.println(readyUncatCust.getName() + " :: " +
+	    // readyUncatCust.getId());
 
-	    // localTaskService.addTask(lenientTask);
-	    // localTaskService.addTask(urgentTask);
+	    localProjectService.addProject(smallProject);
+	    localProjectService.addProject(grandProject);
+
+	    localTaskService.addTask(lenientTask);
+	    localTaskService.addTask(urgentTask);
+
 	} catch (NestedRuntimeException jpaNestedExc) {
 	    ExceptionUtils.printRootCauseStackTrace(jpaNestedExc);
 	} catch (Exception ex) {

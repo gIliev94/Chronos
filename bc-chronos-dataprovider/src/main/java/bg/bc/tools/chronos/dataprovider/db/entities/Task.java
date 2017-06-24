@@ -18,7 +18,8 @@ public class Task extends CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = false)
     private long hoursEstimated;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
+    // , cascade = CascadeType.ALL)
     // , fetch = FetchType.LAZY)
     private Project project;
 
@@ -52,7 +53,7 @@ public class Task extends CategoricalEntity implements Serializable {
 
     public void addBooking(Booking booking) {
 	booking.setTask(this);
-	
+
 	if (getBookings() == null) {
 	    setBookings(new ArrayList<Booking>());
 	}

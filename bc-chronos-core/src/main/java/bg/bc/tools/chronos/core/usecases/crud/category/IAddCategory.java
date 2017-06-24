@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DCategory;
 
 interface IAddCategory {
 
-    boolean addCategory(DCategory category);
+    DCategory addCategory(DCategory category);
 }

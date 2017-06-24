@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DTask;
 
 interface IAddTask {
 
-    boolean addTask(DTask task);
+    DTask addTask(DTask task);
 }

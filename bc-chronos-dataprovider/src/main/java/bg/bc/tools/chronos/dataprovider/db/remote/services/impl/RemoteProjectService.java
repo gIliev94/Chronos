@@ -25,15 +25,16 @@ public class RemoteProjectService implements IRemoteProjectService {
     private RemoteProjectRepository projectRepo;
 
     @Override
-    public boolean addProject(DProject project) {
-	try {
-	    projectRepo.save(DomainToDbMapper.domainToDbProject(project));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+    public DProject addProject(DProject project) {
+	// try {
+	// projectRepo.save(DomainToDbMapper.domainToDbProject(project));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return null;
+	// }
+	//
+	// return null;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

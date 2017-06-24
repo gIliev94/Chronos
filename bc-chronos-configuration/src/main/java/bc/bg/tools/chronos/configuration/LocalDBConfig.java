@@ -130,7 +130,7 @@ public class LocalDBConfig {
 	// TODO: No more than 1 connection for an SQLITE database...
 	poolingDs.setMinPoolSize(0);
 	poolingDs.setMaxPoolSize(1);
-	
+
 	// TODO: Try setting name HERE+BEANS+btm.props to be the same...
 	// https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
 	// http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
@@ -147,6 +147,10 @@ public class LocalDBConfig {
 
 	poolingDs.setEnableJdbc4ConnectionTest(false);
 	poolingDs.setTestQuery("SELECT current_timestamp");
+
+	// final Properties p = new Properties();
+	// p.setProperty("journal_mode", "WAL");
+	// poolingDs.setDriverProperties(p);
 
 	// TODO: Play with these 2 if it ever gets to optimizing...
 	// poolingDs.setShareTransactionConnections(true);

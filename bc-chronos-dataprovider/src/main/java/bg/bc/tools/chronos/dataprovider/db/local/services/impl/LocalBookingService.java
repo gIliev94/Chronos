@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -12,19 +13,26 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalBookingService implements ILocalBookingService {
 
@@ -33,8 +41,26 @@ public class LocalBookingService implements ILocalBookingService {
     @Autowired
     private LocalBookingRepository bookingRepo;
 
+    @Autowired
+    private LocalRoleRepository roleRepo;
+
+    @Autowired
+    private LocalPerformerRepository performerRepo;
+
+    @Autowired
+    private LocalTaskRepository taskRepo;
+
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
+    // @Autowired
+    // private LocalBillingRateModifierRepository billingRateModifierRepo;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Override
-    public boolean addBooking(DBooking booking) {
+    public DBooking addBooking(DBooking booking) {
 	// TODO: Impl at later stage
 	// final HolidayManager holidayManager = HolidayManager
 	// .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
@@ -45,15 +71,34 @@ public class LocalBookingService implements ILocalBookingService {
 	// booking.setOvertime(!holidays.isEmpty());
 	// booking.setEffectivelyStopped(false);
 
+	booking.setSyncKey(UUID.randomUUID().toString());
+
 	try {
-	    booking.setSyncKey(UUID.randomUUID().toString());
-	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
+	    final Task dbTask = transactionTemplate.execute(txDef -> taskRepo.findByName(booking.getTask().getName()));
+
+	    final Role dbRole = transactionTemplate.execute(txDef -> roleRepo.findByName(booking.getRole().getName()));
+
+	    final Performer dbPeformer = transactionTemplate
+		    .execute(txDef -> performerRepo.findByHandle(booking.getPerformer().getHandle()));
+
+	    final Booking dbBooking = DomainToDbMapper.domainToDbBooking(booking);
+	    dbBooking.setTask(dbTask);
+	    dbBooking.setRole(dbRole);
+	    dbBooking.setPerformer(dbPeformer);
+
+	    final Booking managedNewBooking = transactionTemplate.execute(t -> bookingRepo.save(dbBooking));
+
+	    final Changelog changeLog = new Changelog();
+	    changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setUpdatedEntityKey(managedNewBooking.getSyncKey());
+	    changelogRepo.save(changeLog);
+
+	    return DbToDomainMapper.dbToDomainBooking(managedNewBooking);
 	} catch (Exception e) {
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
-
-	return true;
     }
 
     @Override

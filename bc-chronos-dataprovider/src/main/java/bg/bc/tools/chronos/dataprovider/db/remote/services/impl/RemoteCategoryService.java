@@ -21,15 +21,16 @@ public class RemoteCategoryService implements IRemoteCategoryService {
     private RemoteCategoryRepository categoryRepo;
 
     @Override
-    public boolean addCategory(DCategory category) {
-	try {
-	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+    public DCategory addCategory(DCategory category) {
+	// try {
+	// categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return null;
+	// }
+	//
+	// return null;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

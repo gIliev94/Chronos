@@ -22,15 +22,16 @@ public class RemotePerformerService implements IRemotePerformerService {
     private RemotePerformerRepository performerRepo;
 
     @Override
-    public boolean addPerformer(DPerformer performer) {
-	try {
-	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+    public DPerformer addPerformer(DPerformer performer) {
+	// try {
+	// performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return false;
+	// }
+	//
+	// return true;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DBooking;
 
 interface IAddBooking {
 
-    boolean addBooking(DBooking booking);
+    DBooking addBooking(DBooking booking);
 }

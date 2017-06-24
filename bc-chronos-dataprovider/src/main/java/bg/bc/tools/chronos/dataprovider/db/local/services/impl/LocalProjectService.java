@@ -1,24 +1,29 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalProjectService implements ILocalProjectService {
 
@@ -29,31 +34,45 @@ public class LocalProjectService implements ILocalProjectService {
 
     @Autowired
     private LocalCustomerRepository customerRepo;
-    
+
     @Autowired
     private LocalCategoryRepository categoryRepo;
 
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Override
     // @Transactional
-    public boolean addProject(DProject project) {
+    public DProject addProject(DProject project) {
+	project.setSyncKey(UUID.randomUUID().toString());
+
 	try {
-	    project.setSyncKey(UUID.randomUUID().toString());
-	    
-	    final Category dbCategory = categoryRepo.findByName(project.getCategory().getName());
-	    final Customer dbCustomer = customerRepo.findByName(project.getCustomer().getName());
-	    
+	    final Category dbCategory = transactionTemplate
+		    .execute(txDef -> categoryRepo.findByName(project.getCategory().getName()));
+
+	    final Customer dbCustomer = transactionTemplate
+		    .execute(txDef -> customerRepo.findByName(project.getCustomer().getName()));
+
 	    final Project dbProject = DomainToDbMapper.domainToDbProject(project);
 	    dbProject.setCustomer(dbCustomer);
 	    dbProject.setCategory(dbCategory);
-	    
-	    projectRepo.save(dbProject);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    LOGGER.error(e);
-	    return false;
-	}
 
-	return true;
+	    final Project managedNewProject = transactionTemplate.execute(t -> projectRepo.save(dbProject));
+
+	    final Changelog changeLog = new Changelog();
+	    changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setUpdatedEntityKey(managedNewProject.getSyncKey());
+	    changelogRepo.save(changeLog);
+
+	    return DbToDomainMapper.dbToDomainProject(managedNewProject);
+	} catch (Exception e) {
+	    LOGGER.error(e);
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
+	}
     }
 
     @Override

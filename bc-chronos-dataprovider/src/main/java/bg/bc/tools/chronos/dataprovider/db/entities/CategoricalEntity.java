@@ -2,7 +2,6 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,8 +29,13 @@ public abstract class CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = true)
     private String description;
 
-    // TODO: Lazy eval not working properly...
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    // TODO: Lazy eval not working properly / cascade also:
+    // https://vladmihalcea.com/2015/03/05/a-beginners-guide-to-jpa-and-hibernate-cascade-types/
+    // http://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
+    // https://dzone.com/articles/beginner%E2%80%99s-guide-jpa-and
+    // http://www.baeldung.com/hibernate-save-persist-update-merge-saveorupdate
+    @ManyToOne(optional = false)
+    // , cascade = {CascadeType.REFRESH})
     // , fetch = FetchType.LAZY)
     private Category category;
 

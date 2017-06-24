@@ -25,15 +25,16 @@ public class RemoteRoleService implements IRemoteRoleService {
     private RemoteRoleRepository roleRepo;
 
     @Override
-    public boolean addRole(DRole role) {
-	try {
-	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+    public DRole addRole(DRole role) {
+	// try {
+	// roleRepo.save(DomainToDbMapper.domainToDbRole(role));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return false;
+	// }
+	//
+	// return true;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

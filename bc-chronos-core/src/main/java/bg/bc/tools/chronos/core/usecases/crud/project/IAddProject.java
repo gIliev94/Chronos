@@ -4,5 +4,5 @@ import bg.bc.tools.chronos.core.entities.DProject;
 
 interface IAddProject {
 
-    boolean addProject(DProject project);
+    DProject addProject(DProject project);
 }

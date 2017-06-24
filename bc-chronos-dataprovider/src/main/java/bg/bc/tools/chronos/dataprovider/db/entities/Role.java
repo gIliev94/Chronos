@@ -2,7 +2,6 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -15,7 +14,8 @@ public class Role extends CategoricalEntity implements Serializable {
     @Column(unique = false, nullable = false)
     private double billingRate;
 
-    @OneToOne(mappedBy = "role", optional = false, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "role", optional = false)
+    // , cascade = CascadeType.ALL)
     // , orphanRemoval = true,fetch = FetchType.LAZY)
     private Booking booking;
 

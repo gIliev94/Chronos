@@ -1,11 +1,13 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier;
 import bg.bc.tools.chronos.core.entities.DBillingRateModifier.DModifierAction;
@@ -13,10 +15,17 @@ import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRateModifierRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBillingRateModifierService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalBillingRateModifierService implements ILocalBillingRateModifierService {
 
@@ -25,17 +34,46 @@ public class LocalBillingRateModifierService implements ILocalBillingRateModifie
     @Autowired
     private LocalBillingRateModifierRepository billingRateModifierRepo;
 
+    @Autowired
+    private LocalBookingRepository bookingRepo;
+
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     @Override
     public boolean addBillingRateModifier(DBillingRateModifier billingRateModifier) {
+	billingRateModifier.setSyncKey(UUID.randomUUID().toString());
+
 	try {
-	    billingRateModifier.setSyncKey(UUID.randomUUID().toString());
-	    billingRateModifierRepo.save(DomainToDbMapper.domainToDbBillingRateModifier(billingRateModifier));
+	    // TODO:??
+	    // final Performer dbBooking = transactionTemplate
+	    // .execute(txDef ->
+	    // bookingRepo.findBysHandle(billingRateModifier.getBooking().getSyncKey()));
+	    //
+	    // final Booking dbBooking =
+	    // DomainToDbMapper.domainToDbBooking(booking);
+	    // dbBooking.setTask(dbTask);
+	    // dbBooking.setRole(dbRole);
+	    // dbBooking.setPerformer(dbPeformer);
+	    //
+	    // final Booking managedNewBooking = transactionTemplate.execute(t
+	    // -> bookingRepo.save(dbBooking));
+	    //
+	    // final Changelog changeLog = new Changelog();
+	    // changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    // changeLog.setDeviceName(EntityHelper.getComputerName());
+	    // changeLog.setUpdatedEntityKey(managedNewBooking.getSyncKey());
+	    // changelogRepo.save(changeLog);
+	    //
+	    // return DbToDomainMapper.dbToDomainBooking(managedNewBooking);
+	    throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
 	} catch (Exception e) {
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
-
-	return true;
     }
 
     @Override

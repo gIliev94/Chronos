@@ -39,14 +39,17 @@ public class Booking {
     @Column(unique = false, nullable = false)
     private long hoursSpent;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
+    // , cascade = CascadeType.ALL)
     private Performer performer;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
+    // , cascade = CascadeType.ALL)
     // , orphanRemoval = true , fetch = FetchType.LAZY)
     private Role role;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
+    // , cascade = CascadeType.ALL)
     private Task task;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)

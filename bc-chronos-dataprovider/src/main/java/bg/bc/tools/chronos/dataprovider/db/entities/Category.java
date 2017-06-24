@@ -34,6 +34,7 @@ public class Category implements Serializable {
     @Column(unique = false, nullable = false)
     private int sortOrder;
 
+    // TODO: Fix annotation fields at some point...
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     // ,orphanRemoval = true)

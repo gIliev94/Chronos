@@ -1,5 +1,6 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -9,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalPerformerService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalPerformerService implements ILocalPerformerService {
 
@@ -23,17 +27,26 @@ public class LocalPerformerService implements ILocalPerformerService {
     @Autowired
     private LocalPerformerRepository performerRepo;
 
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
     @Override
-    public boolean addPerformer(DPerformer performer) {
+    public DPerformer addPerformer(DPerformer performer) {
 	try {
 	    performer.setSyncKey(UUID.randomUUID().toString());
-	    performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
+	    final Performer managedNewPerformer = performerRepo.save(DomainToDbMapper.domainToDbPerformer(performer));
+
+	    final Changelog changeLog = new Changelog();
+	    changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setUpdatedEntityKey(managedNewPerformer.getSyncKey());
+	    changelogRepo.save(changeLog);
+	    
+	    return DbToDomainMapper.dbToDomainPerformer(managedNewPerformer);
 	} catch (Exception e) {
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
-
-	return true;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -10,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
+import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalCategoryService implements ILocalCategoryService {
 
@@ -22,18 +26,29 @@ public class LocalCategoryService implements ILocalCategoryService {
     @Autowired
     private LocalCategoryRepository categoryRepo;
 
+    @Autowired
+    private LocalChangelogRepository changelogRepo;
+
     @Override
-    @Transactional
-    public boolean addCategory(DCategory category) {
+    // @Transactional
+    public DCategory addCategory(DCategory category) {
+	category.setSyncKey(UUID.randomUUID().toString());
+
 	try {
-	    category.setSyncKey(UUID.randomUUID().toString());
-	    categoryRepo.save(DomainToDbMapper.domainToDbCategory(category));
+	    final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
+	    final Category managedNewCategory = categoryRepo.save(dbCategory);
+
+	    final Changelog changeLog = new Changelog();
+	    changeLog.setChangeTime(Calendar.getInstance().getTime());
+	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setUpdatedEntityKey(managedNewCategory.getSyncKey());
+	    changelogRepo.save(changeLog);
+
+	    return DbToDomainMapper.dbToDomainCategory(managedNewCategory);
 	} catch (Exception e) {
 	    LOGGER.error(e);
-	    return false;
+	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
-
-	return true;
     }
 
     @Override

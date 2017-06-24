@@ -37,7 +37,8 @@ public class BillingRateModifier implements Serializable {
     @Column(unique = false, nullable = false)
     private double modifierValue;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
+    // , cascade = CascadeType.ALL)
     private Booking booking;
 
     public String getSyncKey() {

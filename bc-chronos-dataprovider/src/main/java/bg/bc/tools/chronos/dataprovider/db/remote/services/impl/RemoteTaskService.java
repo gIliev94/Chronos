@@ -25,15 +25,16 @@ public class RemoteTaskService implements IRemoteTaskService {
     private RemoteTaskRepository taskRepo;
 
     @Override
-    public boolean addTask(DTask task) {
-	try {
-	    taskRepo.save(DomainToDbMapper.domainToDbTask(task));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+    public DTask addTask(DTask task) {
+	// try {
+	// taskRepo.save(DomainToDbMapper.domainToDbTask(task));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return null;
+	// }
+	//
+	// return null;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

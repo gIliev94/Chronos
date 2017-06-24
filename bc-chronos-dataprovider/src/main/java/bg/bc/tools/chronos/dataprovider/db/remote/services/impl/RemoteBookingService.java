@@ -33,7 +33,7 @@ public class RemoteBookingService implements IRemoteBookingService {
     private RemoteBookingRepository bookingRepo;
 
     @Override
-    public boolean addBooking(DBooking booking) {
+    public DBooking addBooking(DBooking booking) {
 	// TODO: Impl at later stage
 	// final HolidayManager holidayManager = HolidayManager
 	// .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
@@ -44,14 +44,15 @@ public class RemoteBookingService implements IRemoteBookingService {
 	// booking.setOvertime(!holidays.isEmpty());
 	// booking.setEffectivelyStopped(false);
 
-	try {
-	    bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    return false;
-	}
-
-	return true;
+	// try {
+	// bookingRepo.save(DomainToDbMapper.domainToDbBooking(booking));
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// return false;
+	// }
+	//
+	// return true;
+	throw new RuntimeException("NOT IMPLEMENTED - DB CHANGE MAYBE...");
     }
 
     @Override

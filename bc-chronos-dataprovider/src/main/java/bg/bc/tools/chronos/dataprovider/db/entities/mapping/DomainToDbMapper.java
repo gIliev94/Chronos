@@ -140,8 +140,8 @@ public final class DomainToDbMapper {
 	// dbBooking.setOvertime(domainBooking.isOvertime());
 	// dbBooking.setEffectivelyStopped(domainBooking.isEffectivelyStopped());
 
-	domainToDbPerformer(domainBooking.getPerformer()).addBooking(dbBooking);
-	domainToDbTask(domainBooking.getTask()).addBooking(dbBooking);
+	// domainToDbPerformer(domainBooking.getPerformer()).addBooking(dbBooking);
+	// domainToDbTask(domainBooking.getTask()).addBooking(dbBooking);
 
 	return dbBooking;
     }
@@ -158,10 +158,10 @@ public final class DomainToDbMapper {
 	dbRole.setName(domainRole.getName());
 	dbRole.setBillingRate(domainRole.getBillingRate());
 
-	dbRole.setBooking(domainToDbBooking(domainRole.getBooking()));
-	domainToDbBooking(domainRole.getBooking()).setRole(dbRole);
+	// dbRole.setBooking(domainToDbBooking(domainRole.getBooking()));
+	// domainToDbBooking(domainRole.getBooking()).setRole(dbRole);
 
-	domainToDbCategory(domainRole.getCategory()).addCategoricalEntity(dbRole);
+	// domainToDbCategory(domainRole.getCategory()).addCategoricalEntity(dbRole);
 
 	return dbRole;
     }
@@ -194,7 +194,7 @@ public final class DomainToDbMapper {
 		.setModifierAction(ModifierAction.valueOf(domainBillingRateModifier.getModifierAction().name()));
 	dbBillingRateModifier.setModifierValue(domainBillingRateModifier.getModifierValue());
 
-	domainToDbBooking(domainBillingRateModifier.getBooking()).addBillingRateModifier(dbBillingRateModifier);
+	// domainToDbBooking(domainBillingRateModifier.getBooking()).addBillingRateModifier(dbBillingRateModifier);
 
 	return dbBillingRateModifier;
     }

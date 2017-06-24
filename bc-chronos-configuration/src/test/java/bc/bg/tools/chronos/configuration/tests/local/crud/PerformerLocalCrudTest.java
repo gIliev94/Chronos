@@ -16,6 +16,7 @@ import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,7 +49,7 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 
     private static Performer TEST_PERFORMER;
 
-    //https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java/17956000#17956000
+    // https://stackoverflow.com/questions/7883542/getting-the-computer-name-in-java/17956000#17956000
     private static String getComputerName() {
 	Map<String, String> env = System.getenv();
 	if (env.containsKey("COMPUTERNAME")) {
@@ -95,6 +96,7 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     @Test
+    @Ignore
     public void testLocalCrud() {
 	testCreate();
 
@@ -123,8 +125,9 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 	} else {
 	    changeLog.setUpdateCounter(lastChangelog.getUpdateCounter() + 1);
 	}
-	
-	final boolean changelogAdded = localChangelogService.addChangelog(DbToDomainMapper.dbToDomainChangelog(changeLog));
+
+	final boolean changelogAdded = localChangelogService
+		.addChangelog(DbToDomainMapper.dbToDomainChangelog(changeLog));
 	Assert.assertTrue(changelogAdded);
     }
 
