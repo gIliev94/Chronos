@@ -59,7 +59,7 @@ public class UIConfig {
 	URL url = null;
 	ResourceBundle i18nBundle = null;
 	try {
-	    url = getClass().getResource("/fxml/MainWindowRefactor.fxml");
+	    url = getClass().getResource("/fxml/MainWindowSandbox.fxml");
 	    i18nBundle = ResourceBundle.getBundle("i18n.Bundle", Locale.getDefault());
 	    root = FXMLLoader.load(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
 	    // TODO: Load subviews like this... Use the controller to initialize
@@ -80,6 +80,8 @@ public class UIConfig {
 
 	primaryStage.setTitle("Chronos");
 	primaryStage.setScene(new Scene(root, 900, 600));
+	// primaryStage.sizeToScene();
+	primaryStage.setMaximized(true);
 	primaryStage.show();
 
 	// TODO: Remove later - JavaFx demo...

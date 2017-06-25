@@ -1,11 +1,13 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -49,6 +51,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
@@ -70,6 +73,18 @@ public class MainViewController implements Initializable {
 
     @FXML
     private TreeView<Object> treeRoles;
+
+    @FXML
+    private TitledPane titlePaneCustomer;
+
+    @FXML
+    private TitledPane titlePaneProject;
+
+    @FXML
+    private TitledPane titlePaneTask;
+
+    @FXML
+    private TitledPane titlePaneRole;
 
     @FXML
     private VBox stackEntityAttributes;
@@ -498,21 +513,34 @@ public class MainViewController implements Initializable {
 	    Customer custObj = (Customer) newValueObj;
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
 	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
+
+	    titlePaneCustomer.setText(MessageFormat
+		    .format(resources.getString("view.main.tab.workspace.entity.customer.title"), custObj.getName()));
+
 	} else if (newValueObj instanceof Project) {
 	    Project projObj = (Project) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(projObj.getDescription())));
+
+	    titlePaneProject.setText(MessageFormat
+		    .format(resources.getString("view.main.tab.workspace.entity.project.title"), projObj.getName()));
 	} else if (newValueObj instanceof Task) {
 	    Task taskObj = (Task) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(taskObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(taskObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Hours estimated: "),
 		    new TextField(String.valueOf(taskObj.getHoursEstimated()))));
+	    
+	    titlePaneTask.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.task.title"),
+		    taskObj.getName()));
 	} else if (newValueObj instanceof Role) {
 	    Role roleObj = (Role) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(roleObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(roleObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Rate: "), new TextField(String.valueOf(roleObj.getBillingRate()))));
+
+	    titlePaneRole.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.role.title"),
+		    roleObj.getName()));
 	}
     }
 
