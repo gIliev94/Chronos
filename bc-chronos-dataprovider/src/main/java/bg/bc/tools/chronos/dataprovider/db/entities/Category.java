@@ -116,4 +116,9 @@ public class Category implements Serializable {
 	categoricalEntity.setCategory(null);
     }
     //
+
+    @Override
+    public String toString() {
+	return name;
+    }
 }

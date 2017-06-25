@@ -1,8 +1,11 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
+import bg.bc.tools.chronos.core.entities.DObject;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
@@ -49,22 +53,33 @@ public class LocalCustomerService implements ILocalCustomerService {
     @Override
     // @Transactional
     public DCustomer addCustomer(DCustomer customer) {
+	customer.setSyncKey(UUID.randomUUID().toString());
+
 	try {
 	    // TX 1 :: Fetch references
-	    final Category dbCategory = transactionTemplate
-		    .execute(t -> categoryRepo.findByName(customer.getCategory().getName()));
-	    if (dbCategory == null) {
-		throw new IllegalArgumentException("No category in DB named :: " + customer.getCategory());
-	    }
+	    // final Category dbCategory = transactionTemplate
+	    // .execute(t ->
+	    // categoryRepo.findByName(customer.getCategory().getName()));
+	    // if (dbCategory == null) {
+	    // throw new IllegalArgumentException("No category in DB named :: "
+	    // + customer.getCategory());
+	    // }
+	    // //
 	    //
-
-	    // NO_TX 1 :: Set references
-	    final Customer dbCustomer = DomainToDbMapper.domainToDbCustomer(customer);
-	    dbCustomer.setCategory(dbCategory);
-	    //
+	    // // NO_TX 1 :: Set references
+	    // final Customer dbCustomer =
+	    // DomainToDbMapper.domainToDbCustomer(customer);
+	    // dbCustomer.setCategory(dbCategory);
+	    // //
 
 	    // NO_TX 2 :: Add/update entity
-	    final Customer managedNewCustomer = customerRepo.save(dbCustomer);
+	    // final Customer managedNewCustomer =
+	    // customerRepo.save(dbCustomer);
+
+	    final Customer rawCustomer = DomainToDbMapper.domainToDbCustomer(customer);
+	    rawCustomer.setCategory(DomainToDbMapper.domainToDbCategory(customer.getCategory()));
+	    
+	    final Customer managedNewCustomer = customerRepo.save(rawCustomer);
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
@@ -77,6 +92,16 @@ public class LocalCustomerService implements ILocalCustomerService {
 	    LOGGER.error(e);
 	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
+    }
+
+    @Override
+    public DCustomer fetchReferencedEntities(DCustomer customer, Function<DCategory, Void> refCategorySetter) {
+	final Category refCategory = categoryRepo.findByName(customer.getCategory().getName());
+	
+	final Customer dbCustomer = DomainToDbMapper.domainToDbCustomer(customer);
+	dbCustomer.setCategory(refCategory);
+
+	return DbToDomainMapper.dbToDomainCustomer(dbCustomer);
     }
 
     // TODO: Not used...
@@ -206,4 +231,5 @@ public class LocalCustomerService implements ILocalCustomerService {
 
 	return true;
     }
+
 }

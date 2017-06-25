@@ -1,7 +1,9 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
+import bg.bc.tools.chronos.core.entities.DObject;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
@@ -50,17 +53,23 @@ public class LocalProjectService implements ILocalProjectService {
 	project.setSyncKey(UUID.randomUUID().toString());
 
 	try {
-	    final Category dbCategory = transactionTemplate
-		    .execute(txDef -> categoryRepo.findByName(project.getCategory().getName()));
+	    // final Category dbCategory = transactionTemplate
+	    // .execute(txDef ->
+	    // categoryRepo.findByName(project.getCategory().getName()));
+	    //
+	    // final Customer dbCustomer = transactionTemplate
+	    // .execute(txDef ->
+	    // customerRepo.findByName(project.getCustomer().getName()));
+	    //
+	    // final Project dbProject =
+	    // DomainToDbMapper.domainToDbProject(project);
+	    // dbProject.setCustomer(dbCustomer);
+	    // dbProject.setCategory(dbCategory);
+	    //
+	    // final Project managedNewProject = transactionTemplate.execute(t
+	    // -> projectRepo.save(dbProject));
 
-	    final Customer dbCustomer = transactionTemplate
-		    .execute(txDef -> customerRepo.findByName(project.getCustomer().getName()));
-
-	    final Project dbProject = DomainToDbMapper.domainToDbProject(project);
-	    dbProject.setCustomer(dbCustomer);
-	    dbProject.setCategory(dbCategory);
-
-	    final Project managedNewProject = transactionTemplate.execute(t -> projectRepo.save(dbProject));
+	    final Project managedNewProject = projectRepo.save(DomainToDbMapper.domainToDbProject(project));
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
@@ -73,6 +82,18 @@ public class LocalProjectService implements ILocalProjectService {
 	    LOGGER.error(e);
 	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
 	}
+    }
+
+    @Override
+    public DProject fetchReferencedEntities(DProject project) {
+	final Category refCategory = categoryRepo.findByName(project.getCategory().getName());
+	final Customer refCustomer = customerRepo.findByName(project.getCustomer().getName());
+
+	final Project dbProject = DomainToDbMapper.domainToDbProject(project);
+	dbProject.setCategory(refCategory);
+	dbProject.setCustomer(refCustomer);
+
+	return DbToDomainMapper.dbToDomainProject(dbProject);
     }
 
     @Override

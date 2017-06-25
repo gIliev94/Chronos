@@ -2,6 +2,7 @@ package bc.bg.tools.chronos.endpoint.ui.main;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -28,19 +29,18 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
+import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCategoryService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalCustomerService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalProjectService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
-import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalTaskService;
-import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteCustomerService;
+import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -62,16 +62,16 @@ public class MainViewController implements Initializable {
     private Menu menuFile;
 
     @FXML
-    private TreeView<DObject> treeCustomers;
+    private TreeView<Object> treeCustomers;
 
     @FXML
-    private TreeView<DObject> treeProjects;
+    private TreeView<Object> treeProjects;
 
     @FXML
-    private TreeView<DObject> treeTasks;
+    private TreeView<Object> treeTasks;
 
     @FXML
-    private TreeView<DObject> treeRoles;
+    private TreeView<Object> treeRoles;
 
     @FXML
     private VBox stackEntityAttributes;
@@ -81,29 +81,29 @@ public class MainViewController implements Initializable {
     private ResourceBundle resources;
     //
 
-    @Autowired
-    @Qualifier("localCategoryService")
-    private ILocalCategoryService localCategoryService;
-
-    @Autowired
-    @Qualifier("localCustomerService")
-    private ILocalCustomerService localCustomerService;
-
-    @Autowired
-    @Qualifier("localProjectService")
-    private ILocalProjectService localProjectService;
-
-    @Autowired
-    @Qualifier("localTaskService")
-    private ILocalTaskService localTaskService;
-
-    @Autowired
-    @Qualifier("localRoleService")
-    private ILocalRoleService localRoleService;
-
-    @Autowired
-    @Qualifier("remoteCustomerService")
-    private IRemoteCustomerService remoteCustomerService;
+    // @Autowired
+    // @Qualifier("localCategoryService")
+    // private ILocalCategoryService localCategoryService;
+    //
+    // @Autowired
+    // @Qualifier("localCustomerService")
+    // private ILocalCustomerService localCustomerService;
+    //
+    // @Autowired
+    // @Qualifier("localProjectService")
+    // private ILocalProjectService localProjectService;
+    //
+    // @Autowired
+    // @Qualifier("localTaskService")
+    // private ILocalTaskService localTaskService;
+    //
+    // @Autowired
+    // @Qualifier("localRoleService")
+    // private ILocalRoleService localRoleService;
+    //
+    // @Autowired
+    // @Qualifier("remoteCustomerService")
+    // private IRemoteCustomerService remoteCustomerService;
 
     // TODO: First manual transaction attempt - UserTransaction...
     // @Autowired
@@ -145,6 +145,15 @@ public class MainViewController implements Initializable {
 
     @Autowired
     private LocalChangelogRepository changelogRepo;
+
+    @Autowired
+    private LocalRoleRepository roleRepo;
+
+    @Autowired
+    private LocalBookingRepository bookingRepo;
+
+    @Autowired
+    private LocalPerformerRepository performerRepo;
     //
 
     @Override
@@ -152,54 +161,27 @@ public class MainViewController implements Initializable {
 	this.resources = resources;
 
 	// Initialize tree with 'empty' ROOT item...
-	treeCustomers.setRoot(new TreeItem<DObject>());
-	treeProjects.setRoot(new TreeItem<DObject>());
-	treeTasks.setRoot(new TreeItem<DObject>());
-	treeRoles.setRoot(new TreeItem<DObject>());
+	treeCustomers.setRoot(new TreeItem<Object>());
+	treeProjects.setRoot(new TreeItem<Object>());
+	treeTasks.setRoot(new TreeItem<Object>());
+	treeRoles.setRoot(new TreeItem<Object>());
 
 	// TODO: Test code - clean up later...
 	createTestData();
+	//
 
-	// testPopulateTree(treeCustomers);
-	// testPopulateTree(treeProjects);
-	// testPopulateTree(treeTasks);
-	// testPopulateTree(treeRoles);
+	testPopulateTree(treeCustomers);
+	testPopulateTree(treeProjects);
+	testPopulateTree(treeTasks);
+	testPopulateTree(treeRoles);
 	//
     }
 
     @Transactional("transactionManager")
     private void createTestData() {
-	final Category defCat = new Category();
-	defCat.setName("DEFAULT");
-	defCat.setSortOrder(1);
-	//
-	defCat.setSyncKey(UUID.randomUUID().toString());
-	//
-
-	final Category custCat = new Category();
-	custCat.setName("CUSTOM");
-	custCat.setSortOrder(2);
-	//
-	custCat.setSyncKey(UUID.randomUUID().toString());
-	//
-
-	final Customer uncategorizedCustomer = new Customer();
-	uncategorizedCustomer.setName("PlainCompany");
-	uncategorizedCustomer.setDescription("Just a regular company");
-	//
-	uncategorizedCustomer.setCategory(defCat);
-	uncategorizedCustomer.setSyncKey(UUID.randomUUID().toString());
-	//
-	// defCat.addCategoricalEntity(uncategorizedCustomer);
-
-	final Customer categorizedCustomer = new Customer();
-	categorizedCustomer.setName("LegitCompany");
-	categorizedCustomer.setDescription("A legitimate company");
-	//
-	categorizedCustomer.setCategory(custCat);
-	categorizedCustomer.setSyncKey(UUID.randomUUID().toString());
-	//
-	// custCat.addCategoricalEntity(categorizedCustomer);
+	transactionTemplate.execute(txStatus -> {
+	    return persistDbEntities();
+	});
 
 	// TODO: This might be the way to go when you want to perform
 	// transaction manually...
@@ -248,51 +230,21 @@ public class MainViewController implements Initializable {
 	// e.printStackTrace();
 	// }
 
-	final Project smallProject = new Project();
-	smallProject.setName("SmallProject");
-	smallProject.setDescription("A small project");
+	// Also works - only displays weird in DB...
+	// transactionTemplate.execute(txStatus -> {
+	// final Customer cu =
+	// customerRepo.findByName(categorizedCustomer.getName());
 	//
-	smallProject.setSyncKey(UUID.randomUUID().toString());
-	smallProject.setCategory(custCat);
-	smallProject.setCustomer(categorizedCustomer);
+	// if (cu != null) {
+	// final Collection<Changelog> ffs =
+	// changelogRepo.findByUpdatedEntityKey(cu.getSyncKey());
+	// return (!ffs.isEmpty() && ffs.size() == 1);
+	// }
 	//
-	// custCat.addCategoricalEntity(smallProject);
-	// categorizedCustomer.addProject(smallProject);
+	// return false;
+	// });
 
-	final Project grandProject = new Project();
-	grandProject.setName("GrandProject");
-	grandProject.setDescription("A grand project");
-	//
-	grandProject.setSyncKey(UUID.randomUUID().toString());
-	grandProject.setCategory(custCat);
-	grandProject.setCustomer(categorizedCustomer);
-	//
-	// custCat.addCategoricalEntity(grandProject);
-	// categorizedCustomer.addProject(grandProject);
-
-	final Task lenientTask = new Task();
-	lenientTask.setDescription("A low prior task");
-	lenientTask.setName("Lenient task");
-	lenientTask.setHoursEstimated(15);
-	//
-	lenientTask.setSyncKey(UUID.randomUUID().toString());
-	lenientTask.setCategory(defCat);
-	lenientTask.setProject(smallProject);
-	//
-	// custCat.addCategoricalEntity(lenientTask);
-	// smallProject.addTask(lenientTask);
-
-	final Task urgentTask = new Task();
-	urgentTask.setDescription("A high prior task");
-	urgentTask.setName("Urgent task");
-	urgentTask.setHoursEstimated(5);
-	//
-	urgentTask.setSyncKey(UUID.randomUUID().toString());
-	urgentTask.setCategory(defCat);
-	urgentTask.setProject(grandProject);
-	//
-	// custCat.addCategoricalEntity(urgentTask);
-	// grandProject.addTask(urgentTask);
+	// TODO: Return Optional<DCustomer> for all add* service methods...
 
 	// try {
 	// Statement statement =
@@ -300,168 +252,8 @@ public class MainViewController implements Initializable {
 	// statement.execute("PRAGMA journal_mode = WAL;");
 	// statement.close();
 	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// }
-
-	// transactionTemplate.execute(txStatus -> {
-	// // return persistDomainEntities();
-	// // return persistDbEntities();
-	//
-	// return persistTrick();
-	// });
-
-	persistTrick();
-
-	// Also works - only displays weird in DB...
-	transactionTemplate.execute(txStatus -> {
-	    final Customer cu = customerRepo.findByName(categorizedCustomer.getName());
-
-	    if (cu != null) {
-		final Collection<Changelog> ffs = changelogRepo.findByUpdatedEntityKey(cu.getSyncKey());
-		return (!ffs.isEmpty() && ffs.size() == 1);
-	    }
-
-	    return false;
-	});
-
-	// TODO: Return Optional<DCustomer> for all add* service methods...
-	// transactionTemplate.execute(a ->
-	// localCategoryService.addCategory(defCat) // nl
-	// && localCategoryService.addCategory(custCat) // nl
-	// );
-
-	// localCategoryService.addCategory(defCat);
-	// localCategoryService.addCategory(custCat);
-
-	// transactionTemplate.execute(a ->
-	// localCustomerService.addCustomer(categorizedCustomer) // nl
-	// && localCustomerService.addCustomer(uncategorizedCustomer) // nl
-	// );
-
-	// final DCustomer addedCatCust =
-	// localCustomerService.addCustomer(categorizedCustomer);
-	// final DCustomer addedUncatCust =
-	// localCustomerService.addCustomer(uncategorizedCustomer);
-
-	// addedCatCust.addProject(smallProject);
-	// final DCategory theCat =
-	// localCategoryService.getCategory(addedCatCust.getCategory().getName());
-	// theCat.addCategoricalEntity(smallProject);
-	//
-	// localCategoryService.updateCategory(theCat);
-
-	// transactionTemplate.execute(a ->
-	// localProjectService.addProject(smallProject) // nl
-	// && localProjectService.addProject(grandProject) // nl
-	// );
-
-	// smallProject.setCategory(custCat);
-	// smallProject.setCustomer(addedCatCust);
-
-	// localProjectService.addProject(smallProject);
-	// localProjectService.addProject(grandProject);
-
-	// transactionTemplate.execute(a ->
-	// localTaskService.addTask(lenientTask) // nl
-	// && localTaskService.addTask(urgentTask) // nl
-	// );
-
-	// localTaskService.addTask(lenientTask);
-	// localTaskService.addTask(urgentTask);
-    }
-
-    public Boolean persistTrick() {
-	final DCategory defaultCategory = new DCategory();
-	defaultCategory.setSyncKey(UUID.randomUUID().toString());
-	defaultCategory.setName("DEFAULT");
-	defaultCategory.setSortOrder(1);
-
-	final DCategory customCategory = new DCategory();
-	customCategory.setSyncKey(UUID.randomUUID().toString());
-	customCategory.setName("CUSTOM");
-	customCategory.setSortOrder(2);
-
-	final DCustomer uncategorizedCustomer = new DCustomer();
-	uncategorizedCustomer.setSyncKey(UUID.randomUUID().toString());
-	uncategorizedCustomer.setName("PlainCompany");
-	uncategorizedCustomer.setDescription("Just a regular company");
-	uncategorizedCustomer.setCategory(defaultCategory);
-
-	final DCustomer categorizedCustomer = new DCustomer();
-	categorizedCustomer.setSyncKey(UUID.randomUUID().toString());
-	categorizedCustomer.setName("LegitCompany");
-	categorizedCustomer.setDescription("A legitimate company");
-	categorizedCustomer.setCategory(customCategory);
-
-	final DProject smallProject = new DProject();
-	smallProject.setSyncKey(UUID.randomUUID().toString());
-	smallProject.setName("SmallProject");
-	smallProject.setDescription("A small project");
-	smallProject.setCategory(customCategory);
-	smallProject.setCustomer(categorizedCustomer);
-	//// categorizedCustomer.addProject(smallProject);
-
-	final DProject grandProject = new DProject();
-	grandProject.setSyncKey(UUID.randomUUID().toString());
-	grandProject.setName("GrandProject");
-	grandProject.setDescription("A grand project");
-	grandProject.setCategory(customCategory);
-	grandProject.setCustomer(categorizedCustomer);
-	// categorizedCustomer.addProject(grandProject);
-
-	final DTask lenientTask = new DTask();
-	lenientTask.setSyncKey(UUID.randomUUID().toString());
-	lenientTask.setDescription("A low prior task");
-	lenientTask.setName("Lenient task");
-	lenientTask.setHoursEstimated(15);
-	lenientTask.setCategory(defaultCategory);
-	lenientTask.setProject(smallProject);
-
-	final DTask urgentTask = new DTask();
-	urgentTask.setSyncKey(UUID.randomUUID().toString());
-	urgentTask.setDescription("A high prior task");
-	urgentTask.setName("Urgent task");
-	urgentTask.setHoursEstimated(5);
-	urgentTask.setCategory(defaultCategory);
-	urgentTask.setProject(grandProject);
-
-	try {
-	    // Works with/without(only referenced in customer does the
-	    // saving...) - sometimes fails with so better not use it like
-	    // this...
-	    localCategoryService.addCategory(defaultCategory);
-	    localCategoryService.addCategory(customCategory);
-	    //
-
-	    localCustomerService.addCustomer(categorizedCustomer);
-	    localCustomerService.addCustomer(uncategorizedCustomer);
-
-	    // final DCustomer readyCatCust =
-	    // localCustomerService.addCustomerWithReferences(categorizedCustomer,
-	    // customCategory);
-	    // System.err.println(readyCatCust.getName() + " :: " +
-	    // readyCatCust.getId());
-	    // final DCustomer readyUncatCust =
-	    // localCustomerService.addCustomerWithReferences(uncategorizedCustomer,
-	    // defaultCategory);
-	    // System.err.println(readyUncatCust.getName() + " :: " +
-	    // readyUncatCust.getId());
-
-	    localProjectService.addProject(smallProject);
-	    localProjectService.addProject(grandProject);
-
-	    localTaskService.addTask(lenientTask);
-	    localTaskService.addTask(urgentTask);
-
-	} catch (NestedRuntimeException jpaNestedExc) {
-	    ExceptionUtils.printRootCauseStackTrace(jpaNestedExc);
-	} catch (Exception ex) {
-	    ExceptionUtils.printRootCauseStackTrace(ex);
-	    return false;
-	}
-
-	return true;
     }
 
     public Boolean persistDomainEntities() {
@@ -479,45 +271,33 @@ public class MainViewController implements Initializable {
 	uncategorizedCustomer.setSyncKey(UUID.randomUUID().toString());
 	uncategorizedCustomer.setName("PlainCompany");
 	uncategorizedCustomer.setDescription("Just a regular company");
-	// uncategorizedCustomer.setCategory(defaultCategory);
 
 	final DCustomer categorizedCustomer = new DCustomer();
 	categorizedCustomer.setSyncKey(UUID.randomUUID().toString());
 	categorizedCustomer.setName("LegitCompany");
 	categorizedCustomer.setDescription("A legitimate company");
-	// categorizedCustomer.setCategory(customCategory);
 
 	final DProject smallProject = new DProject();
 	smallProject.setSyncKey(UUID.randomUUID().toString());
 	smallProject.setName("SmallProject");
 	smallProject.setDescription("A small project");
-	// smallProject.setCategory(customCategory);
-	// smallProject.setCustomer(categorizedCustomer);
-	//// categorizedCustomer.addProject(smallProject);
 
 	final DProject grandProject = new DProject();
 	grandProject.setSyncKey(UUID.randomUUID().toString());
 	grandProject.setName("GrandProject");
 	grandProject.setDescription("A grand project");
-	// grandProject.setCategory(customCategory);
-	// grandProject.setCustomer(categorizedCustomer);
-	// categorizedCustomer.addProject(grandProject);
 
 	final DTask lenientTask = new DTask();
 	lenientTask.setSyncKey(UUID.randomUUID().toString());
 	lenientTask.setDescription("A low prior task");
 	lenientTask.setName("Lenient task");
 	lenientTask.setHoursEstimated(15);
-	// lenientTask.setCategory(defaultCategory);
-	// lenientTask.setProject(smallProject);
 
 	final DTask urgentTask = new DTask();
 	urgentTask.setSyncKey(UUID.randomUUID().toString());
 	urgentTask.setDescription("A high prior task");
 	urgentTask.setName("Urgent task");
 	urgentTask.setHoursEstimated(5);
-	// urgentTask.setCategory(defaultCategory);
-	// urgentTask.setProject(grandProject);
 
 	try {
 	    // NOT WORKING - no ID maybe...
@@ -585,49 +365,74 @@ public class MainViewController implements Initializable {
 	uncategorizedCustomer.setSyncKey(UUID.randomUUID().toString());
 	uncategorizedCustomer.setName("PlainCompany");
 	uncategorizedCustomer.setDescription("Just a regular company");
-	uncategorizedCustomer.setCategory(defaultCategory);
 
 	final Customer categorizedCustomer = new Customer();
 	categorizedCustomer.setSyncKey(UUID.randomUUID().toString());
 	categorizedCustomer.setName("LegitCompany");
 	categorizedCustomer.setDescription("A legitimate company");
-	categorizedCustomer.setCategory(customCategory);
 
 	final Project smallProject = new Project();
 	smallProject.setSyncKey(UUID.randomUUID().toString());
 	smallProject.setName("SmallProject");
 	smallProject.setDescription("A small project");
-	smallProject.setCategory(customCategory);
-	smallProject.setCustomer(categorizedCustomer);
 
 	final Project grandProject = new Project();
 	grandProject.setSyncKey(UUID.randomUUID().toString());
 	grandProject.setName("GrandProject");
 	grandProject.setDescription("A grand project");
-	grandProject.setCategory(customCategory);
-	grandProject.setCustomer(categorizedCustomer);
 
 	final Task lenientTask = new Task();
 	lenientTask.setSyncKey(UUID.randomUUID().toString());
 	lenientTask.setDescription("A low prior task");
 	lenientTask.setName("Lenient task");
 	lenientTask.setHoursEstimated(15);
-	lenientTask.setCategory(defaultCategory);
-	lenientTask.setProject(smallProject);
 
 	final Task urgentTask = new Task();
 	urgentTask.setSyncKey(UUID.randomUUID().toString());
 	urgentTask.setDescription("A high prior task");
 	urgentTask.setName("Urgent task");
 	urgentTask.setHoursEstimated(5);
-	urgentTask.setCategory(defaultCategory);
-	urgentTask.setProject(grandProject);
 
 	try {
-	    categoryRepo.save(Arrays.asList(defaultCategory, customCategory));
-	    customerRepo.save(Arrays.asList(uncategorizedCustomer, categorizedCustomer));
-	    projectRepo.save(Arrays.asList(smallProject, grandProject));
-	    taskRepo.save(Arrays.asList(lenientTask, urgentTask));
+	    final Category mDefCat = categoryRepo.save(defaultCategory);
+	    appendChangelog(mDefCat.getSyncKey());
+
+	    final Category mCustCat = categoryRepo.save(customCategory);
+	    appendChangelog(mCustCat.getSyncKey());
+
+	    uncategorizedCustomer.setCategory(mDefCat);
+	    categorizedCustomer.setCategory(mCustCat);
+
+	    final Customer mUncatCust = customerRepo.save(uncategorizedCustomer);
+	    appendChangelog(mUncatCust.getSyncKey());
+
+	    final Customer mCatCust = customerRepo.save(categorizedCustomer);
+	    appendChangelog(mCatCust.getSyncKey());
+
+	    smallProject.setCategory(mCustCat);
+	    smallProject.setCustomer(mCatCust);
+
+	    grandProject.setCategory(mCustCat);
+	    grandProject.setCustomer(mCatCust);
+
+	    final Project mSmallProj = projectRepo.save(smallProject);
+	    appendChangelog(mSmallProj.getSyncKey());
+
+	    final Project mGrandProj = projectRepo.save(grandProject);
+	    appendChangelog(mGrandProj.getSyncKey());
+
+	    lenientTask.setCategory(mDefCat);
+	    lenientTask.setProject(mSmallProj);
+
+	    urgentTask.setCategory(mDefCat);
+	    urgentTask.setProject(mGrandProj);
+
+	    final Task mLenTask = taskRepo.save(lenientTask);
+	    appendChangelog(mLenTask.getSyncKey());
+
+	    final Task mUrgeTask = taskRepo.save(urgentTask);
+	    appendChangelog(mUrgeTask.getSyncKey());
+
 	} catch (NestedRuntimeException jpaNestedExc) {
 	    ExceptionUtils.printRootCauseStackTrace(jpaNestedExc);
 	} catch (Exception ex) {
@@ -638,37 +443,46 @@ public class MainViewController implements Initializable {
 	return true;
     }
 
-    private void testPopulateTree(final TreeView<DObject> tree) {
-	final List<DCategory> categories = localCategoryService.getCategories();
+    private void appendChangelog(String entitySyncKey) {
+	final Changelog changeLog = new Changelog();
+	changeLog.setChangeTime(Calendar.getInstance().getTime());
+	changeLog.setDeviceName(EntityHelper.getComputerName());
+	changeLog.setUpdatedEntityKey(entitySyncKey);
+
+	changelogRepo.save(changeLog);
+    }
+
+    private void testPopulateTree(final TreeView<Object> tree) {
+	final List<Category> categories = ((List<Category>) categoryRepo.findAll());
 	// TODO; Keep the sorter idea - works nicely...
 	categories.sort( // nl
-		Comparator.comparing(DCategory::getSortOrder) // nl
-			.thenComparing(DCategory::getName) // nl
+		Comparator.comparing(Category::getSortOrder) // nl
+			.thenComparing(Category::getName) // nl
 	);
 	//
 
-	final ObservableList<TreeItem<DObject>> categoryLevel = tree.getRoot().getChildren();
+	final ObservableList<TreeItem<Object>> categoryLevel = tree.getRoot().getChildren();
 	final boolean categoriesAppended = categoryLevel.addAll(categories.stream() // nl
-		.map(TreeItem<DObject>::new) // nl
+		.map(TreeItem<Object>::new) // nl
 		.collect(Collectors.toList()));
 	if (categoriesAppended) {
-	    for (TreeItem<DObject> catNode : categoryLevel) {
+	    for (TreeItem<Object> catNode : categoryLevel) {
 		catNode.setExpanded(true);
 
-		final DCategory catObj = (DCategory) catNode.getValue();
+		final Category catObj = (Category) catNode.getValue();
 
-		List<? extends DObject> subEntities = null;
+		Collection<?> subEntities = null;
 		if (Objects.equals(tree.getId(), "treeCustomers")) {
-		    subEntities = localCustomerService.getCustomers(catObj);
+		    subEntities = customerRepo.findByCategory(catObj);
 		} else if (Objects.equals(tree.getId(), "treeProjects")) {
-		    subEntities = localProjectService.getProjects(catObj);
+		    subEntities = projectRepo.findByCategory(catObj);
 		} else if (Objects.equals(tree.getId(), "treeTasks")) {
-		    subEntities = localTaskService.getTasks(catObj);
+		    subEntities = taskRepo.findByCategory(catObj);
 		} else if (Objects.equals(tree.getId(), "treeRoles")) {
-		    subEntities = localRoleService.getRoles(catObj);
+		    subEntities = roleRepo.findByCategory(catObj);
 		}
 		subEntities.stream() // nl
-			.map(TreeItem<DObject>::new) // nl
+			.map(TreeItem<Object>::new) // nl
 			.forEach(catNode.getChildren()::add);
 	    }
 	}
@@ -676,28 +490,28 @@ public class MainViewController implements Initializable {
 	tree.getSelectionModel().selectedItemProperty().addListener(this::showEntityAttributes);
     }
 
-    private void showEntityAttributes(ObservableValue<? extends TreeItem<DObject>> observable,
-	    TreeItem<DObject> old_val, TreeItem<DObject> new_val) {
+    private void showEntityAttributes(ObservableValue<? extends TreeItem<Object>> observable, TreeItem<Object> old_val,
+	    TreeItem<Object> new_val) {
 	final ObservableList<Node> entityAttrList = stackEntityAttributes.getChildren();
 	entityAttrList.clear();
 
-	final DObject newValueObj = new_val.getValue();
-	if (newValueObj instanceof DCustomer) {
-	    DCustomer custObj = (DCustomer) newValueObj;
+	final Object newValueObj = new_val.getValue();
+	if (newValueObj instanceof Customer) {
+	    Customer custObj = (Customer) newValueObj;
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
 	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
-	} else if (newValueObj instanceof DProject) {
-	    DProject projObj = (DProject) newValueObj;
+	} else if (newValueObj instanceof Project) {
+	    Project projObj = (Project) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(projObj.getDescription())));
-	} else if (newValueObj instanceof DTask) {
-	    DTask taskObj = (DTask) newValueObj;
+	} else if (newValueObj instanceof Task) {
+	    Task taskObj = (Task) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(taskObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(taskObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Hours estimated: "),
 		    new TextField(String.valueOf(taskObj.getHoursEstimated()))));
-	} else if (newValueObj instanceof DRole) {
-	    DRole roleObj = (DRole) newValueObj;
+	} else if (newValueObj instanceof Role) {
+	    Role roleObj = (Role) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(roleObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(roleObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Rate: "), new TextField(String.valueOf(roleObj.getBillingRate()))));

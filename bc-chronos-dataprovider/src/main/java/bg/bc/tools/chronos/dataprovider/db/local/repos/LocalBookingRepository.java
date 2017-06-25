@@ -43,4 +43,6 @@ public interface LocalBookingRepository extends CrudRepository<Booking, Long> {
     Collection<Booking> findByPerformerAndRole(Performer performer, Role role);
 
     Collection<Booking> findByTask(Task task);
+
+    Booking findBySyncKey(String syncKey);
 }

@@ -95,4 +95,9 @@ public abstract class CategoricalEntity implements Serializable {
 	}
     }
     //
+
+    @Override
+    public String toString() {
+	return name;
+    }
 }
