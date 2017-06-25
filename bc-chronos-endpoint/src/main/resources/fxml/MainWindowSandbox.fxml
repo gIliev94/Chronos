@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- prefHeight="700.0" prefWidth="1000.0" -->
+<GridPane hgap="5" prefHeight="700.0" prefWidth="1000.0" stylesheets="@dark.css" vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+	<padding>
+		<Insets bottom="5" left="5" right="5" top="5" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="5" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="90" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="5" vgrow="ALWAYS" />
+	</rowConstraints>
+
+	<MenuBar GridPane.columnIndex="0" GridPane.rowIndex="0"  >
+		<menus>
+			<Menu fx:id="menuFile" mnemonicParsing="false" text="%view.main.menu.file.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Close" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.edit.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Delete" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.view.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Action 1" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.settings.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Action 1" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.help.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="About" />
+				</items>
+			</Menu>
+		</menus>
+	</MenuBar>
+
+	<TabPane tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0" GridPane.rowIndex="1"  >
+		<tabs>
+			<Tab text="%view.main.tab.workspace.title"  >
+				<content>
+					<GridPane>
+						<padding>
+							<Insets bottom="5" left="5" right="5" top="5" />
+						</padding>
+						<columnConstraints>
+							<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
+							<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
+							<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
+						</columnConstraints>
+						<rowConstraints>
+							<RowConstraints percentHeight="10" vgrow="ALWAYS" />
+							<RowConstraints percentHeight="90" vgrow="ALWAYS" />
+						</rowConstraints>
+
+						<Label   contentDisplay="CENTER" text="%view.main.tab.workspace.user.label" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+
+						<!-- alignment="TOP_CENTER" -->
+						<VBox   alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
+							<children>
+								<!-- <ToolBar orientation="VERTICAL"> -->
+								<!-- <items> -->
+								<Button mnemonicParsing="false" text="A1" />
+								<Button mnemonicParsing="false" text="A2" />
+								<Button mnemonicParsing="false" text="A3" />
+								<!-- </items> -->
+								<!-- </ToolBar> -->
+							</children>
+						</VBox>
+
+						<!-- FlowPane maybe? -->
+						<HBox   alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
+							<children>
+								<!-- <ToolBar> -->
+								<!-- <items> -->
+								<!-- <Button mnemonicParsing="false" text="A1" /> -->
+								<!-- <Button mnemonicParsing="false" text="A2" /> -->
+								<!-- <Button mnemonicParsing="false" text="A3" /> -->
+								<!-- </items> -->
+								<!-- </ToolBar> -->
+								<DatePicker   />
+							</children>
+						</HBox>
+
+						<Accordion   GridPane.columnIndex="0" GridPane.rowIndex="1">
+							<panes>
+								<TitledPane   fx:id="titlePaneCustomer" animated="false" text="%view.main.tab.workspace.entity.customer.title.na">
+									<content>
+										<AnchorPane  >
+											<children>
+												<ScrollPane  >
+													<content>
+														<TreeView   fx:id="treeCustomers" showRoot="false" />
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</TitledPane>
+								<TitledPane   fx:id="titlePaneProject" animated="false" text="%view.main.tab.workspace.entity.project.title.na">
+									<content>
+										<AnchorPane  >
+											<children>
+												<ScrollPane  >
+													<content>
+														<TreeView     fx:id="treeProjects" showRoot="false" />
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</TitledPane>
+								<TitledPane   fx:id="titlePaneTask" animated="false" style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.task.title.na">
+									<content>
+										<AnchorPane   style="-fx-background-color: transparent;">
+											<children>
+												<ScrollPane   style="-fx-background-color: transparent;">
+													<content>
+														<TreeView   fx:id="treeTasks" showRoot="false" style="-fx-background-color: transparent;" />
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</TitledPane>
+								<TitledPane   fx:id="titlePaneRole" animated="false" style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.role.title.na">
+									<content>
+										<VBox   style="-fx-background-color: transparent;">
+											<children>
+												<!-- styleClass="#ffs" stylesheets="@main.css" -->
+												<ScrollPane   style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+													<content>
+														<TreeView   fx:id="treeRoles" showRoot="false" style="-fx-background-color: transparent;" />
+													</content>
+												</ScrollPane>
+											</children>
+										</VBox>
+									</content>
+								</TitledPane>
+							</panes>
+						</Accordion>
+
+						<GridPane GridPane.columnIndex="2" GridPane.rowIndex="1"  >
+							<columnConstraints>
+								<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints percentHeight="50" vgrow="ALWAYS" />
+								<RowConstraints percentHeight="30" vgrow="ALWAYS" />
+								<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+							</rowConstraints>
+
+							<TableView   tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+
+								<columns>
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.task" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.description" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.starttime" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.endtime" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.duration" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.timespent" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.performer" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.role" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.rate" />
+								</columns>
+							</TableView>
+
+							<VBox   fx:id="stackEntityAttributes" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+							<!-- <ButtonBar GridPane.columnIndex="0" GridPane.rowIndex="2" -->
+							<!-- nodeOrientation="RIGHT_TO_LEFT" GridPane.hgrow="ALWAYS" -->
+							<!-- GridPane.halignment="CENTER"> -->
+							<!-- <buttons> -->
+							<!-- <Button disable="true" mnemonicParsing="false" -->
+							<!-- text="%view.main.tab.workspace.perspective.tabular" -->
+							<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
+							<!-- <Button mnemonicParsing="false" -->
+							<!-- text="%view.main.tab.workspace.perspective.graphical" -->
+							<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
+							<!-- </buttons> -->
+							<!-- </ButtonBar> -->
+
+							<HBox   GridPane.columnIndex="0" GridPane.rowIndex="2">
+								<children>
+									<Button disable="true" maxWidth="1000" mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS" />
+									<Button maxWidth="1000" mnemonicParsing="false" text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" />
+								</children>
+							</HBox>
+						</GridPane>
+					</GridPane>
+				</content>
+			</Tab>
+			<Tab   text="%view.main.tab.performers.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab   text="%view.main.tab.reporting.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab   text="%view.main.tab.statistics.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab   text="%view.main.tab.synchronization.title">
+				<content>
+				</content>
+			</Tab>
+		</tabs>
+	</TabPane>
+
+	<!-- FlowPane maybe? -->
+	<HBox alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2">
+		<children>
+			<Label contentDisplay="RIGHT" text="%view.main.credits.label" textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
+		</children>
+	</HBox>
+</GridPane>
