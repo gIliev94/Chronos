@@ -109,9 +109,9 @@ public class PerformerLocalCrudTest extends AbstractJUnit4SpringContextTests {
     }
 
     public void testCreate() {
-	final boolean performerAdded = localPerformerService
+	final DPerformer performerAdded = localPerformerService
 		.addPerformer(DbToDomainMapper.dbToDomainPerformer(TEST_PERFORMER));
-	Assert.assertTrue(performerAdded);
+	Assert.assertTrue(performerAdded != null);
 
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
