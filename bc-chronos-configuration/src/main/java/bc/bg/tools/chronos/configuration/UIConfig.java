@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 
+import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -53,22 +55,30 @@ public class UIConfig {
 	return new MainViewController();
     }
 
+    @DependsOn("transactionManager")
+    @Bean(name = "loginController")
+    public LoginController loginController() {
+	return new LoginController();
+    }
+
     // TODO: Refactor paths/resources obtaining method when you get to JavaFx...
     public void showStartScreen(Stage primaryStage, ConfigurableApplicationContext context) {
 	Parent root = null;
 	URL url = null;
 	ResourceBundle i18nBundle = null;
+	Scene theScene = null;
 	try {
-	    url = getClass().getResource("/fxml/MainWindowSandbox.fxml");
+	    url = getClass().getResource("/fxml/LoginWindow.fxml");
 	    i18nBundle = ResourceBundle.getBundle("i18n.Bundle", Locale.getDefault());
-	    root = FXMLLoader.load(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
-	    // TODO: Load subviews like this... Use the controller to initialize
-	    // forms post-construct
-	    // final FXMLLoader l = new FXMLLoader(url, i18nBundle, new
-	    // JavaFXBuilderFactory(), context::getBean);
-	    // root = l.load();
-	    // final Object ctr = l.getController();
-	    // System.out.println(ctr);
+
+	    final FXMLLoader l = new FXMLLoader(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
+	    root = l.load();
+
+	    final LoginController ctr = l.<LoginController> getController();
+	    theScene = new Scene(root, 900, 600);
+	    ctr.refScene(theScene);
+	    ctr.loadTestData();
+
 	} catch (Exception ex) {
 	    System.out.println("Exception on FXMLLoader.load()");
 	    System.out.println("  * url: " + url);
@@ -79,7 +89,9 @@ public class UIConfig {
 	}
 
 	primaryStage.setTitle("Chronos");
-	primaryStage.setScene(new Scene(root, 900, 600));
+	primaryStage.getIcons().add(new Image("/images/chronos_icon.jpg"));
+
+	primaryStage.setScene(theScene);
 	// primaryStage.sizeToScene();
 	primaryStage.setMaximized(true);
 	primaryStage.show();
@@ -87,6 +99,45 @@ public class UIConfig {
 	// TODO: Remove later - JavaFx demo...
 	// testSample(primaryStage);
     }
+
+    // TODO: Refactor paths/resources obtaining method when you get to JavaFx...
+    // public void showStartScreen(Stage primaryStage,
+    // ConfigurableApplicationContext context) {
+    // Parent root = null;
+    // URL url = null;
+    // ResourceBundle i18nBundle = null;
+    // try {
+    // url = getClass().getResource("/fxml/MainWindowSandbox.fxml");
+    // i18nBundle = ResourceBundle.getBundle("i18n.Bundle",
+    // Locale.getDefault());
+    // root = FXMLLoader.load(url, i18nBundle, new JavaFXBuilderFactory(),
+    // context::getBean);
+    // // TODO: Load subviews like this... Use the controller to initialize
+    // // forms post-construct
+    // // final FXMLLoader l = new FXMLLoader(url, i18nBundle, new
+    // // JavaFXBuilderFactory(), context::getBean);
+    // // root = l.load();
+    // // final Object ctr = l.getController();
+    // // System.out.println(ctr);
+    // } catch (Exception ex) {
+    // System.out.println("Exception on FXMLLoader.load()");
+    // System.out.println(" * url: " + url);
+    // System.out.println(" * " + ex);
+    // System.out.println(" ----------------------------------------\n");
+    // ExceptionUtils.printRootCauseStackTrace(ex);
+    // return;
+    // }
+    //
+    // primaryStage.setTitle("Chronos");
+    // primaryStage.getIcons().add(new Image("/images/chronos_icon.jpg"));
+    // primaryStage.setScene(new Scene(root, 900, 600));
+    // // primaryStage.sizeToScene();
+    // primaryStage.setMaximized(true);
+    // primaryStage.show();
+    //
+    // // TODO: Remove later - JavaFx demo...
+    // // testSample(primaryStage);
+    // }
 
     // TODO: Remove later - JavaFx demo...
     @SuppressWarnings("unused")

@@ -41,14 +41,14 @@ public class Performer implements Serializable {
     @Column(unique = true, nullable = false)
     private String handle;
 
-    //TODO: Remove password entirely - Windows SSO + check username only...
+    // TODO: Remove password entirely - Windows SSO + check username only...
     @Column(unique = false, nullable = false)
     private char[] password;
 
     @Column(unique = true, nullable = true)
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String primaryDeviceName;
 
     @Column(unique = false, nullable = false)
@@ -159,5 +159,10 @@ public class Performer implements Serializable {
 	}
 
 	getBookings().add(booking);
+    }
+
+    @Override
+    public String toString() {
+	return handle + "[" + name + "]";
     }
 }

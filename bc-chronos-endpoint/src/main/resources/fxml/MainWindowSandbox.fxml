@@ -26,10 +26,7 @@
 
 <!-- prefHeight="700.0" prefWidth="1000.0" -->
 
-<GridPane gridLinesVisible="true" hgap="5" prefHeight="700.0"
-	prefWidth="1000.0" stylesheets="@../css/dark.css" vgap="5"
-	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+<GridPane gridLinesVisible="true" hgap="5" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/dark.css" vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
 	<padding>
 		<Insets bottom="5" left="5" right="5" top="5" />
 	</padding>
@@ -44,8 +41,7 @@
 
 	<MenuBar GridPane.columnIndex="0" GridPane.rowIndex="0">
 		<menus>
-			<Menu fx:id="menuFile" mnemonicParsing="false"
-				text="%view.main.menu.file.title">
+			<Menu fx:id="menuFile" mnemonicParsing="false" text="%view.main.menu.file.title">
 				<items>
 					<MenuItem mnemonicParsing="false" text="Close" />
 				</items>
@@ -73,8 +69,7 @@
 		</menus>
 	</MenuBar>
 
-	<TabPane tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0"
-		GridPane.rowIndex="1">
+	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0" GridPane.rowIndex="1">
 		<tabs>
 			<Tab text="%view.main.tab.workspace.title">
 				<content>
@@ -92,25 +87,20 @@
 							<RowConstraints percentHeight="90" vgrow="ALWAYS" />
 						</rowConstraints>
 
-						<Label contentDisplay="CENTER" text="%view.main.tab.workspace.user.label"
-							textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0"
-							GridPane.halignment="LEFT" GridPane.rowIndex="0"
-							GridPane.valignment="CENTER">
+						<Label fx:id="loggedUserLabel" contentDisplay="CENTER" text="%view.main.tab.workspace.user.label" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER">
 							<padding>
 								<Insets bottom="0" left="10" right="10" top="0" />
 							</padding>
 						</Label>
 
-						<ImageView preserveRatio="true" smooth="true"
-							GridPane.columnIndex="1" GridPane.rowIndex="0">
+						<ImageView preserveRatio="true" smooth="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
 							<image>
 								<Image url="@../images/chronos_icon.jpg" />
 							</image>
 						</ImageView>
 
 						<!-- alignment="TOP_CENTER" -->
-						<VBox alignment="TOP_CENTER" spacing="15"
-							GridPane.columnIndex="1" GridPane.rowIndex="1">
+						<VBox alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
 							<children>
 								<!-- <ToolBar orientation="VERTICAL"> -->
 								<!-- <items> -->
@@ -132,8 +122,7 @@
 						</VBox>
 
 						<!-- FlowPane maybe? -->
-						<HBox alignment="CENTER_LEFT" spacing="5"
-							GridPane.columnIndex="2" GridPane.rowIndex="0">
+						<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
 							<padding>
 								<Insets bottom="5" left="25" right="25" top="5" />
 							</padding>
@@ -145,15 +134,13 @@
 								<!-- <Button mnemonicParsing="false" text="A3" /> -->
 								<!-- </items> -->
 								<!-- </ToolBar> -->
-								<DatePicker maxWidth="200" showWeekNumbers="true"
-									HBox.hgrow="ALWAYS" />
+								<DatePicker maxWidth="200" showWeekNumbers="true" HBox.hgrow="ALWAYS" />
 							</children>
 						</HBox>
 
 						<Accordion GridPane.columnIndex="0" GridPane.rowIndex="1">
 							<panes>
-								<TitledPane fx:id="titlePaneCustomer" animated="false"
-									text="%view.main.tab.workspace.entity.customer.title.na">
+								<TitledPane fx:id="titlePaneCustomer" animated="false" text="%view.main.tab.workspace.entity.customer.title.na">
 									<content>
 										<AnchorPane>
 											<children>
@@ -166,8 +153,7 @@
 										</AnchorPane>
 									</content>
 								</TitledPane>
-								<TitledPane fx:id="titlePaneProject" animated="false"
-									text="%view.main.tab.workspace.entity.project.title.na">
+								<TitledPane fx:id="titlePaneProject" animated="false" text="%view.main.tab.workspace.entity.project.title.na">
 									<content>
 										<AnchorPane>
 											<children>
@@ -180,32 +166,27 @@
 										</AnchorPane>
 									</content>
 								</TitledPane>
-								<TitledPane fx:id="titlePaneTask" animated="false"
-									style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.task.title.na">
+								<TitledPane fx:id="titlePaneTask" animated="false" style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.task.title.na">
 									<content>
 										<AnchorPane style="-fx-background-color: transparent;">
 											<children>
 												<ScrollPane style="-fx-background-color: transparent;">
 													<content>
-														<TreeView fx:id="treeTasks" showRoot="false"
-															style="-fx-background-color: transparent;" />
+														<TreeView fx:id="treeTasks" showRoot="false" style="-fx-background-color: transparent;" />
 													</content>
 												</ScrollPane>
 											</children>
 										</AnchorPane>
 									</content>
 								</TitledPane>
-								<TitledPane fx:id="titlePaneRole" animated="false"
-									style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.role.title.na">
+								<TitledPane fx:id="titlePaneRole" animated="false" style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.role.title.na">
 									<content>
 										<VBox style="-fx-background-color: transparent;">
 											<children>
 												<!-- styleClass="#ffs" stylesheets="@main.css" -->
-												<ScrollPane style="-fx-background-color: transparent;"
-													VBox.vgrow="ALWAYS">
+												<ScrollPane style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
 													<content>
-														<TreeView fx:id="treeRoles" showRoot="false"
-															style="-fx-background-color: transparent;" />
+														<TreeView fx:id="treeRoles" showRoot="false" style="-fx-background-color: transparent;" />
 													</content>
 												</ScrollPane>
 											</children>
@@ -215,11 +196,9 @@
 							</panes>
 						</Accordion>
 
-						<GridPane gridLinesVisible="true" GridPane.columnIndex="2"
-							GridPane.rowIndex="1">
+						<GridPane gridLinesVisible="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
 							<columnConstraints>
-								<ColumnConstraints hgrow="ALWAYS"
-									percentWidth="-1" />
+								<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
 							</columnConstraints>
 							<rowConstraints>
 								<RowConstraints percentHeight="50" vgrow="ALWAYS" />
@@ -227,33 +206,22 @@
 								<RowConstraints percentHeight="10" vgrow="ALWAYS" />
 							</rowConstraints>
 
-							<TableView tableMenuButtonVisible="true"
-								GridPane.columnIndex="0" GridPane.rowIndex="0">
+							<TableView tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
 
 								<columns>
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.task" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.description" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.starttime" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.endtime" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.duration" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.timespent" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.performer" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.role" />
-									<TableColumn editable="false" sortable="false"
-										text="%view.main.tab.workspace.grid.col.rate" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.task" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.description" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.starttime" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.endtime" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.duration" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.timespent" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.performer" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.role" />
+									<TableColumn editable="false" sortable="false" text="%view.main.tab.workspace.grid.col.rate" />
 								</columns>
 							</TableView>
 
-							<VBox fx:id="stackEntityAttributes" GridPane.columnIndex="0"
-								GridPane.rowIndex="1" />
+							<VBox fx:id="stackEntityAttributes" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
 							<!-- <ButtonBar GridPane.columnIndex="0" GridPane.rowIndex="2" -->
 							<!-- nodeOrientation="RIGHT_TO_LEFT" GridPane.hgrow="ALWAYS" -->
@@ -268,27 +236,21 @@
 							<!-- </buttons> -->
 							<!-- </ButtonBar> -->
 
-							<HBox alignment="CENTER" GridPane.columnIndex="0"
-								GridPane.rowIndex="2" GridPane.valignment="CENTER"
-								GridPane.vgrow="ALWAYS">
+							<HBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
 								<children>
-									<Button disable="true" maxHeight="100" maxWidth="1000"
-										mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular"
-										HBox.hgrow="ALWAYS" />
-									<Button maxHeight="100" maxWidth="1000" mnemonicParsing="false"
-										text="%view.main.tab.workspace.perspective.graphical"
-										HBox.hgrow="ALWAYS" />
+									<Button disable="true" maxHeight="100" maxWidth="1000" mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS" />
+									<Button maxHeight="100" maxWidth="1000" mnemonicParsing="false" text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" />
 								</children>
 							</HBox>
 						</GridPane>
 					</GridPane>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.performers.title">
+			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.reporting.title">
+			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title">
 				<content>
 				</content>
 			</Tab>
@@ -304,11 +266,9 @@
 	</TabPane>
 
 	<!-- FlowPane maybe? -->
-	<HBox alignment="CENTER_RIGHT" GridPane.columnIndex="0"
-		GridPane.rowIndex="2">
+	<HBox alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2">
 		<children>
-			<Label contentDisplay="RIGHT" text="%view.main.credits.label"
-				textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
+			<Label contentDisplay="RIGHT" text="%view.main.credits.label" textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
 		</children>
 	</HBox>
 </GridPane>

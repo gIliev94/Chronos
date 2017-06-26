@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -28,6 +27,8 @@ import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
@@ -50,6 +51,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
@@ -168,6 +171,39 @@ public class MainViewController implements Initializable {
     @Autowired
     private LocalPerformerRepository performerRepo;
     //
+
+    @FXML
+    private Label loggedUserLabel;
+
+    @FXML
+    private Tab tabPerformers;
+
+    @FXML
+    private Tab tabReporting;
+
+    @FXML
+    private TabPane tabPaneMain;
+
+    private Performer loggedPerformer;
+
+    public Performer getLoggedPerformer() {
+	return loggedPerformer;
+    }
+
+    public void setLoggedPerformer(Performer loggedPerformer) {
+	this.loggedPerformer = loggedPerformer;
+    }
+
+    public void applyLoginStuff(Performer loggedPerformer) {
+	setLoggedPerformer(loggedPerformer);
+
+	loggedUserLabel.setText(loggedUserLabel.getText() + " " + loggedPerformer);
+
+	if (loggedPerformer.getPriviledges().contains(Priviledge.ALL)) {
+	    tabPaneMain.getTabs().remove(tabPerformers);
+	    tabPaneMain.getTabs().remove(tabReporting);
+	}
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -530,7 +566,7 @@ public class MainViewController implements Initializable {
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(taskObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Hours estimated: "),
 		    new TextField(String.valueOf(taskObj.getHoursEstimated()))));
-	    
+
 	    titlePaneTask.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.task.title"),
 		    taskObj.getName()));
 	} else if (newValueObj instanceof Role) {
