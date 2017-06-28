@@ -1,5 +1,6 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -16,7 +17,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity(name = "Booking")
-public class Booking {
+public class Booking implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Column(unique = true, nullable = false)
     private String syncKey;

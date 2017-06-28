@@ -100,11 +100,11 @@
 						</ImageView>
 
 						<!-- alignment="TOP_CENTER" -->
-						<VBox alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
+						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
 							<children>
 								<!-- <ToolBar orientation="VERTICAL"> -->
 								<!-- <items> -->
-								<Button mnemonicParsing="false" text="A1">
+<!-- 								<Button mnemonicParsing="false" text="A1"> -->
 									<!-- <graphic> -->
 									<!-- <ImageView preserveRatio="true"> -->
 									<!-- <image> -->
@@ -112,10 +112,10 @@
 									<!-- </image> -->
 									<!-- </ImageView> -->
 									<!-- </graphic> -->
-								</Button>
-								<Button mnemonicParsing="false" text="A2" />
-								<Button mnemonicParsing="false" text="A3" />
-								<Button mnemonicParsing="false" text="A4" />
+<!-- 								</Button> -->
+<!-- 								<Button mnemonicParsing="false" text="A2" /> -->
+<!-- 								<Button mnemonicParsing="false" text="A3" /> -->
+<!-- 								<Button mnemonicParsing="false" text="A4" /> -->
 								<!-- </items> -->
 								<!-- </ToolBar> -->
 							</children>

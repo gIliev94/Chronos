@@ -1,17 +1,22 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +25,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import bc.bg.tools.chronos.endpoint.ui.actions.EntityAction;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
@@ -45,10 +51,12 @@ import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
@@ -57,6 +65,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -172,6 +182,12 @@ public class MainViewController implements Initializable {
     private LocalPerformerRepository performerRepo;
     //
 
+    //
+    // private Map<EntityAction<Category, ?>, Button> categoryActions;
+
+    private List<EntityAction<Category>> categoryActions;
+    //
+
     @FXML
     private Label loggedUserLabel;
 
@@ -185,6 +201,11 @@ public class MainViewController implements Initializable {
     private TabPane tabPaneMain;
 
     private Performer loggedPerformer;
+
+    private TreeItem<Object> selectedCategoryNode;
+
+    @FXML
+    private VBox actionButtonBar;
 
     public Performer getLoggedPerformer() {
 	return loggedPerformer;
@@ -224,6 +245,8 @@ public class MainViewController implements Initializable {
 	testPopulateTree(treeTasks);
 	testPopulateTree(treeRoles);
 	//
+
+	loadCategoryActions();
     }
 
     @Transactional("transactionManager")
@@ -545,7 +568,19 @@ public class MainViewController implements Initializable {
 	entityAttrList.clear();
 
 	final Object newValueObj = new_val.getValue();
-	if (newValueObj instanceof Customer) {
+	if (newValueObj instanceof Category) {
+	    Category catObj = (Category) newValueObj;
+	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(catObj.getName())));
+	    entityAttrList
+		    .add(createHBox(new Label("Sort order: "), new TextField(String.valueOf(catObj.getSortOrder()))));
+
+	    selectedCategoryNode = new_val;
+	    showCategoryActions();
+	    // titlePaneCustomer.setText(MessageFormat
+	    // .format(resources.getString("view.main.tab.workspace.entity.customer.title"),
+	    // custObj.getName()));
+
+	} else if (newValueObj instanceof Customer) {
 	    Customer custObj = (Customer) newValueObj;
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
 	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
@@ -594,4 +629,104 @@ public class MainViewController implements Initializable {
 
 	return hBox;
     }
+
+    private Button generateButtonForAction(EntityAction<? extends Serializable> action) {
+	Button actionButton = new Button();
+	actionButton.setGraphic(new ImageView(new Image("/images/" + action.getActionIconName())));
+	actionButton.setMnemonicParsing(false);
+	actionButton.setOnMouseClicked(evt -> {
+	    action.execute(selectedCategoryNode.getValue());
+	});
+
+	return actionButton;
+    }
+
+    private void loadCategoryActions() {
+	final Class<Category> cls = Category.class;
+
+	categoryActions = new ArrayList<EntityAction<Category>>();
+	categoryActions.add(new EntityAction<Category>(cls, "refresh_icon.png") // nl
+		.requiredPriviledges(Arrays.asList(Priviledge.READ)) // nl
+		.action(this::refreshCategory));
+
+	// categoryActions.add(new EntityAction<Category>(cls,
+	// "add_icon").requiredPriviledge(Priviledge.WRITE));
+	// categoryActions.add(new EntityAction<Category>(cls,
+	// "update_icon").requiredPriviledge(Priviledge.WRITE));
+	// categoryActions.add(new EntityAction<Category>(cls,
+	// "remove_icon").requiredPriviledge(Priviledge.DELETE));
+	// categoryActions.add(new EntityAction<Category>(cls,
+	// "upDownOrder_icon").requiredPriviledge(Priviledge.WRITE));
+    }
+
+    public void showCategoryActions() {
+	categoryActions.forEach(a -> {
+	    // Move to somewhere else...
+	    actionButtonBar.getChildren().clear();
+	    //
+
+	    // TODO: DISABLE / ENABLE THIS...
+	    transactionTemplate.execute(tx -> {
+		final Customer sneakyCust = new Customer();
+		sneakyCust.setName("Sneaky Company");
+		sneakyCust.setSyncKey(UUID.randomUUID().toString());
+		sneakyCust.setDescription("A sneaky company appears...");
+		sneakyCust.setCategory((Category) selectedCategoryNode.getValue());
+
+		customerRepo.save(sneakyCust);
+		return 0;
+	    });
+	    //
+
+	    if (a.isVisibleToUser(loggedPerformer)) {
+		actionButtonBar.getChildren().add(generateButtonForAction(a));
+	    }
+	});
+    }
+
+    private void refreshCategory(Category category) {
+	transactionTemplate.execute(tx -> {
+	    final Category refreshedCategory = categoryRepo.findOne(category.getId());
+	    selectedCategoryNode.setValue(refreshedCategory);
+
+	    // Update property display
+	    final ObservableList<Node> entityAttrList = stackEntityAttributes.getChildren();
+	    entityAttrList.clear();
+	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(refreshedCategory.getName())));
+	    entityAttrList.add(createHBox(new Label("Sort order: "),
+		    new TextField(String.valueOf(refreshedCategory.getSortOrder()))));
+
+	    // Update sub-entities
+	    Optional<Collection<?>> subEntities = Optional.empty();
+	    if (!treeCustomers.getSelectionModel().isEmpty()) {
+		// final FilteredList<TreeItem<Object>> filtered =
+		// selectedCategoryNode.getChildren()
+		// .filtered(n -> n.getValue() instanceof Customer)
+		// .filtered(n -> ObjectUtils.equals(((Customer)
+		// n.getValue()).getCategory().getName(),
+		// refreshedCategory.getName()));
+		// System.out.println(filtered);
+		// treeCustomers.getRoot().getChildren().removeIf(n ->
+		// n.getValue() instanceof Customer && ObjectUtils
+		// .equals(((Customer) n.getValue()).getCategory().getName(),
+		// refreshedCategory.getName()));
+		selectedCategoryNode.getChildren().clear();
+		subEntities = Optional.ofNullable(customerRepo.findByCategory(refreshedCategory));
+	    } else if (!treeRoles.getSelectionModel().isEmpty()) {
+		subEntities = Optional.ofNullable(projectRepo.findByCategory(refreshedCategory));
+	    } else if (!treeProjects.getSelectionModel().isEmpty()) {
+		subEntities = Optional.ofNullable(taskRepo.findByCategory(refreshedCategory));
+	    } else if (!treeTasks.getSelectionModel().isEmpty()) {
+		subEntities = Optional.ofNullable(roleRepo.findByCategory(refreshedCategory));
+	    }
+	    subEntities.ifPresent(list -> {
+		list.stream().map(TreeItem<Object>::new) // nl
+			.forEach(selectedCategoryNode.getChildren()::add);
+	    });
+
+	    // ffs???
+	    return 0;
+	});
+    }
+
 }

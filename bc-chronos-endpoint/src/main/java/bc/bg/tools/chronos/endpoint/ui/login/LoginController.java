@@ -71,6 +71,8 @@ public class LoginController {
 	assert (testDataInserted != null && testDataInserted.iterator().hasNext()) : "No test data could be inserted!";
     }
 
+    // TODO: USe this shit...
+    // https://gist.github.com/jewelsea/4631319
     private Iterable<Performer> createTestUsers() {
 	final Performer userNorm = new Performer();
 	userNorm.setSyncKey(UUID.randomUUID().toString());
@@ -137,7 +139,7 @@ public class LoginController {
 	try {
 	    url = getClass().getResource("/fxml/MainWindowSandbox.fxml");
 	    i18nBundle = ResourceBundle.getBundle("i18n.Bundle", Locale.getDefault());
-	    
+
 	    final FXMLLoader l = new FXMLLoader(url, i18nBundle, new JavaFXBuilderFactory(), context::getBean);
 	    root = l.load();
 	    final MainViewController ctr = l.<MainViewController> getController();
