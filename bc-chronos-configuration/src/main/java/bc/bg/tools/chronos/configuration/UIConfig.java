@@ -75,9 +75,9 @@ public class UIConfig {
 	    root = l.load();
 
 	    final LoginController ctr = l.<LoginController> getController();
-	    theScene = new Scene(root, 900, 600);
-	    ctr.refScene(theScene);
-	    ctr.loadTestData();
+	    theScene = new Scene(root, 400, 150);
+	    ctr.setPrimaryStage(primaryStage);
+	    ctr.loadLoginTestData();
 
 	} catch (Exception ex) {
 	    System.out.println("Exception on FXMLLoader.load()");
@@ -93,7 +93,7 @@ public class UIConfig {
 
 	primaryStage.setScene(theScene);
 	// primaryStage.sizeToScene();
-	primaryStage.setMaximized(true);
+	// primaryStage.setMaximized(true);
 	primaryStage.show();
 
 	// TODO: Remove later - JavaFx demo...

@@ -215,7 +215,7 @@ public class MainViewController implements Initializable {
 	this.loggedPerformer = loggedPerformer;
     }
 
-    public void applyLoginStuff(Performer loggedPerformer) {
+    public void loginAs(Performer loggedPerformer) {
 	setLoggedPerformer(loggedPerformer);
 
 	loggedUserLabel.setText(loggedUserLabel.getText() + " " + loggedPerformer);
@@ -524,6 +524,7 @@ public class MainViewController implements Initializable {
 	changelogRepo.save(changeLog);
     }
 
+    // https://github.com/tomoTaka01/FileTreeViewSample/blob/master/src/filetreeviewsample/FileTreeViewSample.java
     private void testPopulateTree(final TreeView<Object> tree) {
 	final List<Category> categories = ((List<Category>) categoryRepo.findAll());
 	// TODO; Keep the sorter idea - works nicely...
@@ -641,6 +642,8 @@ public class MainViewController implements Initializable {
 	return actionButton;
     }
 
+    // http://code.makery.ch/blog/javafx-8-event-handling-examples/
+    // https://stackoverflow.com/questions/10518458/javafx-create-custom-button-with-image
     private void loadCategoryActions() {
 	final Class<Category> cls = Category.class;
 
@@ -666,16 +669,17 @@ public class MainViewController implements Initializable {
 	    //
 
 	    // TODO: DISABLE / ENABLE THIS...
-	    transactionTemplate.execute(tx -> {
-		final Customer sneakyCust = new Customer();
-		sneakyCust.setName("Sneaky Company");
-		sneakyCust.setSyncKey(UUID.randomUUID().toString());
-		sneakyCust.setDescription("A sneaky company appears...");
-		sneakyCust.setCategory((Category) selectedCategoryNode.getValue());
-
-		customerRepo.save(sneakyCust);
-		return 0;
-	    });
+	    // transactionTemplate.execute(tx -> {
+	    // final Customer sneakyCust = new Customer();
+	    // sneakyCust.setName("Sneaky Company");
+	    // sneakyCust.setSyncKey(UUID.randomUUID().toString());
+	    // sneakyCust.setDescription("A sneaky company appears...");
+	    // sneakyCust.setCategory((Category)
+	    // selectedCategoryNode.getValue());
+	    //
+	    // customerRepo.save(sneakyCust);
+	    // return 0;
+	    // });
 	    //
 
 	    if (a.isVisibleToUser(loggedPerformer)) {
