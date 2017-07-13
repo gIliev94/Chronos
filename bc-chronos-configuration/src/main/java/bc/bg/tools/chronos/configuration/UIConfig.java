@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 
+import com.sun.javafx.fxml.builder.JavaFXSceneBuilder;
+
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
@@ -63,6 +65,8 @@ public class UIConfig {
 
     // TODO: Refactor paths/resources obtaining method when you get to JavaFx...
     public void showStartScreen(Stage primaryStage, ConfigurableApplicationContext context) {
+	primaryStage.setResizable(false);
+
 	Parent root = null;
 	URL url = null;
 	ResourceBundle i18nBundle = null;
@@ -75,7 +79,9 @@ public class UIConfig {
 	    root = l.load();
 
 	    final LoginController ctr = l.<LoginController> getController();
-	    theScene = new Scene(root, 400, 150);
+	    // theScene = new Scene(root, 400, 150);
+	    theScene = new Scene(root);
+
 	    ctr.setPrimaryStage(primaryStage);
 	    ctr.loadLoginTestData();
 

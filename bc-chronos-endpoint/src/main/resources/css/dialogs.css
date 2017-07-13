@@ -1,0 +1,31 @@
+/*
+*https://stackoverflow.com/questions/147500/is-it-possible-to-include-one-css-file-in-another
+ */
+@import url("dark.css");
+
+/*
+ * This is an adjustment of the original modena.css for a consistent dark theme.
+ * Original modena.css here: https://gist.github.com/maxd/63691840fc372f22f470.
+ */
+.myDialog {
+	-fx-background-color: #f9d900;
+}
+
+.myDialog>*.button-bar>*.container {
+	-fx-background-color: #a9e200;
+}
+
+.myDialog>*.label.content {
+	-fx-font-size: 14.0px;
+	-fx-font-weight: bold;
+}
+
+.myDialog:header *.header-panel {
+	-fx-background-color: #a59c31;
+}
+
+.myDialog:header *.header-panel *.label {
+	-fx-font-size: 18.0px;
+	-fx-font-style: italic;
+	-fx-fill: #292929;
+}

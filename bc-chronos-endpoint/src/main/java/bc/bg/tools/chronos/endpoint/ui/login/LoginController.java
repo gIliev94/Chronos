@@ -2,12 +2,12 @@ package bc.bg.tools.chronos.endpoint.ui.login;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +33,7 @@ import javafx.stage.Stage;
  * 
  * @author giliev
  */
-public class LoginController {
+public class LoginController implements ILoginModel {
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -66,31 +66,72 @@ public class LoginController {
 	this.primaryStage = refStage;
     }
 
+    // TODO: Set model as bean
+    @SuppressWarnings("unused")
+    private ILoginModel model;
+
+    public void setModel(ILoginModel model) {
+	this.model = model;
+    }
+
     // This method is called by the FXMLLoader when initialization is complete
     @FXML
     void initialize() {
 	assert userField != null : "fx:id=\"userField\" was not injected: check your FXML file 'LoginWindow.fxml'.";
 	assert passwordField != null : "fx:id=\"passwordField\" was not injected: check your FXML file 'LoginWindow.fxml'.";
 	assert loginButton != null : "fx:id=\"loginButton\" was not injected: check your FXML file 'LoginWindow.fxml'.";
+
+	initTooltips();
+	toggleLoginButtonOnInput();
+    }
+
+    protected void initTooltips() {
+	userField.tooltipProperty()
+		.set(UIHelper.createTooltip(resources.getString(ILoginModel.MSG_ID_TOOLTIP_USER_FIELD)));
+	passwordField.tooltipProperty()
+		.set(UIHelper.createTooltip(resources.getString(ILoginModel.MSG_ID_TOOLTIP_PASSWORD_FIELD)));
+	loginButton.tooltipProperty()
+		.set(UIHelper.createTooltip(resources.getString(ILoginModel.MSG_ID_TOOLTIP_LOGIN_BUTTON)));
+    }
+
+    // TODO: Refactor(maybe use colors to highlight)...
+    // https://stackoverflow.com/a/29616567
+    // https://www.javacodegeeks.com/2012/06/in-this-tutorial-i-will-design-nice.html
+    // http://zoranpavlovic.blogspot.bg/2012/05/javafx-2-create-nice-login-form.html
+    protected void toggleLoginButtonOnInput() {
+	loginButton.disableProperty().set(true);
+
+	userField.textProperty().addListener((obs, oldVal, newVal) -> {
+	    if (!newVal.isEmpty() && !passwordField.getText().isEmpty()) {
+		loginButton.disableProperty().set(false);
+	    } else {
+		loginButton.disableProperty().set(true);
+	    }
+	});
+
+	passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
+	    if (!newVal.isEmpty() && !userField.getText().isEmpty()) {
+		loginButton.disableProperty().set(false);
+	    } else {
+		loginButton.disableProperty().set(true);
+	    }
+	});
     }
 
     // TODO: Extract constants and apply I18n(also refactor UI)
     @FXML
     void performLogin(MouseEvent loginBtnClickedEvt) {
-	if (StringUtils.isBlank(userField.getText()) || StringUtils.isBlank(passwordField.getText())) {
-	    UIHelper.showErrorDialog("NO CREDENTIALS INPUT!");
-	    return;
-	}
+	final String username = userField.getText();
 
 	final Performer user = transactionTemplate.execute(txStatus -> {
-	    return performerRepo.findByHandle(userField.getText());
+	    return performerRepo.findByHandle(username);
 	});
 
 	if (user == null) {
-	    UIHelper.showErrorDialog("NO SUCH USER FOUND IN DB :: " + userField.getText());
+	    UIHelper.showErrorDialog(i18n(MSG_ID_ERR_INVALID_USER, username));
 	    return;
 	} else if (ObjectUtils.notEqual(passwordField.getText(), new String(user.getPassword()))) {
-	    UIHelper.showErrorDialog("WRONG PASSWORD FOR USER :: " + userField.getText());
+	    UIHelper.showErrorDialog(i18n(MSG_ID_ERR_INVALID_PASS, username));
 	    return;
 	} else {
 	    final Performer persistedUser = transactionTemplate.execute(txStatus -> {
@@ -102,18 +143,21 @@ public class LoginController {
 		return displayMainWindow(persistedUser);
 	    });
 	    if (!wasMainViewDisplayed) {
-		UIHelper.showErrorDialog("THE MAIN WINDOW COULD NOT BE LOADED! ASK ADMINISTRATOR FOR HELP!");
+		UIHelper.showErrorDialog(
+			i18n(UIHelper.Defaults.MSG_ID_ERR_WINDOW_NOT_LOADED, UIHelper.Defaults.FXML_MAIN_WINDOW));
 	    }
 	}
     }
 
     protected Boolean displayMainWindow(final Performer user) {
-	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor("MainWindowSandbox", "i18n.Bundle", context::getBean);
+	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.FXML_MAIN_WINDOW,
+		UIHelper.Defaults.I18N_BUNDLE, context::getBean);
 
 	Parent rootContainerUI;
 	try {
 	    rootContainerUI = uiLoader.load();
 	} catch (IOException e) {
+	    //TODO: Remove println
 	    System.out.println("Exception on FXMLLoader.load()");
 	    System.out.println(" * url: " + uiLoader.getLocation());
 	    System.out.println(" * " + e);
@@ -125,12 +169,19 @@ public class LoginController {
 	final MainViewController mainViewController = uiLoader.<MainViewController> getController();
 	mainViewController.loginAs(user);
 
-	// TODO: Either set size or maximize window!
-	// primaryStage.setHeight(600.0d);
-	// primaryStage.setWidth(900.0d);
-	primaryStage.setMaximized(true);
-	// primaryStage.sizeToScene();
 	primaryStage.getScene().setRoot(rootContainerUI);
+
+	// TODO: Either maximize window or set size!
+	// https://stackoverflow.com/a/22686642
+	primaryStage.setResizable(true);
+	primaryStage.setMaximized(true);
+
+	// https://stackoverflow.com/a/8791691
+	// primaryStage.setHeight(800.0d);
+	// primaryStage.setWidth(1000.0d);
+
+	// primaryStage.setResizable(true);
+	// primaryStage.sizeToScene();
 
 	return true;
     }
@@ -170,5 +221,10 @@ public class LoginController {
 	userAdmin.setLogged(false);
 
 	return performerRepo.save(Arrays.asList(userNorm, userAdmin));
+    }
+
+    @Override
+    public String i18n(String msgId, Object... arguments) {
+	return MessageFormat.format(resources.getString(msgId), arguments);
     }
 }
