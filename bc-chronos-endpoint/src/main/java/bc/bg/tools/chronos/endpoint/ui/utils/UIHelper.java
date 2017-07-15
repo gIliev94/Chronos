@@ -17,6 +17,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.util.Callback;
 
 /**
@@ -29,18 +30,23 @@ public final class UIHelper {
     public static class Defaults {
 	public static final JavaFXBuilderFactory FX_BUILDER_FACTORY = new JavaFXBuilderFactory();
 
-	public static final String MSG_ID_ERR_WINDOW_NOT_LOADED = "view.error.could.not.be.loaded";
-	public static final String FXML_MAIN_WINDOW = "MainWindowSandbox";
-	public static final String I18N_BUNDLE = "i18n.Bundle";
-	public static final String STYLE_SHEET_BASE = "dark";
+	public static final String APP_TITLE = "Chronos";
+	public static final String APP_ICON = "chronos_icon";
+	public static final String APP_START_WINDOW = "LoginWindow";
+	public static final String APP_MAIN_WINDOW = "MainWindowSandbox";
+	public static final String APP_MSG_ID_ERR_WINDOW_NOT_LOADED = "view.error.could.not.be.loaded";
+	public static final String APP_I18N_EN = "i18n.Bundle";
+	public static final String APP_STYLE_SHEET_BASE = "dark";
     }
 
     private static class Paths {
 	private static final String REL_PATH_FXML = "/fxml/";
 	private static final String REL_PATH_STYLE_SHEET = "/css/";
+	private static final String REL_PATH_IMAGE_ICON = "/images/";
 
 	private static final String EXT_FXML = ".fxml";
 	private static final String EXT_STYLE_SHEET = ".css";
+	private static final String[] EXT_IMAGE_ICON = { ".ico", ".png", ".jpg" };
 
 	private static String getFxnlPath(String fxmlName) {
 	    return (REL_PATH_FXML + fxmlName + EXT_FXML);
@@ -59,10 +65,25 @@ public final class UIHelper {
     private UIHelper() {
     }
 
-    public static Tooltip createTooltip(String tooltipText) {
+    public static Tooltip createTooltip(final String tooltipText) {
 	final Tooltip tooltip = new Tooltip(tooltipText);
 	// TODO: Style maybe???
 	return tooltip;
+    }
+
+    public static Image createImageIcon(final String imageName) {
+	Image imgIcon = null;
+
+	for (String ext : Paths.EXT_IMAGE_ICON) {
+	    try {
+		imgIcon = new Image(Paths.REL_PATH_IMAGE_ICON + imageName + ext);
+		break;
+	    } catch (Exception e) {
+		continue;
+	    }
+	}
+
+	return imgIcon;
     }
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,
@@ -85,8 +106,8 @@ public final class UIHelper {
 	}
     }
 
-    private static void styleDialog(Dialog<?> dialog) {
-	String styleSheet = Defaults.STYLE_SHEET_BASE;
+    private static void styleDialog(final Dialog<?> dialog) {
+	String styleSheet = Defaults.APP_STYLE_SHEET_BASE;
 
 	// TODO: Distinguish styles for types dialog/s
 	// https://stackoverflow.com/a/28421229

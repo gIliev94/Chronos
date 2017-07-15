@@ -135,18 +135,18 @@ public class LoginController implements ILoginModel {
 	    });
 	    if (!wasMainViewDisplayed) {
 		UIHelper.showErrorDialog(
-			i18n(UIHelper.Defaults.MSG_ID_ERR_WINDOW_NOT_LOADED, UIHelper.Defaults.FXML_MAIN_WINDOW));
+			i18n(UIHelper.Defaults.APP_MSG_ID_ERR_WINDOW_NOT_LOADED, UIHelper.Defaults.APP_MAIN_WINDOW));
 	    }
 	}
     }
 
     protected Boolean displayMainWindow(final Performer user) {
-	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.FXML_MAIN_WINDOW,
-		UIHelper.Defaults.I18N_BUNDLE, context::getBean);
+	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
+		UIHelper.Defaults.APP_I18N_EN, context::getBean);
 
-	Parent rootContainerUI;
+	Parent rootContainer;
 	try {
-	    rootContainerUI = uiLoader.load();
+	    rootContainer = uiLoader.load();
 	} catch (IOException e) {
 	    // TODO: Remove println
 	    System.out.println("Exception on FXMLLoader.load()");
@@ -160,7 +160,7 @@ public class LoginController implements ILoginModel {
 	final MainViewController mainViewController = uiLoader.<MainViewController> getController();
 	mainViewController.loginAs(user);
 
-	primaryStage.getScene().setRoot(rootContainerUI);
+	primaryStage.getScene().setRoot(rootContainer);
 
 	// TODO: Either maximize window or set size!
 	// https://stackoverflow.com/a/22686642
