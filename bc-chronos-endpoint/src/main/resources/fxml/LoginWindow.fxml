@@ -16,6 +16,15 @@
 	<padding>
 		<Insets bottom="10" left="10" right="10" top="10" />
 	</padding>
+	<columnConstraints>
+		<ColumnConstraints />
+		<ColumnConstraints />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints />
+		<RowConstraints />
+		<RowConstraints />
+	</rowConstraints>
 	<children>
 		<Label text="%view.login.label.user" GridPane.columnIndex="0"
 			GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
@@ -34,13 +43,4 @@
 			</children>
 		</HBox>
 	</children>
-	<columnConstraints>
-		<ColumnConstraints />
-		<ColumnConstraints />
-	</columnConstraints>
-	<rowConstraints>
-		<RowConstraints />
-		<RowConstraints />
-		<RowConstraints />
-	</rowConstraints>
 </GridPane>

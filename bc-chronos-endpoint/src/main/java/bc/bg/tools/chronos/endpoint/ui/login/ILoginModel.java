@@ -1,7 +1,7 @@
 package bc.bg.tools.chronos.endpoint.ui.login;
 
 /**
- * Model nethods and constants for LoginController.
+ * Model methods / constants for LoginController.
  * 
  * @author giliev
  */
@@ -15,8 +15,11 @@ public interface ILoginModel {
 
     /**
      * @param msgId
+     *            - the message translation ID
      * @param arguments
-     * @return
+     *            - the arguments to fill in the translated message.
+     * @return A translated message for the specified message ID, filled with
+     *         context from the specified arguments.
      */
     String i18n(String msgId, Object... arguments);
 }

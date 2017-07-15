@@ -66,14 +66,6 @@ public class LoginController implements ILoginModel {
 	this.primaryStage = refStage;
     }
 
-    // TODO: Set model as bean
-    @SuppressWarnings("unused")
-    private ILoginModel model;
-
-    public void setModel(ILoginModel model) {
-	this.model = model;
-    }
-
     // This method is called by the FXMLLoader when initialization is complete
     @FXML
     void initialize() {
@@ -117,8 +109,7 @@ public class LoginController implements ILoginModel {
 	    }
 	});
     }
-
-    // TODO: Extract constants and apply I18n(also refactor UI)
+    
     @FXML
     void performLogin(MouseEvent loginBtnClickedEvt) {
 	final String username = userField.getText();
@@ -157,7 +148,7 @@ public class LoginController implements ILoginModel {
 	try {
 	    rootContainerUI = uiLoader.load();
 	} catch (IOException e) {
-	    //TODO: Remove println
+	    // TODO: Remove println
 	    System.out.println("Exception on FXMLLoader.load()");
 	    System.out.println(" * url: " + uiLoader.getLocation());
 	    System.out.println(" * " + e);
