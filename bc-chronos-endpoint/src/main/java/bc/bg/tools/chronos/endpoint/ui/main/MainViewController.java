@@ -47,6 +47,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
+import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
 import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
@@ -106,6 +107,10 @@ public class MainViewController implements Initializable {
     @FXML
     private ResourceBundle resources;
     //
+
+    @SuppressWarnings("unused")
+    @Autowired
+    private IMessageService messageService;
 
     // @Autowired
     // @Qualifier("localCategoryService")

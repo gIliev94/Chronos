@@ -109,7 +109,7 @@ public class LoginController implements ILoginModel {
 	    }
 	});
     }
-    
+
     @FXML
     void performLogin(MouseEvent loginBtnClickedEvt) {
 	final String username = userField.getText();

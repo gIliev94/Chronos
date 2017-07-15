@@ -1,28 +1,41 @@
 package bg.bc.tools.chronos.dataprovider.i18n;
 
 import java.util.Locale;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
-
+/**
+ * Implementation of an I18n service.
+ * 
+ * @author giliev
+ */
 public class MessageService implements IMessageService {
 
-    @Autowired
-    private MessageSource messageSource;
+    // @Autowired
+    // private MessageSource messageSource;
 
-    //TODO: Obtain dynamically??
-    @Autowired
-    @Qualifier("EN-US")
-    private Locale locale;
+    private Map<String, Locale> availableLocales;
 
-    @Override
-    public String i18n(String msgId, Object[] args) {
-	return messageSource.getMessage(msgId, args, locale);
+    public MessageService(Map<String, Locale> availableLocales) {
+	this.availableLocales = availableLocales;
     }
 
     @Override
-    public String i18n(String msgId) {
-	return messageSource.getMessage(msgId, null, locale);
+    public Map<String, Locale> getAvailableLocales() {
+	return availableLocales;
     }
+
+    // public static class LocaleChoice {
+    // private String name;
+    // private Locale locale;
+    // }
+
+    // @Override
+    // public String i18n(String msgId, Object[] args) {
+    // return messageSource.getMessage(msgId, args, locale);
+    // }
+    //
+    // @Override
+    // public String i18n(String msgId) {
+    // return messageSource.getMessage(msgId, null, locale);
+    // }
 }
