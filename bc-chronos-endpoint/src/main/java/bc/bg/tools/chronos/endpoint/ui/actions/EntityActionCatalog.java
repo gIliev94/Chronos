@@ -1,6 +1,7 @@
 package bc.bg.tools.chronos.endpoint.ui.actions;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
+import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 
 // ADD AS BEAN PROTOTYPE
 public class EntityActionCatalog {
@@ -70,6 +72,31 @@ public class EntityActionCatalog {
 
 	return actionStream.map(actionDef -> (EntityAction<T>) actionDef) // nl
 		.collect(Collectors.toSet());
+    }
+
+    private static final String ENTITY_CATEGORY = "Category";
+
+    protected static <T> Set<T> initialize(Class<? extends Serializable> entityClass) {
+	final Set<T> theSet = new LinkedHashSet<>();
+
+	final String entityName = entityClass.getSimpleName();
+
+	switch (entityName) {
+	case ENTITY_CATEGORY:
+	    final EntityAction<Category> actionRefreshCategory = new EntityAction<Category>(Category.class)
+		    .requiredPriviledges(Arrays.asList(Priviledge.READ));
+	    CATEGORY_ACTIONS.add(actionRefreshCategory);
+
+	    final EntityAction<Category> actionHideCategory = new EntityAction<Category>(Category.class)
+		    .requiredPriviledges(Arrays.asList(Priviledge.READ));
+	    CATEGORY_ACTIONS.add(actionHideCategory);
+	    break;
+
+	default:
+	    break;
+	}
+
+	return Collections.unmodifiableSet(theSet);
     }
 
     // TODO: Wtf???

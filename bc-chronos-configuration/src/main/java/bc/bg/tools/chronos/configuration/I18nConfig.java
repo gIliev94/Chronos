@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
 import bg.bc.tools.chronos.dataprovider.i18n.MessageService;
 
-//TODO: May be redundant - i18n is actually done in the UI module...
 /**
  * Configuration class for I18n related beans.
  * 

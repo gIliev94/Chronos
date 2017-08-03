@@ -73,7 +73,7 @@
 		<tabs>
 			<Tab text="%view.main.tab.workspace.title">
 				<content>
-					<GridPane gridLinesVisible="true">
+					<GridPane fx:id="gridPaneMain" gridLinesVisible="true">
 						<padding>
 							<Insets bottom="5" left="5" right="5" top="5" />
 						</padding>
@@ -93,15 +93,15 @@
 							</padding>
 						</Label>
 
-						<ImageView preserveRatio="true" smooth="true" GridPane.columnIndex="1" GridPane.rowIndex="0">
-							<image>
-								<Image url="@../images/chronos_icon.jpg" />
-							</image>
-						</ImageView>
+<!-- 						<ImageView preserveRatio="true" smooth="true" GridPane.columnIndex="1" GridPane.rowIndex="0"> -->
+<!-- 							<image> -->
+<!-- 								<Image url="@../images/chronos_icon.jpg" /> -->
+<!-- 							</image> -->
+<!-- 						</ImageView> -->
 
 						<!-- alignment="TOP_CENTER" -->
-						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
-							<children>
+<!-- 						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1"> -->
+<!-- 							<children> -->
 								<!-- <ToolBar orientation="VERTICAL"> -->
 								<!-- <items> -->
 <!-- 								<Button mnemonicParsing="false" text="A1"> -->
@@ -118,8 +118,8 @@
 <!-- 								<Button mnemonicParsing="false" text="A4" /> -->
 								<!-- </items> -->
 								<!-- </ToolBar> -->
-							</children>
-						</VBox>
+<!-- 							</children> -->
+<!-- 						</VBox> -->
 
 						<!-- FlowPane maybe? -->
 						<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">

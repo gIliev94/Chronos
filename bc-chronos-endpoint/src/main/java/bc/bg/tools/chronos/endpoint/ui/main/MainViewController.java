@@ -1,6 +1,6 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -14,18 +14,18 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.EntityAction;
+import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
 import bg.bc.tools.chronos.core.entities.DProject;
@@ -52,12 +52,12 @@ import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
@@ -66,10 +66,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class MainViewController implements Initializable {
 
@@ -139,6 +141,9 @@ public class MainViewController implements Initializable {
     // TODO: First manual transaction attempt - UserTransaction...
     // @Autowired
     // private BitronixTransactionManager btm;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     public PlatformTransactionManager transactionManager;
@@ -594,6 +599,9 @@ public class MainViewController implements Initializable {
 	    titlePaneCustomer.setText(MessageFormat
 		    .format(resources.getString("view.main.tab.workspace.entity.customer.title"), custObj.getName()));
 
+	    selectedCategoryNode = new_val;
+	    showCategoryActions();
+
 	} else if (newValueObj instanceof Project) {
 	    Project projObj = (Project) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
@@ -636,24 +644,13 @@ public class MainViewController implements Initializable {
 	return hBox;
     }
 
-    private Button generateButtonForAction(EntityAction<? extends Serializable> action) {
-	Button actionButton = new Button();
-	actionButton.setGraphic(new ImageView(new Image("/images/" + action.getActionIconName())));
-	actionButton.setMnemonicParsing(false);
-	actionButton.setOnMouseClicked(evt -> {
-	    action.execute(selectedCategoryNode.getValue());
-	});
-
-	return actionButton;
-    }
-
     // http://code.makery.ch/blog/javafx-8-event-handling-examples/
     // https://stackoverflow.com/questions/10518458/javafx-create-custom-button-with-image
     private void loadCategoryActions() {
 	final Class<Category> cls = Category.class;
 
 	categoryActions = new ArrayList<EntityAction<Category>>();
-	categoryActions.add(new EntityAction<Category>(cls, "refresh_icon.png") // nl
+	categoryActions.add(new EntityAction<Category>(cls, "refresh_icon") // nl
 		.requiredPriviledges(Arrays.asList(Priviledge.READ)) // nl
 		.action(this::refreshCategory));
 
@@ -668,6 +665,34 @@ public class MainViewController implements Initializable {
     }
 
     public void showCategoryActions() {
+	final FXMLLoader actionView = UIHelper.getWindowLoaderFor("SubviewActionPanel", UIHelper.Defaults.APP_I18N_EN,
+		applicationContext::getBean);
+
+	try {
+	    final Parent actionRoot = actionView.load();
+	    final SubViewActionPanelController actionController = actionView
+		    .<SubViewActionPanelController> getController();
+
+	    if (selectedCategoryNode.getValue() instanceof Category) {
+		actionController.displayActions(Category.class, loggedPerformer, selectedCategoryNode.getValue());
+	    } else {
+		actionController.clearActions();
+	    }
+
+	    // SwingFXUtils.
+	    // final GridPane gridRoot = (GridPane)
+	    // primaryStage.getScene().getRoot();
+	    // gridRoot.add(actionRoot, 1, 1);
+	    gridPaneMain.add(actionRoot, 1, 1);
+
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	if (actionView != null) {
+	    return;
+	}
+
 	categoryActions.forEach(a -> {
 	    // Move to somewhere else...
 	    actionButtonBar.getChildren().clear();
@@ -688,7 +713,8 @@ public class MainViewController implements Initializable {
 	    //
 
 	    if (a.isVisibleToUser(loggedPerformer)) {
-		actionButtonBar.getChildren().add(generateButtonForAction(a));
+		// actionButtonBar.getChildren().add(generateButtonForAction(a));
+		actionButtonBar.getChildren().add(UIHelper.createButtonForAction(a, selectedCategoryNode.getValue()));
 	    }
 	});
     }
@@ -736,6 +762,16 @@ public class MainViewController implements Initializable {
 	    // ffs???
 	    return 0;
 	});
+    }
+
+    // The primary stage to use when swapping UI windows
+    private Stage primaryStage;
+
+    @FXML
+    private GridPane gridPaneMain;
+
+    public void setPrimaryStage(Stage refStage) {
+	this.primaryStage = refStage;
     }
 
 }

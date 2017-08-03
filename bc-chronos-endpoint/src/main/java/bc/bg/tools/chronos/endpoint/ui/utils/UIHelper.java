@@ -1,5 +1,6 @@
 package bc.bg.tools.chronos.endpoint.ui.utils;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
@@ -8,16 +9,20 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import bc.bg.tools.chronos.endpoint.ui.actions.EntityAction;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 /**
@@ -76,7 +81,7 @@ public final class UIHelper {
 
 	for (String ext : Paths.EXT_IMAGE_ICON) {
 	    try {
-		imgIcon = new Image(Paths.REL_PATH_IMAGE_ICON + imageName + ext);
+		imgIcon = new Image(Paths.REL_PATH_IMAGE_ICON + imageName + ext, -1, 50, true, true);
 		break;
 	    } catch (Exception e) {
 		continue;
@@ -84,6 +89,36 @@ public final class UIHelper {
 	}
 
 	return imgIcon;
+    }
+
+    // TODO: Adjust image width to cover available...
+    public static Button createButtonForAction(EntityAction<? extends Serializable> action, Object context) {
+	final Button actionButton = new Button();
+	actionButton.setMnemonicParsing(false);
+	actionButton.getStyleClass().add("action-button");
+	actionButton.setGraphic(new ImageView(UIHelper.createImageIcon(action.getActionIconName())));
+
+	actionButton.setOnMouseClicked(evt -> {
+	    action.execute(context);
+	});
+
+	actionButton.hoverProperty().addListener((obsProp, oldVal, newVal) -> {
+	    actionButton.setEffect(createGlow(newVal.booleanValue()));
+	});
+
+	return actionButton;
+    }
+
+    private static final double ON_GLOW_INTENSITY = 0.5d;
+
+    private static final double OFF_GLOW_INTENSITY = 0.0d;
+
+    public static Glow createGlow(boolean glowOn) {
+	final Glow glowEffect = new Glow();
+
+	glowEffect.setLevel(glowOn ? ON_GLOW_INTENSITY : OFF_GLOW_INTENSITY);
+
+	return glowEffect;
     }
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,

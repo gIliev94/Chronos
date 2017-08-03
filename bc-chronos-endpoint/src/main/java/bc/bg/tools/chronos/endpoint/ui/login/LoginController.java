@@ -159,6 +159,7 @@ public class LoginController implements ILoginModel {
 
 	final MainViewController mainViewController = uiLoader.<MainViewController> getController();
 	mainViewController.loginAs(user);
+	mainViewController.setPrimaryStage(primaryStage);
 
 	primaryStage.getScene().setRoot(rootContainer);
 

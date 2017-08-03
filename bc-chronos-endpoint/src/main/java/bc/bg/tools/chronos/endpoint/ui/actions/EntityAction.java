@@ -73,6 +73,11 @@ public class EntityAction<E extends Serializable> {
 	return this;
     }
 
+    public EntityAction<E> actionIconName(String actionIconName) {
+	this.actionIconName = actionIconName;
+	return this;
+    }
+
     public EntityAction<E> action(Consumer<E> action) {
 	this.action = action;
 	return this;
@@ -87,9 +92,11 @@ public class EntityAction<E extends Serializable> {
 	return actionIconName;
     }
 
+    // TODO: Remove maybe???
     public Class<E> getEntityClass() {
 	return this.entityClass;
     }
+    //
 
     public List<Priviledge> getRequiredPriviledges() {
 	return this.requiredPriviledges;
