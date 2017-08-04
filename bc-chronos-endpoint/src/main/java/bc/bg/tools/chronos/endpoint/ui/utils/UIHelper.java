@@ -1,6 +1,5 @@
 package bc.bg.tools.chronos.endpoint.ui.utils;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Locale;
@@ -22,7 +21,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 /**
@@ -91,22 +89,17 @@ public final class UIHelper {
 	return imgIcon;
     }
 
-    // TODO: Adjust image width to cover available...
-    public static Button createButtonForAction(EntityAction<? extends Serializable> action, Object context) {
-	final Button actionButton = new Button();
-	actionButton.setMnemonicParsing(false);
-	actionButton.getStyleClass().add("action-button");
-	actionButton.setGraphic(new ImageView(UIHelper.createImageIcon(action.getActionIconName())));
+    public static void wireButtonForEntityAction(final EntityAction entityAction) {
+	final Button actionButton = entityAction.getActionButton();
+	actionButton.setVisible(entityAction.isVisibleToUser());
 
-	actionButton.setOnMouseClicked(evt -> {
-	    action.execute(context);
+	actionButton.setOnMouseClicked(clickEvent -> {
+	    entityAction.execute((Void) null);
 	});
 
-	actionButton.hoverProperty().addListener((obsProp, oldVal, newVal) -> {
-	    actionButton.setEffect(createGlow(newVal.booleanValue()));
+	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {
+	    actionButton.setEffect(createGlow(newValue.booleanValue()));
 	});
-
-	return actionButton;
     }
 
     private static final double ON_GLOW_INTENSITY = 0.5d;
@@ -177,6 +170,8 @@ public final class UIHelper {
 	dialog.getDialogPane().getStyleClass().add(STYLE_CLASS_DIALOGS);
     }
 
+    // TODO: com.sun.deploy.uitoolkit.impl.fx.ui.FXUIFactory => consider for
+    // dialogs...
     public static Optional<ButtonType> showErrorDialog(final String errorMessage) {
 	final Alert errorDialog = new Alert(AlertType.ERROR, errorMessage, ButtonType.OK);
 	styleDialog(errorDialog);
