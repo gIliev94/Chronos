@@ -7,9 +7,10 @@
 
 <VBox alignment="TOP_CENTER" fillWidth="true" spacing="15"
 	stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.CategoryActionPanelController">
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="actionButtonGeneratedContainer"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.category.CategoryActionPanelController">
 	<children>
+		<!-- onMouseClicked="#refresh" -->
 		<Button fx:id="btnRefreshCategory" mnemonicParsing="false"
 			styleClass="action-button">
 			<graphic>
@@ -21,7 +22,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnAddCategory" mnemonicParsing="false"
+		<Button fx:id="btnModifyCategory" mnemonicParsing="false"
 			styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
@@ -32,12 +33,23 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnEditCategory" mnemonicParsing="false"
+		<Button fx:id="btnMergeCategory" mnemonicParsing="false"
 			styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
-						<Image url="@../images/edit_icon.png" />
+						<Image url="@../images/apply_icon.png" />
+					</image>
+				</ImageView>
+			</graphic>
+		</Button>
+
+		<Button fx:id="btnHideCategory" mnemonicParsing="false"
+			styleClass="action-button">
+			<graphic>
+				<ImageView fitHeight="50.0" preserveRatio="true">
+					<image>
+						<Image url="@../images/delete_icon.png" />
 					</image>
 				</ImageView>
 			</graphic>
@@ -49,6 +61,17 @@
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
 						<Image url="@../images/delete_icon.png" />
+					</image>
+				</ImageView>
+			</graphic>
+		</Button>
+
+		<Button fx:id="btnAddChildForCategory" mnemonicParsing="false"
+			styleClass="action-button">
+			<graphic>
+				<ImageView fitHeight="50.0" preserveRatio="true">
+					<image>
+						<Image url="@../images/apply_icon.png" />
 					</image>
 				</ImageView>
 			</graphic>

@@ -1,16 +1,14 @@
-package bc.bg.tools.chronos.endpoint.ui.main;
-
-import java.io.Serializable;
+package bc.bg.tools.chronos.endpoint.ui.actions;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 
-public interface IEntityActionContext {
+public interface IEntityActionModel {
 
     TreeItem<Object> getSelectedEntityNode();
 
-    Serializable getSelectedEntity();
+    // <T extends Serializable> T getSelectedEntity();
 
     void refreshSelectedEntityNode(Object modifiedEntity);
 

@@ -15,13 +15,13 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import javafx.scene.control.Button;
 
 /**
- * Builder class for entity actions.
+ * Builder class for entity action context.
  * 
  * @author giliev
  */
-public class EntityAction {
-    
-    private static final Logger LOGGER = Logger.getLogger(EntityAction.class);
+public class EntityActionInfo {
+
+    private static final Logger LOGGER = Logger.getLogger(EntityActionInfo.class);
 
     /**
      * This action`s performer(user).
@@ -39,6 +39,11 @@ public class EntityAction {
     private Function<Void, Void> action;
 
     /**
+     * The preparation actions(applied BEFORE {@link #action}).
+     */
+    private List<Function<Void, Void>> preActions;
+
+    /**
      * The follow-up / post actions(applied AFTER {@link #action}).
      */
     private List<Function<Void, Void>> postActions;
@@ -48,8 +53,9 @@ public class EntityAction {
      */
     private Button actionButton;
 
-    public EntityAction() {
+    public EntityActionInfo() {
 	requiredPrivileges = new HashSet<>();
+	preActions = new LinkedList<>();
 	postActions = new LinkedList<>();
     }
 
@@ -60,7 +66,7 @@ public class EntityAction {
      *            - the performer(user) to set.
      * @return This entity action instance (used for builder method chaining).
      */
-    public final EntityAction performer(final Performer performer) {
+    public final EntityActionInfo performer(final Performer performer) {
 	this.performer = performer;
 	return this;
     }
@@ -72,7 +78,7 @@ public class EntityAction {
      *            - the privileges to set as required.
      * @return This entity action instance (used for builder method chaining).
      */
-    public final EntityAction requiredPriviledges(final Priviledge... requiredPrivileges) {
+    public final EntityActionInfo requiredPriviledges(final Priviledge... requiredPrivileges) {
 	this.requiredPrivileges.addAll(Stream.of(requiredPrivileges).collect(Collectors.toList()));
 	return this;
     }
@@ -84,7 +90,7 @@ public class EntityAction {
      *            - the UI button to set.
      * @return This entity action instance (used for builder method chaining).
      */
-    public final EntityAction actionButton(final Button actionButton) {
+    public final EntityActionInfo actionButton(final Button actionButton) {
 	this.actionButton = actionButton;
 	return this;
     }
@@ -96,8 +102,21 @@ public class EntityAction {
      *            - the main action to set.
      * @return This entity action instance (used for builder method chaining).
      */
-    public final EntityAction action(final Function<Void, Void> action) {
+    public final EntityActionInfo action(final Function<Void, Void> action) {
 	this.action = action;
+	return this;
+    }
+
+    /**
+     * Builder method, sets up {@link #preActions}
+     * 
+     * @param preActions
+     *            - the preparation actions to set.
+     * @return This entity action instance (used for builder method chaining).
+     */
+    @SafeVarargs
+    public final EntityActionInfo preActions(final Function<Void, Void>... preActions) {
+	this.preActions.addAll(Stream.of(preActions).collect(Collectors.toList()));
 	return this;
     }
 
@@ -109,7 +128,7 @@ public class EntityAction {
      * @return This entity action instance (used for builder method chaining).
      */
     @SafeVarargs
-    public final EntityAction postActions(final Function<Void, Void>... postActions) {
+    public final EntityActionInfo postActions(final Function<Void, Void>... postActions) {
 	this.postActions.addAll(Stream.of(postActions).collect(Collectors.toList()));
 	return this;
     }
@@ -141,9 +160,20 @@ public class EntityAction {
     }
 
     /**
-     * Initiates this entity action`s execution sequence / chain - the main
-     * action itself + multiple follow-up / post actions(like clean up / refresh
-     * / etc.. ), if applicable.
+     * Initiates this entity action`s execution sequence/chain in the following
+     * manner:
+     * 
+     * <p>
+     * Zero or more preparation actions(like validation/pre-processing/etc..)
+     * </p>
+     * +
+     * <p>
+     * The main action itself
+     * </p>
+     * +
+     * <p>
+     * Zero or more follow-up/post actions(like clean up/refresh/etc..)
+     * </p>
      * 
      * @param dummyArg
      *            - dummy argument because of functional interface(not actually
@@ -155,12 +185,19 @@ public class EntityAction {
 	    return;
 	}
 
-	Function<Void, Void> entityActionSequence = action;
+	final LinkedList<Function<Void, Void>> entityActionSeqList = new LinkedList<>();
+	entityActionSeqList.addAll(preActions);
+	entityActionSeqList.add(action);
+	entityActionSeqList.addAll(postActions);
 
-	if (!(postActions.isEmpty())) {
-	    for (final Function<Void, Void> postAction : postActions) {
-		entityActionSequence = entityActionSequence.andThen(postAction);
-	    }
+	if (entityActionSeqList.isEmpty()) {
+	    logIncompleteEntityAction();
+	    return;
+	}
+
+	Function<Void, Void> entityActionSequence = entityActionSeqList.removeFirst();
+	for (final Function<Void, Void> nextAction : entityActionSeqList) {
+	    entityActionSequence = entityActionSequence.andThen(nextAction);
 	}
 
 	entityActionSequence.apply(dummyArg);
@@ -185,15 +222,23 @@ public class EntityAction {
 	actionInfoBuilder // nl
 		.append("Button name :: " + (actionButton != null ? actionButton.getId() : notAssigned)) // nl
 		.append('\n') // nl
+
 		.append("Performer :: " + (performer != null ? performer : notAssigned)) // nl
 		.append('\n') // nl
+
 		.append("Requires privileges :: "
 			+ (!(requiredPrivileges.isEmpty()) ? requiredPrivileges : notAssigned)) // nl
 		.append('\n') // nl
+
 		.append("Is main action set :: " + (action != null)) // nl
 		.append('\n') // nl
+
+		.append("Has pre actions set :: " + !(preActions.isEmpty())) // nl
+		.append('\n') // nl
+
 		.append("Has post actions set :: " + !(postActions.isEmpty())) // nl
 		.append('\n') // nl
+
 		.append("Action exection sequence length :: " + postActions.size() + 1);
 
 	return actionInfoBuilder.toString();

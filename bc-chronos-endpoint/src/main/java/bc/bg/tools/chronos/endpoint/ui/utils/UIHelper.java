@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import bc.bg.tools.chronos.endpoint.ui.actions.EntityAction;
+import bc.bg.tools.chronos.endpoint.ui.actions.EntityActionInfo;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.Alert;
@@ -21,6 +21,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 /**
@@ -89,12 +90,12 @@ public final class UIHelper {
 	return imgIcon;
     }
 
-    public static void wireEntityActionUI(final EntityAction entityAction) {
-	final Button actionButton = entityAction.getActionButton();
-	actionButton.setVisible(entityAction.isVisibleToUser());
+    public static void wireEntityActionUI(final EntityActionInfo entityActionInfo) {
+	final Button actionButton = entityActionInfo.getActionButton();
+	actionButton.setVisible(entityActionInfo.isVisibleToUser());
 
 	actionButton.setOnMouseClicked(clickEvent -> {
-	    entityAction.executeActionSequence((Void) null);
+	    entityActionInfo.executeActionSequence((Void) null);
 	});
 
 	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {
@@ -112,6 +113,10 @@ public final class UIHelper {
 	glowEffect.setLevel(glowOn ? ON_GLOW_INTENSITY : OFF_GLOW_INTENSITY);
 
 	return glowEffect;
+    }
+
+    public static void removeHiddenNodesFromContainer(final Pane parentContainer) {
+	parentContainer.getChildren().removeIf(node -> !node.isVisible());
     }
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,

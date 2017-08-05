@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.category.CategoryActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
-import bc.bg.tools.chronos.endpoint.ui.main.CategoryActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;

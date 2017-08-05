@@ -24,6 +24,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.category.CategoryActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.category.ICategoryActionModel;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -705,19 +707,9 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     }
 
     @Override
-    public Serializable getSelectedEntity() {
-	final Object selectedEntity = selectedCategoryNode.getValue();
-	if (selectedEntity instanceof Serializable) {
-	    return (Serializable) selectedEntity;
-	}
-
-	return null;
-    }
-
-    @Override
-    public void refreshSelectedEntityNode(Object entity) {
-	if (entity instanceof Serializable) {
-	    selectedCategoryNode.setValue(entity);
+    public void refreshSelectedEntityNode(Object modifiedEntity) {
+	if (modifiedEntity instanceof Serializable) {
+	    selectedCategoryNode.setValue(modifiedEntity);
 	} else {
 	    // LOG...
 	}
