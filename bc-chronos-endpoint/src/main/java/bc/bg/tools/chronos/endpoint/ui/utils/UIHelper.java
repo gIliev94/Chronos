@@ -89,12 +89,12 @@ public final class UIHelper {
 	return imgIcon;
     }
 
-    public static void wireButtonForEntityAction(final EntityAction entityAction) {
+    public static void wireEntityActionUI(final EntityAction entityAction) {
 	final Button actionButton = entityAction.getActionButton();
 	actionButton.setVisible(entityAction.isVisibleToUser());
 
 	actionButton.setOnMouseClicked(clickEvent -> {
-	    entityAction.execute((Void) null);
+	    entityAction.executeActionSequence((Void) null);
 	});
 
 	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {

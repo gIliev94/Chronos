@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -71,6 +72,8 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainViewController implements Initializable, ICategoryActionModel {
+
+    private static final Logger LOGGER = Logger.getLogger(MainViewController.class);
 
     @FXML
     private Menu menuFile;
@@ -640,24 +643,33 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
     // http://code.makery.ch/blog/javafx-8-event-handling-examples/
     // https://stackoverflow.com/questions/10518458/javafx-create-custom-button-with-image
-    private Parent currentActionPanel;
+
+    // Example :: replace container`s children approach
+    // private Parent currentActionPanel;
+
+    private static final String ACTION_PANEL_CATEGORY = "CategoryActionPanel";
 
     public void showCategoryActionsAlt() {
-	if (currentActionPanel != null) {
-	    gridPaneMain.getChildren().remove(currentActionPanel);
-	}
-	// actionButtonBar.getChildren().clear();
+	// Example :: replace container`s children approach
+	// if (currentActionPanel != null) {
+	// gridPaneMain.getChildren().remove(currentActionPanel);
+	// }
+
+	// Example :: replace container`s children approach
+	actionButtonBar.getChildren().clear();
 
 	if (!(selectedCategoryNode.getValue() instanceof Category)) {
 	    return;
 	}
 
-	final FXMLLoader actionView = UIHelper.getWindowLoaderFor("CategoryActionPanel", UIHelper.Defaults.APP_I18N_EN,
+	final FXMLLoader actionView = UIHelper.getWindowLoaderFor(ACTION_PANEL_CATEGORY, UIHelper.Defaults.APP_I18N_EN,
 		applicationContext::getBean);
 
 	try {
 	    final Parent actionRoot = actionView.load();
-	    currentActionPanel = actionRoot;
+
+	    // Example :: replace container`s children approach
+	    // currentActionPanel = actionRoot;
 
 	    final CategoryActionPanelController actionController = actionView
 		    .<CategoryActionPanelController> getController();
@@ -668,15 +680,21 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	    // final GridPane gridRoot = (GridPane)
 	    // primaryStage.getScene().getRoot();
 	    // gridRoot.add(actionRoot, 1, 1);
-	    gridPaneMain.add(actionRoot, 1, 1);
+
+	    // Example :: replace container approach
+	    // gridPaneMain.add(actionRoot, 1, 1);
+
+	    // Example :: replace container`s children approach
+	    actionButtonBar.getChildren().add(actionRoot);
 
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    // TODO: i18n
+	    LOGGER.error(e);
+	    UIHelper.showErrorDialog("Problem loading UI for :: " + ACTION_PANEL_CATEGORY);
 	}
     }
 
-    // The primary stage to use when swapping UI windows
+    // The primary stage to use when swapping UI windows OR log out...
     private Stage primaryStage;
 
     @FXML

@@ -20,6 +20,7 @@ public class Performer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //TODO: Typo - correct is Privilege
     public enum Priviledge {
 	READ, // nl
 	WRITE, // nl

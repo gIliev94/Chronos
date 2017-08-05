@@ -99,27 +99,7 @@
 <!-- 							</image> -->
 <!-- 						</ImageView> -->
 
-						<!-- alignment="TOP_CENTER" -->
-<!-- 						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1"> -->
-<!-- 							<children> -->
-								<!-- <ToolBar orientation="VERTICAL"> -->
-								<!-- <items> -->
-<!-- 								<Button mnemonicParsing="false" text="A1"> -->
-									<!-- <graphic> -->
-									<!-- <ImageView preserveRatio="true"> -->
-									<!-- <image> -->
-									<!-- <Image url="@../images/apply_icon.png" /> -->
-									<!-- </image> -->
-									<!-- </ImageView> -->
-									<!-- </graphic> -->
-<!-- 								</Button> -->
-<!-- 								<Button mnemonicParsing="false" text="A2" /> -->
-<!-- 								<Button mnemonicParsing="false" text="A3" /> -->
-<!-- 								<Button mnemonicParsing="false" text="A4" /> -->
-								<!-- </items> -->
-								<!-- </ToolBar> -->
-<!-- 							</children> -->
-<!-- 						</VBox> -->
+						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
 						<!-- FlowPane maybe? -->
 						<HBox alignment="CENTER_LEFT" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">

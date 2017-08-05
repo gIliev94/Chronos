@@ -2,7 +2,6 @@ package bc.bg.tools.chronos.endpoint.ui.main;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -29,7 +28,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 public class CategoryActionPanelController implements Initializable {
@@ -39,9 +37,6 @@ public class CategoryActionPanelController implements Initializable {
 
     @FXML
     private URL location;
-
-    @FXML
-    private VBox actionButtonBar;
 
     @FXML
     private Button btnRefreshCategory;
@@ -91,35 +86,9 @@ public class CategoryActionPanelController implements Initializable {
     }
     //
 
-    // private final List<EntityAction<? extends Serializable>> categoryActions
-    // = new ArrayList<>();
-    //
-    // private void loadCategoryActions() {
-    // final EntityAction<Category> actionRefreshCategory = new
-    // EntityAction<Category>(Category.class) // nl
-    // .requiredPriviledges(Arrays.asList(Priviledge.READ)) // nl
-    // .action(this::refreshCategory) // nl
-    // .postAction(this::refreshEntityDetails);
-    //
-    // final EntityAction<Category> actionAddEditCategory = new
-    // EntityAction<Category>(Category.class) // nl
-    // .requiredPriviledges(Arrays.asList(Priviledge.READ)) // nl
-    // .action(this::addEditCategory) // nl
-    // .postAction(this::refreshEntityDetails);
-    //
-    // final EntityAction<Category> actionRemoveCategory = new
-    // EntityAction<Category>(Category.class) // nl
-    // .requiredPriviledges(Arrays.asList(Priviledge.DELETE)) // nl
-    // .action(this::hideCategory) // nl
-    // .postAction(this::refreshEntityDetails);
-    //
-    // categoryActions.addAll(Arrays.asList(actionRefreshCategory,
-    // actionAddEditCategory, actionRemoveCategory));
-    // }
-
     @FXML
     void initialize() {
-	assert actionButtonBar != null : "fx:id=\"actionButtonBar\" was not injected: check your FXML file 'CategoryActionPanel.fxml'.";
+	// injected: check your FXML file 'CategoryActionPanel.fxml'.";
 	assert btnRefreshCategory != null : "fx:id=\"btnRefreshCategory\" was not injected: check your FXML file 'CategoryActionPanel.fxml'.";
 	assert btnAddCategory != null : "fx:id=\"btnAddCategory\" was not injected: check your FXML file 'CategoryActionPanel.fxml'.";
 	assert btnEditCategory != null : "fx:id=\"btnEditCategory\" was not injected: check your FXML file 'CategoryActionPanel.fxml'.";
@@ -134,38 +103,37 @@ public class CategoryActionPanelController implements Initializable {
     protected void initializeActions() {
 	final EntityAction actionRefreshCategory = new EntityAction() // nl
 		.performer(categoryActionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Arrays.asList(Priviledge.READ)) // nl
+		.requiredPriviledges(Priviledge.READ) // nl
 		.actionButton(btnRefreshCategory) // nl
 		.action(this::refreshCategory) // nl
-		.postAction(this::refreshEntityDetails);
+		.postActions(this::refreshEntityDetails);
 
 	// TODO: Add to parent Action controller because add will not depend on
 	// whether the entity node is clicked or not...
 	final EntityAction actionAddCategory = new EntityAction() // nl
 		.performer(categoryActionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Arrays.asList(Priviledge.WRITE)) // nl
+		.requiredPriviledges(Priviledge.WRITE) // nl
 		.actionButton(btnAddCategory) // nl
 		.action(this::addEditCategory) // nl
-		.postAction(this::refreshEntityDetails) // nl
-		.postAction(this::hideCategory);
+		.postActions(this::refreshEntityDetails, this::hideCategory);
 	//
 
 	final EntityAction actionEditCategory = new EntityAction() // nl
 		.performer(categoryActionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Arrays.asList(Priviledge.WRITE)) // nl
+		.requiredPriviledges(Priviledge.WRITE) // nl
 		.actionButton(btnEditCategory) // nl
 		.action(this::addEditCategory) // nl
-		.postAction(this::refreshEntityDetails);
+		.postActions(this::refreshEntityDetails);
 
 	final EntityAction actionRemoveCategory = new EntityAction() // nl
 		.performer(categoryActionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Arrays.asList(Priviledge.DELETE)) // nl
+		.requiredPriviledges(Priviledge.DELETE) // nl
 		.actionButton(btnRemoveCategory) // nl
 		.action(this::hideCategory) // nl
-		.postAction(this::refreshEntityDetails);
+		.postActions(this::refreshEntityDetails);
 
 	Stream.of(actionRefreshCategory, actionAddCategory, actionEditCategory, actionRemoveCategory)
-		.forEach(UIHelper::wireButtonForEntityAction);
+		.forEach(UIHelper::wireEntityActionUI);
     }
 
     protected Void refreshCategory(Void dummyArg) {
