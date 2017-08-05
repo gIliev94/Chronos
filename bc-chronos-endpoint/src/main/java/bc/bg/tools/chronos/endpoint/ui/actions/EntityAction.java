@@ -1,5 +1,6 @@
 package bc.bg.tools.chronos.endpoint.ui.actions;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,9 +16,13 @@ public class EntityAction {
 
     private Function<Void, Void> action;
 
-    private Function<Void, Void> postAction;
+    private List<Function<Void, Void>> postActions;
 
     private Button actionButton;
+
+    public EntityAction() {
+	postActions = new LinkedList<>();
+    }
 
     public EntityAction performer(final Performer performer) {
 	this.performer = performer;
@@ -40,7 +45,7 @@ public class EntityAction {
     }
 
     public EntityAction postAction(final Function<Void, Void> postAction) {
-	this.postAction = postAction;
+	this.postActions.add(postAction);
 	return this;
     }
 
@@ -67,10 +72,28 @@ public class EntityAction {
 	    throw new IllegalArgumentException("NO ACTION SPECIFIED!!!");
 	}
 
-	if (postAction != null) {
-	    action.andThen(postAction).apply(dummyArg);
-	} else {
-	    action.apply(dummyArg);
+	Function<Void, Void> fullActionChain = action;
+
+	if (!(postActions.isEmpty())) {
+	    for (final Function<Void, Void> postAction : postActions) {
+		fullActionChain = fullActionChain.andThen(postAction);
+	    }
 	}
+
+	fullActionChain.apply(dummyArg);
+
+	// if (!(postActions.isEmpty())) {
+	// Function<Void, Void> fullChainedAction = action;
+	//
+	// postActions.forEach(postAction -> {
+	// fullChainedAction = fullChainedAction.andThen(postAction);
+	// });
+	//
+	// fullChainedAction
+	//
+	// action.andThen(postAction).apply(dummyArg);
+	// } else {
+	// action.apply(dummyArg);
+	// }
     }
 }

@@ -146,7 +146,8 @@ public class CategoryActionPanelController implements Initializable {
 		.requiredPriviledges(Arrays.asList(Priviledge.WRITE)) // nl
 		.actionButton(btnAddCategory) // nl
 		.action(this::addEditCategory) // nl
-		.postAction(this::refreshEntityDetails);
+		.postAction(this::refreshEntityDetails) // nl
+		.postAction(this::hideCategory);
 	//
 
 	final EntityAction actionEditCategory = new EntityAction() // nl
