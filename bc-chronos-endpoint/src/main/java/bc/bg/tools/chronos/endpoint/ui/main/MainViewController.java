@@ -24,8 +24,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import bc.bg.tools.chronos.endpoint.ui.actions.entity.category.CategoryActionPanelController;
-import bc.bg.tools.chronos.endpoint.ui.actions.entity.category.ICategoryActionModel;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController2;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoryActionModel;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -572,6 +574,8 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	final ObservableList<Node> entityAttrList = stackEntityAttributes.getChildren();
 	entityAttrList.clear();
 
+	Class<? extends Serializable> entityClass = null;
+
 	final Object newValueObj = new_val.getValue();
 	if (newValueObj instanceof Category) {
 	    Category catObj = (Category) newValueObj;
@@ -581,9 +585,9 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
 	    selectedCategoryNode = new_val;
 
+	    entityClass = Category.class;
 	    // showCategoryActions();
-
-	    showCategoryActionsAlt();
+	    // showCategoryActionsAlt();
 
 	    // titlePaneCustomer.setText(MessageFormat
 	    // .format(resources.getString("view.main.tab.workspace.entity.customer.title"),
@@ -594,17 +598,21 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
 	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
 
+	    entityClass = Customer.class;
+
 	    titlePaneCustomer.setText(MessageFormat
 		    .format(resources.getString("view.main.tab.workspace.entity.customer.title"), custObj.getName()));
 
 	    selectedCategoryNode = new_val;
 	    // showCategoryActions();
-	    showCategoryActionsAlt();
+	    // showCategoryActionsAlt();
 
 	} else if (newValueObj instanceof Project) {
 	    Project projObj = (Project) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(projObj.getDescription())));
+
+	    entityClass = Project.class;
 
 	    titlePaneProject.setText(MessageFormat
 		    .format(resources.getString("view.main.tab.workspace.entity.project.title"), projObj.getName()));
@@ -615,6 +623,8 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	    entityAttrList.add(new HBox(new Label("Hours estimated: "),
 		    new TextField(String.valueOf(taskObj.getHoursEstimated()))));
 
+	    entityClass = Task.class;
+
 	    titlePaneTask.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.task.title"),
 		    taskObj.getName()));
 	} else if (newValueObj instanceof Role) {
@@ -623,9 +633,13 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(roleObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Rate: "), new TextField(String.valueOf(roleObj.getBillingRate()))));
 
+	    entityClass = Role.class;
+
 	    titlePaneRole.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.role.title"),
 		    roleObj.getName()));
 	}
+
+	showCategoricalEntityActions(entityClass);
     }
 
     private HBox createHBox(Label label, TextField textField) {
@@ -650,6 +664,43 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     // private Parent currentActionPanel;
 
     private static final String ACTION_PANEL_CATEGORY = "CategoryActionPanel";
+
+    private static final String ACTION_PANEL_CATEGORICAL = "CategoricalEntityActionPanel";
+
+    @Autowired
+    private CategoryActionPanelController2 categoryActionController2;
+
+    protected void showCategoricalEntityActions(final Class<? extends Serializable> entityClass) {
+	// rename to categorical action button bar...
+	actionButtonBar.getChildren().clear();
+
+	final FXMLLoader actionPanel = UIHelper.getWindowLoaderFor(ACTION_PANEL_CATEGORICAL,
+		UIHelper.Defaults.APP_I18N_EN, applicationContext::getBean);
+
+	Object specificEntityController = null;
+	if (Category.class.isAssignableFrom(entityClass)) {
+	    specificEntityController = categoryActionController2;
+	} else {
+	   //TODO: Implement specific controllers for other entities...
+	    return;
+	}
+	actionPanel.setController(specificEntityController);
+
+	try {
+	    final Parent actionPanelRoot = actionPanel.load();
+
+	    final CategoricalEntityActionPanelController actionController = actionPanel
+		    .<CategoricalEntityActionPanelController> getController();
+	    actionController.setActionModel(this);
+
+	    actionButtonBar.getChildren().add(actionPanelRoot);
+
+	} catch (IOException e) {
+	    // TODO: i18n
+	    LOGGER.error(e);
+	    UIHelper.showErrorDialog("Problem loading UI for :: " + ACTION_PANEL_CATEGORICAL);
+	}
+    }
 
     public void showCategoryActionsAlt() {
 	// Example :: replace container`s children approach

@@ -1,4 +1,4 @@
-package bc.bg.tools.chronos.endpoint.ui.actions.entity.category;
+package bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical;
 
 import java.io.Serializable;
 import java.net.URL;

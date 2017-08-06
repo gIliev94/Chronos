@@ -7,12 +7,11 @@
 
 <VBox alignment="TOP_CENTER" fillWidth="true" spacing="15"
 	stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
-	xmlns:fx="http://javafx.com/fxml/1" fx:id="actionButtonGeneratedContainer"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController">
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="actionButtonGeneratedContainer">
+	<!-- fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController" -->
 	<children>
 		<!-- onMouseClicked="#refresh" -->
-		<Button fx:id="btnRefreshCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnRefresh" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
@@ -22,8 +21,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnModifyCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnModify" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
@@ -33,8 +31,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnMergeCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnMerge" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
@@ -44,8 +41,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnHideCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnHide" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
@@ -55,8 +51,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnRemoveCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnRemove" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
@@ -66,8 +61,7 @@
 			</graphic>
 		</Button>
 
-		<Button fx:id="btnAddChildForCategory" mnemonicParsing="false"
-			styleClass="action-button">
+		<Button fx:id="btnAddChild" mnemonicParsing="false" styleClass="action-button">
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
