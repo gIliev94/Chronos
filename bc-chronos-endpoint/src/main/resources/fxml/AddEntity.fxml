@@ -88,7 +88,7 @@
 				<graphic>
 					<ImageView fitHeight="50.0" preserveRatio="true">
 						<image>
-							<Image url="@../images/delete_icon.png" />
+							<Image url="@../images/back_icon.png" />
 						</image>
 					</ImageView>
 				</graphic>
@@ -100,7 +100,7 @@
 				<graphic>
 					<ImageView fitHeight="50.0" preserveRatio="true">
 						<image>
-							<Image url="@../images/apply_icon.png" />
+							<Image url="@../images/next_icon.png" />
 						</image>
 					</ImageView>
 				</graphic>

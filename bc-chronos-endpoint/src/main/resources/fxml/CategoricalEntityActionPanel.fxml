@@ -65,7 +65,7 @@
 			<graphic>
 				<ImageView fitHeight="50.0" preserveRatio="true">
 					<image>
-						<Image url="@../images/apply_icon.png" />
+						<Image url="@../images/add_icon.png" />
 					</image>
 				</ImageView>
 			</graphic>
