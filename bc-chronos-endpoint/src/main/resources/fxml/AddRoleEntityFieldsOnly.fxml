@@ -17,15 +17,16 @@
 	AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0"
 	AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.AddCustomerController">
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.AddRoleController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="40" />
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="60" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="25" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="25" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="25" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="25" vgrow="ALWAYS" />
 	</rowConstraints>
 
 	<children>
@@ -35,7 +36,7 @@
 			GridPane.rowIndex="0" />
 		<!-- <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1" -->
 		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="0"> -->
-		<!-- <ComboBox fx:id="dropDownCategory" editable="false" disable="true" -->
+		<!-- <ComboBox fx:id="dropDownCategory" editable="false" -->
 		<!-- prefWidth="200" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" 
 			/> -->
 		<!-- </AnchorPane> -->
@@ -59,5 +60,13 @@
 		<TextField fx:id="txfFieldDescription" prefWidth="200"
 			maxWidth="400" GridPane.columnIndex="1" GridPane.columnSpan="1"
 			GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+
+		<Label fx:id="lblBillingRate" prefWidth="100" maxWidth="200"
+			text="%view.add.entity.categorical.role.property.billingrate.label"
+			textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="1"
+			GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+		<TextField fx:id="txfBillingRate" prefWidth="200" maxWidth="400"
+			GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.halignment="LEFT"
+			GridPane.rowIndex="3" />
 	</children>
 </GridPane>

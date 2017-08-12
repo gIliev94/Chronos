@@ -17,15 +17,17 @@
 	AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0"
 	AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.AddCustomerController">
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.AddTaskController">
 	<columnConstraints>
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="40" />
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="60" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="33.3" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="20" vgrow="ALWAYS" />
 	</rowConstraints>
 
 	<children>
@@ -35,7 +37,7 @@
 			GridPane.rowIndex="0" />
 		<!-- <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1" -->
 		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="0"> -->
-		<!-- <ComboBox fx:id="dropDownCategory" editable="false" disable="true" -->
+		<!-- <ComboBox fx:id="dropDownCategory" editable="false" -->
 		<!-- prefWidth="200" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" 
 			/> -->
 		<!-- </AnchorPane> -->
@@ -44,20 +46,43 @@
 			prefWidth="200" maxWidth="400" GridPane.columnIndex="1"
 			GridPane.columnSpan="1" GridPane.halignment="LEFT" GridPane.rowIndex="0" />
 
+		<Label fx:id="lblProject" prefWidth="100" maxWidth="200"
+			text="%view.add.entity.categorical.project.label" textAlignment="CENTER"
+			GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.halignment="RIGHT"
+			GridPane.rowIndex="1" />
+		<!-- <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1" -->
+		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="1"> -->
+		<!-- <ComboBox fx:id="dropDownCustomer" editable="false" -->
+		<!-- prefWidth="200" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" 
+			/> -->
+		<!-- </AnchorPane> -->
+
+		<ComboBox fx:id="dropDownProject" editable="false" disable="true"
+			prefWidth="200" maxWidth="400" GridPane.columnIndex="1"
+			GridPane.columnSpan="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+
 		<Label fx:id="lblName" prefWidth="100" maxWidth="200"
 			text="%view.add.entity.categorical.property.name.label"
 			textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="1"
-			GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+			GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
 		<TextField fx:id="txfFieldName" prefWidth="200" maxWidth="400"
 			GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.halignment="LEFT"
-			GridPane.rowIndex="1" />
+			GridPane.rowIndex="2" />
 
 		<Label fx:id="lblDescription" prefWidth="100" maxWidth="200"
 			text="%view.add.entity.categorical.property.description.label"
 			textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="1"
-			GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+			GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
 		<TextField fx:id="txfFieldDescription" prefWidth="200"
 			maxWidth="400" GridPane.columnIndex="1" GridPane.columnSpan="1"
-			GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+			GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+
+		<Label fx:id="lblHoursEstimated" prefWidth="100" maxWidth="200"
+			text="%view.add.entity.categorical.task.property.hoursestimated.label"
+			textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="1"
+			GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+		<TextField fx:id="txfFieldHoursEstimated" prefWidth="200"
+			maxWidth="400" GridPane.columnIndex="1" GridPane.columnSpan="1"
+			GridPane.halignment="LEFT" GridPane.rowIndex="4" />
 	</children>
 </GridPane>

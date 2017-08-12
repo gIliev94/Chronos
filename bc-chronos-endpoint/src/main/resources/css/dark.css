@@ -66,6 +66,11 @@
     -fx-prompt-text-fill: transparent;
 }
 
+.anchor-pane {
+   -fx-background-color: rgb(255.0, 0.0, 0.0);
+}
+
+
 /* Fix scroll bar buttons arrows colors */
 .scroll-bar > .increment-button > .increment-arrow,
 .scroll-bar > .decrement-button > .decrement-arrow {

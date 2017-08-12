@@ -2,21 +2,19 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
 <!-- xmlns:fx="http://javafx.com/fxml/1" -->
+
 <GridPane gridLinesVisible="true" hgap="10" minHeight="200"
 	minWidth="300" stylesheets="@../css/dark.css" vgap="10"
-	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.AddEntityController">
 
 	<!-- <fx:define> -->
@@ -51,56 +49,27 @@
 			GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="LEFT"
 			GridPane.rowIndex="0" />
 
-		<!-- <AnchorPane fx:id="paneEditFields" GridPane.columnIndex="0" -->
-		<!-- GridPane.columnSpan="1" GridPane.halignment="CENTER" -->
-		<!-- GridPane.rowIndex="1"> -->
-		<!-- <fx:include fx:id="subform" source="AddNewEntity.fxml" /> -->
-		<!-- </AnchorPane> -->
-
-		<GridPane fx:id="paneEditFields" gridLinesVisible="true"
-			GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.halignment="CENTER"
+		<AnchorPane fx:id="paneEditFields" GridPane.columnIndex="0"
+			GridPane.columnSpan="1" GridPane.halignment="CENTER"
 			GridPane.rowIndex="1">
-			<fx:include fx:id="subform" source="AddCustomerEntityFieldsOnly.fxml" />
-		</GridPane>
+			<!-- <fx:include fx:id="subform" source="AddCustomerEntityFieldsOnly.fxml" 
+				/> -->
 
-		<!-- <GridPane gridLinesVisible="true" GridPane.columnIndex="0" -->
-		<!-- GridPane.columnSpan="1" GridPane.halignment="CENTER" -->
-		<!-- GridPane.rowIndex="1"> -->
-		<!-- <columnConstraints> -->
-		<!-- <ColumnConstraints hgrow="ALWAYS" percentWidth="40" /> -->
-		<!-- <ColumnConstraints hgrow="ALWAYS" percentWidth="60" /> -->
-		<!-- </columnConstraints> -->
-		<!-- <rowConstraints> -->
-		<!-- <RowConstraints percentHeight="33.3" vgrow="ALWAYS" /> -->
-		<!-- <RowConstraints percentHeight="33.3" vgrow="ALWAYS" /> -->
-		<!-- <RowConstraints percentHeight="33.3" vgrow="ALWAYS" /> -->
-		<!-- </rowConstraints> -->
+			<!-- <fx:include fx:id="subform" source="AddProjectEntityFieldsOnly.fxml" 
+				/> -->
 
-		<!-- <Label fx:id="lblCategory" prefWidth="100" -->
-		<!-- text="%view.add.entity.categorical.category.label" textAlignment="CENTER" -->
-		<!-- GridPane.columnIndex="0" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="RIGHT" GridPane.rowIndex="0" /> -->
-		<!-- <ComboBox fx:id="dropDownCategory" editable="false" -->
-		<!-- prefWidth="200" GridPane.columnIndex="1" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="0" /> -->
+			<!-- <fx:include fx:id="subform" source="AddTaskEntityFieldsOnly.fxml" 
+				/> -->
 
-		<!-- <Label fx:id="lblName" prefWidth="100" -->
-		<!-- text="%view.add.entity.categorical.name.label" textAlignment="CENTER" -->
-		<!-- GridPane.columnIndex="0" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="RIGHT" GridPane.rowIndex="1" /> -->
-		<!-- <TextField fx:id="txfFieldName" prefWidth="200" -->
-		<!-- GridPane.columnIndex="1" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="1" /> -->
+			<!-- <fx:include fx:id="subform" source="AddBookingEntityFieldsOnly.fxml" 
+				/> -->
 
-		<!-- <Label fx:id="lblDescription" prefWidth="100" -->
-		<!-- text="%view.add.entity.categorical.description.label" textAlignment="CENTER" -->
-		<!-- GridPane.columnIndex="0" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="RIGHT" GridPane.rowIndex="2" /> -->
-		<!-- <TextField fx:id="txfFieldDescription" prefWidth="200" -->
-		<!-- GridPane.columnIndex="1" GridPane.columnSpan="1" -->
-		<!-- GridPane.halignment="LEFT" GridPane.rowIndex="2" /> -->
-		<!-- </GridPane> -->
+			<!-- <fx:include fx:id="subform" source="AddRoleEntityFieldsOnly.fxml" 
+				/> -->
 
+			<!-- <fx:include fx:id="subform" source="AddPerformerEntityFieldsOnly.fxml" 
+				/> -->
+		</AnchorPane>
 
 		<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
 			GridPane.columnSpan="1" GridPane.halignment="CENTER"
