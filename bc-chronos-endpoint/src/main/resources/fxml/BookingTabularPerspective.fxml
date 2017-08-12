@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+
+<GridPane fx:id="gridPaneMain" gridLinesVisible="true"
+	AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0"
+	AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" hgap="5"
+	prefHeight="500.0" prefWidth="700.0" stylesheets="@../css/dark.css"
+	vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+	<padding>
+		<Insets bottom="5" left="5" right="5" top="5" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+	</rowConstraints>
+
+	<!-- <AnchorPane GridPane.columnIndex="0" GridPane.columnSpan="1" -->
+	<!-- GridPane.halignment="CENTER" GridPane.rowIndex="0"> -->
+	<!-- <fx:include fx:id="subform" source="BookingActionPanel.fxml" /> -->
+	<!-- </AnchorPane> -->
+
+	<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
+		GridPane.rowIndex="0">
+		<columnConstraints>
+			<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="60" vgrow="ALWAYS" />
+			<RowConstraints percentHeight="40" vgrow="ALWAYS" />
+		</rowConstraints>
+
+		<TableView tableMenuButtonVisible="true"
+			GridPane.columnIndex="0" GridPane.rowIndex="0">
+
+			<columns>
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.task" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.description" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.starttime" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.endtime" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.duration" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.timespent" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.performer" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.role" />
+				<TableColumn editable="false" sortable="false"
+					text="%view.main.tab.workspace.grid.col.rate" />
+			</columns>
+		</TableView>
+
+		<VBox fx:id="stackEntityAttributes" GridPane.columnIndex="0"
+			GridPane.rowIndex="1" />
+
+		<!-- <ButtonBar GridPane.columnIndex="0" GridPane.rowIndex="2" -->
+		<!-- nodeOrientation="RIGHT_TO_LEFT" GridPane.hgrow="ALWAYS" -->
+		<!-- GridPane.halignment="CENTER"> -->
+		<!-- <buttons> -->
+		<!-- <Button disable="true" mnemonicParsing="false" -->
+		<!-- text="%view.main.tab.workspace.perspective.tabular" -->
+		<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
+		<!-- <Button mnemonicParsing="false" -->
+		<!-- text="%view.main.tab.workspace.perspective.graphical" -->
+		<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
+		<!-- </buttons> -->
+		<!-- </ButtonBar> -->
+
+		<!-- <HBox alignment="CENTER" GridPane.columnIndex="0" -->
+		<!-- GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS"> -->
+		<!-- <children> -->
+		<!-- <Button disable="true" maxHeight="100" maxWidth="1000" -->
+		<!-- mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular" -->
+		<!-- HBox.hgrow="ALWAYS" /> -->
+		<!-- <Button maxHeight="100" maxWidth="1000" mnemonicParsing="false" -->
+		<!-- text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" 
+			/> -->
+		<!-- </children> -->
+		<!-- </HBox> -->
+	</GridPane>
+</GridPane>

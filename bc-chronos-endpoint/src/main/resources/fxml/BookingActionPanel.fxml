@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<GridPane gridLinesVisible="true" hgap="10" minHeight="60"
+	maxHeight="120" minWidth="300" maxWidth="600" AnchorPane.bottomAnchor="0.0"
+	AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css" vgap="10"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.BookingActionPanelController">
+
+	<padding>
+		<Insets bottom="10" left="10" right="10" top="10" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="80" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+	</rowConstraints>
+	<children>
+		<!-- prefWidth="200" maxWidth="200" -->
+		<DatePicker GridPane.columnIndex="0" GridPane.rowIndex="0"
+			showWeekNumbers="true" HBox.hgrow="ALWAYS" />
+		<HBox GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER_LEFT"
+			styleClass="anchor-pane" prefWidth="200" maxWidth="500" />
+	</children>
+</GridPane>

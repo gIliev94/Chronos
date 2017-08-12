@@ -15,6 +15,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,8 +25,9 @@
 <?import javafx.scene.layout.VBox?>
 
 <!-- prefHeight="700.0" prefWidth="1000.0" -->
+
 <GridPane gridLinesVisible="true" hgap="5" prefHeight="700.0"
-	stylesheets="@dark.css" prefWidth="1000.0" vgap="5"
+	prefWidth="1000.0" stylesheets="@../css/dark.css" vgap="5"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
 	<padding>
@@ -70,12 +73,12 @@
 		</menus>
 	</MenuBar>
 
-	<TabPane tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0"
-		GridPane.rowIndex="1">
+	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
+		GridPane.columnIndex="0" GridPane.rowIndex="1">
 		<tabs>
 			<Tab text="%view.main.tab.workspace.title">
 				<content>
-					<GridPane gridLinesVisible="true">
+					<GridPane fx:id="gridPaneMain" gridLinesVisible="true">
 						<padding>
 							<Insets bottom="5" left="5" right="5" top="5" />
 						</padding>
@@ -89,47 +92,69 @@
 							<RowConstraints percentHeight="90" vgrow="ALWAYS" />
 						</rowConstraints>
 
-						<Label contentDisplay="CENTER" text="%view.main.tab.workspace.user.label"
-							textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0"
-							GridPane.halignment="LEFT" GridPane.rowIndex="0"
-							GridPane.valignment="CENTER">
+						<Label fx:id="loggedUserLabel" contentDisplay="CENTER"
+							text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
+							wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
+							GridPane.rowIndex="0" GridPane.valignment="CENTER">
 							<padding>
 								<Insets bottom="0" left="10" right="10" top="0" />
 							</padding>
 						</Label>
 
-						<!-- alignment="TOP_CENTER" -->
-						<VBox alignment="TOP_CENTER" spacing="15"
-							GridPane.columnIndex="1" GridPane.rowIndex="1">
-							<children>
-								<!-- <ToolBar orientation="VERTICAL"> -->
-								<!-- <items> -->
-								<Button mnemonicParsing="false" text="A1" />
-								<Button mnemonicParsing="false" text="A2" />
-								<Button mnemonicParsing="false" text="A3" />
-								<!-- </items> -->
-								<!-- </ToolBar> -->
-							</children>
-						</VBox>
+						<!-- <ImageView preserveRatio="true" smooth="true" GridPane.columnIndex="1" 
+							GridPane.rowIndex="0"> -->
+						<!-- <image> -->
+						<!-- <Image url="@../images/chronos_icon.jpg" /> -->
+						<!-- </image> -->
+						<!-- </ImageView> -->
+
+						<VBox fx:id="actionButtonBar" alignment="TOP_CENTER" spacing="15"
+							GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
 						<!-- FlowPane maybe? -->
-						<HBox alignment="CENTER_LEFT" spacing="5"
-							GridPane.columnIndex="2" GridPane.rowIndex="0">
-							<padding>
-								<Insets bottom="5" left="25" right="25" top="5" />
-							</padding>
-							<children>
-								<!-- <ToolBar> -->
-								<!-- <items> -->
-								<!-- <Button mnemonicParsing="false" text="A1" /> -->
-								<!-- <Button mnemonicParsing="false" text="A2" /> -->
-								<!-- <Button mnemonicParsing="false" text="A3" /> -->
-								<!-- </items> -->
-								<!-- </ToolBar> -->
-								<DatePicker showWeekNumbers="true" HBox.hgrow="ALWAYS"
-									maxWidth="2000" />
-							</children>
-						</HBox>
+						<!-- <HBox alignment="CENTER_LEFT" spacing="5" -->
+						<!-- GridPane.columnIndex="2" GridPane.rowIndex="0"> -->
+						<!-- <padding> -->
+						<!-- <Insets bottom="5" left="5" right="5" top="5" /> -->
+						<!-- </padding> -->
+						<!-- <children> -->
+						<!-- <DatePicker prefWidth="200" maxWidth="200" -->
+						<!-- showWeekNumbers="true" HBox.hgrow="ALWAYS" /> -->
+						<!-- <HBox alignment="CENTER_LEFT" styleClass="anchor-pane" -->
+						<!-- prefWidth="200" maxWidth="500" /> -->
+						<!-- </children> -->
+						<!-- </HBox> -->
+
+						<AnchorPane GridPane.columnIndex="2"
+							GridPane.columnSpan="1" GridPane.halignment="CENTER"
+							GridPane.rowIndex="0">
+							<fx:include fx:id="subform" source="BookingActionPanel.fxml" />
+						</AnchorPane>
+
+
+						<!-- <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0"> -->
+						<!-- <padding> -->
+						<!-- <Insets bottom="5" left="10" right="5" top="5" /> -->
+						<!-- </padding> -->
+						<!-- <columnConstraints> -->
+						<!-- <ColumnConstraints hgrow="ALWAYS" -->
+						<!-- percentWidth="20" /> -->
+						<!-- <ColumnConstraints hgrow="ALWAYS" -->
+						<!-- percentWidth="80" /> -->
+						<!-- </columnConstraints> -->
+						<!-- <rowConstraints> -->
+						<!-- <RowConstraints percentHeight="-1" vgrow="ALWAYS" /> -->
+						<!-- </rowConstraints> -->
+						<!-- <children> -->
+						<!-- prefWidth="200" maxWidth="200" -->
+						<!-- <DatePicker GridPane.columnIndex="0" -->
+						<!-- GridPane.rowIndex="0" showWeekNumbers="true" HBox.hgrow="ALWAYS" 
+							/> -->
+						<!-- <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" -->
+						<!-- alignment="CENTER_LEFT" styleClass="anchor-pane" prefWidth="200" -->
+						<!-- maxWidth="500" /> -->
+						<!-- </children> -->
+						<!-- </GridPane> -->
 
 						<Accordion GridPane.columnIndex="0" GridPane.rowIndex="1">
 							<panes>
@@ -196,8 +221,8 @@
 							</panes>
 						</Accordion>
 
-						<GridPane GridPane.columnIndex="2" GridPane.rowIndex="1"
-							gridLinesVisible="true">
+						<GridPane gridLinesVisible="true" GridPane.columnIndex="2"
+							GridPane.rowIndex="1">
 							<columnConstraints>
 								<ColumnConstraints hgrow="ALWAYS"
 									percentWidth="-1" />
@@ -249,13 +274,14 @@
 							<!-- </buttons> -->
 							<!-- </ButtonBar> -->
 
-							<HBox GridPane.columnIndex="0" GridPane.rowIndex="2"
-								GridPane.valignment="CENTER" alignment="CENTER" GridPane.vgrow="ALWAYS">
+							<HBox alignment="CENTER" GridPane.columnIndex="0"
+								GridPane.rowIndex="2" GridPane.valignment="CENTER"
+								GridPane.vgrow="ALWAYS">
 								<children>
-									<Button disable="true" maxWidth="1000" maxHeight="100"
+									<Button disable="true" maxHeight="100" maxWidth="1000"
 										mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular"
 										HBox.hgrow="ALWAYS" />
-									<Button maxWidth="1000" maxHeight="100" mnemonicParsing="false"
+									<Button maxHeight="100" maxWidth="1000" mnemonicParsing="false"
 										text="%view.main.tab.workspace.perspective.graphical"
 										HBox.hgrow="ALWAYS" />
 								</children>
@@ -264,11 +290,11 @@
 					</GridPane>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.performers.title">
+			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.reporting.title">
+			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title">
 				<content>
 				</content>
 			</Tab>

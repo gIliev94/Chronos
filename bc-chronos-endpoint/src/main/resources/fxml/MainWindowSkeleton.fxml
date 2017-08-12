@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane gridLinesVisible="true" hgap="5" vgap="5" prefHeight="700.0"
+	prefWidth="1000.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+	<padding>
+		<Insets bottom="5" left="5" right="5" top="5" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="5" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="90" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="5" vgrow="ALWAYS" />
+	</rowConstraints>
+
+	<MenuBar GridPane.columnIndex="0" GridPane.rowIndex="0">
+		<menus>
+			<Menu fx:id="menuFile" mnemonicParsing="false"
+				text="%view.main.menu.file.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Close" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.edit.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Delete" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.view.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Action 1" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.settings.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="Action 1" />
+				</items>
+			</Menu>
+			<Menu mnemonicParsing="false" text="%view.main.menu.help.title">
+				<items>
+					<MenuItem mnemonicParsing="false" text="About" />
+				</items>
+			</Menu>
+		</menus>
+	</MenuBar>
+
+	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
+		GridPane.columnIndex="0" GridPane.rowIndex="1">
+		<tabs>
+			<Tab text="%view.main.tab.workspace.title" />
+			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab text="%view.main.tab.statistics.title">
+				<content>
+				</content>
+			</Tab>
+			<Tab text="%view.main.tab.synchronization.title">
+				<content>
+				</content>
+			</Tab>
+		</tabs>
+	</TabPane>
+
+	<!-- FlowPane maybe? -->
+	<HBox alignment="CENTER_RIGHT" GridPane.columnIndex="0"
+		GridPane.rowIndex="2">
+		<padding>
+			<Insets bottom="0" left="0" right="15" top="0" />
+		</padding>
+		<children>
+			<Label contentDisplay="RIGHT" text="%view.main.credits.label"
+				textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
+		</children>
+	</HBox>
+</GridPane>
