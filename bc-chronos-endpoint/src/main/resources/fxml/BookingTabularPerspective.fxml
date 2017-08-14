@@ -41,11 +41,6 @@
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 
-	<!-- <AnchorPane GridPane.columnIndex="0" GridPane.columnSpan="1" -->
-	<!-- GridPane.halignment="CENTER" GridPane.rowIndex="0"> -->
-	<!-- <fx:include fx:id="subform" source="BookingActionPanel.fxml" /> -->
-	<!-- </AnchorPane> -->
-
 	<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
 		GridPane.rowIndex="0">
 		<columnConstraints>
@@ -81,32 +76,9 @@
 			</columns>
 		</TableView>
 
+		<!-- TODO -->
 		<VBox fx:id="stackEntityAttributes" GridPane.columnIndex="0"
 			GridPane.rowIndex="1" />
 
-		<!-- <ButtonBar GridPane.columnIndex="0" GridPane.rowIndex="2" -->
-		<!-- nodeOrientation="RIGHT_TO_LEFT" GridPane.hgrow="ALWAYS" -->
-		<!-- GridPane.halignment="CENTER"> -->
-		<!-- <buttons> -->
-		<!-- <Button disable="true" mnemonicParsing="false" -->
-		<!-- text="%view.main.tab.workspace.perspective.tabular" -->
-		<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
-		<!-- <Button mnemonicParsing="false" -->
-		<!-- text="%view.main.tab.workspace.perspective.graphical" -->
-		<!-- HBox.hgrow="ALWAYS" maxWidth="1000" /> -->
-		<!-- </buttons> -->
-		<!-- </ButtonBar> -->
-
-		<!-- <HBox alignment="CENTER" GridPane.columnIndex="0" -->
-		<!-- GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS"> -->
-		<!-- <children> -->
-		<!-- <Button disable="true" maxHeight="100" maxWidth="1000" -->
-		<!-- mnemonicParsing="false" text="%view.main.tab.workspace.perspective.tabular" -->
-		<!-- HBox.hgrow="ALWAYS" /> -->
-		<!-- <Button maxHeight="100" maxWidth="1000" mnemonicParsing="false" -->
-		<!-- text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" 
-			/> -->
-		<!-- </children> -->
-		<!-- </HBox> -->
 	</GridPane>
 </GridPane>

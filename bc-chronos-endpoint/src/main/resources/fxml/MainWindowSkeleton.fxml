@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <GridPane gridLinesVisible="true" hgap="5" vgap="5" prefHeight="700.0"
 	prefWidth="1000.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
@@ -61,7 +62,13 @@
 	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
 		GridPane.columnIndex="0" GridPane.rowIndex="1">
 		<tabs>
-			<Tab text="%view.main.tab.workspace.title" />
+			<Tab fx:id="tabWorkspace" text="%view.main.tab.workspace.title">
+				<content>
+					<AnchorPane>
+						<fx:include fx:id="subform" source="WorkspaceTabSkeleton.fxml" />
+					</AnchorPane>
+				</content>
+			</Tab>
 			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
 				<content>
 				</content>
