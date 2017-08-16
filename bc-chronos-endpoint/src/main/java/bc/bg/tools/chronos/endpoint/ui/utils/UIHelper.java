@@ -11,6 +11,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import bc.bg.tools.chronos.endpoint.ui.actions.EntityActionInfo;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -92,10 +93,18 @@ public final class UIHelper {
 
     public static void wireEntityActionUI(final EntityActionInfo entityActionInfo) {
 	final Button actionButton = entityActionInfo.getActionButton();
+	// TODO: Test...
+	makeToggleVisibilityCapable(actionButton);
 	actionButton.setVisible(entityActionInfo.isVisibleToUser());
+	//
 
 	actionButton.setOnMouseClicked(clickEvent -> {
-	    entityActionInfo.executeActionSequence((Void) null);
+	    try {
+		entityActionInfo.executeActionSequence((Void) null);
+	    } catch (Exception genericException) {
+		// TODO: This or allow proceeding with Q dialog...
+		showErrorDialog(genericException.getMessage());
+	    }
 	});
 
 	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {
@@ -115,9 +124,15 @@ public final class UIHelper {
 	return glowEffect;
     }
 
+    // https://stackoverflow.com/a/28318394
+    public static void makeToggleVisibilityCapable(final Node toggleNode) {
+	toggleNode.managedProperty().bind(toggleNode.visibleProperty());
+    }
+
     public static void removeHiddenNodesFromContainer(final Pane parentContainer) {
 	parentContainer.getChildren().removeIf(node -> !node.isVisible());
     }
+    //
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,
 	    final Callback<Class<?>, Object> controllerFactory) {

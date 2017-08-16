@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
+import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
@@ -141,8 +142,12 @@ public class LoginController implements ILoginModel {
     }
 
     protected Boolean displayMainWindow(final Performer user) {
-	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
-		UIHelper.Defaults.APP_I18N_EN, context::getBean);
+	// final FXMLLoader uiLoader =
+	// UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
+	// UIHelper.Defaults.APP_I18N_EN, context::getBean);
+
+	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor("WorkspaceTabSkeleton", UIHelper.Defaults.APP_I18N_EN,
+		context::getBean);
 
 	Parent rootContainer;
 	try {
@@ -157,9 +162,14 @@ public class LoginController implements ILoginModel {
 	    return false;
 	}
 
-	final MainViewController mainViewController = uiLoader.<MainViewController> getController();
-	mainViewController.loginAs(user);
-	mainViewController.setPrimaryStage(primaryStage);
+	// final MainViewController mainViewController =
+	// uiLoader.<MainViewController> getController();
+	// mainViewController.loginAs(user);
+	// mainViewController.setPrimaryStage(primaryStage);
+
+	final WorkspaceController mainViewController = uiLoader.<WorkspaceController> getController();
+	// mainViewController.loginAs(user);
+	// mainViewController.setPrimaryStage(primaryStage);
 
 	primaryStage.getScene().setRoot(rootContainer);
 
@@ -167,6 +177,10 @@ public class LoginController implements ILoginModel {
 	// https://stackoverflow.com/a/22686642
 	primaryStage.setResizable(true);
 	primaryStage.setMaximized(true);
+
+	// https://stackoverflow.com/a/36982552
+	primaryStage.setMinHeight(800.0d);
+	primaryStage.setMinWidth(800.0d);
 
 	// https://stackoverflow.com/a/8791691
 	// primaryStage.setHeight(800.0d);

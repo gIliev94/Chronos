@@ -29,8 +29,8 @@
 	AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0"
 	AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" hgap="5"
 	prefHeight="500.0" prefWidth="700.0" stylesheets="@../css/dark.css"
-	vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+	vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<!-- 	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController"> -->
 	<padding>
 		<Insets bottom="5" left="5" right="5" top="5" />
 	</padding>

@@ -13,6 +13,7 @@ import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryAction
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
+import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -90,6 +91,11 @@ public class UIConfig {
     @Bean
     public LoginController loginController() {
 	return new LoginController();
+    }
+
+    @Bean
+    public WorkspaceController workspaceController() {
+	return new WorkspaceController();
     }
 
     @Bean
