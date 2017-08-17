@@ -39,6 +39,7 @@ public class Booking implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    //TODO: Change to DOUBLE
     @Column(unique = false, nullable = false)
     private long hoursSpent;
 

@@ -136,7 +136,8 @@ public final class UIHelper {
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,
 	    final Callback<Class<?>, Object> controllerFactory) {
-	final ResourceBundle i18nBundle = ResourceBundle.getBundle(i18n, Locale.getDefault());
+	final ResourceBundle i18nBundle = ResourceBundle.getBundle(i18n != null ? i18n : Defaults.APP_I18N_EN,
+		Locale.getDefault());
 
 	URL fxmlURL = null;
 	try {

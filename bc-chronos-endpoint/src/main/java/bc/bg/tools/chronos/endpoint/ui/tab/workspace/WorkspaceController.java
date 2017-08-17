@@ -30,65 +30,67 @@ public class WorkspaceController implements Initializable {
     private URL location;
 
     @FXML // fx:id="lblLoggedUser"
-    private Label lblLoggedUser; // Value injected by FXMLLoader
+    private Label lblLoggedUser;
 
     @FXML // fx:id="btnBarEntityActions"
-    private VBox btnBarEntityActions; // Value injected by FXMLLoader
+    private VBox btnBarEntityActions;
 
     @FXML // fx:id="datePickerBooking"
-    private DatePicker datePickerBooking; // Value injected by FXMLLoader
+    private DatePicker datePickerBooking;
 
     @FXML // fx:id="btnBarBookingActions"
-    private HBox btnBarBookingActions; // Value injected by FXMLLoader
+    private HBox btnBarBookingActions;
 
     @FXML // fx:id="titlePaneCustomer"
-    private TitledPane titlePaneCustomer; // Value injected by FXMLLoader
+    private TitledPane titlePaneCustomer;
 
     @FXML // fx:id="treeCustomers"
-    private TreeView<?> treeCustomers; // Value injected by FXMLLoader
+    private TreeView<?> treeCustomers;
 
     @FXML // fx:id="titlePaneProject"
-    private TitledPane titlePaneProject; // Value injected by FXMLLoader
+    private TitledPane titlePaneProject;
 
     @FXML // fx:id="treeProjects"
-    private TreeView<?> treeProjects; // Value injected by FXMLLoader
+    private TreeView<?> treeProjects;
 
     @FXML // fx:id="titlePaneTask"
-    private TitledPane titlePaneTask; // Value injected by FXMLLoader
+    private TitledPane titlePaneTask;
 
     @FXML // fx:id="treeTasks"
-    private TreeView<?> treeTasks; // Value injected by FXMLLoader
+    private TreeView<?> treeTasks;
 
     @FXML // fx:id="titlePaneRole"
-    private TitledPane titlePaneRole; // Value injected by FXMLLoader
+    private TitledPane titlePaneRole;
 
     @FXML // fx:id="treeRoles"
-    private TreeView<?> treeRoles; // Value injected by FXMLLoader
+    private TreeView<?> treeRoles;
 
     @FXML // fx:id="btnToggleEntityDetails"
-    private Button btnToggleEntityDetails; // Value injected by FXMLLoader
+    private Button btnToggleEntityDetails;
 
     @FXML // fx:id="imgViewShowEntityDetails"
-    private ImageView imgViewShowEntityDetails; // Value injected by FXMLLoader
+    private ImageView imgViewShowEntityDetails;
 
     @FXML // fx:id="imgViewHideEntityDetails"
-    private ImageView imgViewHideEntityDetails; // Value injected by FXMLLoader
+    private ImageView imgViewHideEntityDetails;
 
     @FXML // fx:id="rowEntityTree"
-    private RowConstraints rowEntityTree; // Value injected by FXMLLoader
+    private RowConstraints rowEntityTree;
 
     @FXML // fx:id="rowEntityDetails"
-    private RowConstraints rowEntityDetails; // Value injected by FXMLLoader
+    private RowConstraints rowEntityDetails;
 
     @FXML // fx:id="barEntityDetails"
-    private VBox barEntityDetails; // Value injected by FXMLLoader
+    private VBox barEntityDetails;
 
     @FXML // fx:id="btnBookingTabluarPerspective"
-    private Button btnBookingTabluarPerspective; // Value injected by FXMLLoader
+    private Button btnBookingTabluarPerspective;
 
     @FXML // fx:id="btnBookingGraphicalPerspective"
-    private Button btnBookingGraphicalPerspective; // Value injected by
-						   // FXMLLoader
+    private Button btnBookingGraphicalPerspective;
+
+    @FXML
+    private BookingTabularPerspectiveController bookingsTabularPerspectiveController;
 
     // This method is called by the FXMLLoader when initialization is complete
     @Override

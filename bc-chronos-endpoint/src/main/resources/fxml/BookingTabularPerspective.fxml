@@ -25,12 +25,12 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<GridPane fx:id="gridPaneMain" gridLinesVisible="true"
-	AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0"
-	AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" hgap="5"
-	prefHeight="500.0" prefWidth="700.0" stylesheets="@../css/dark.css"
-	vgap="5" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-<!-- 	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController"> -->
+<GridPane gridLinesVisible="true" AnchorPane.bottomAnchor="0.0"
+	AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+	AnchorPane.topAnchor="0.0" hgap="5" prefHeight="500.0" prefWidth="700.0"
+	stylesheets="@../css/dark.css" vgap="5" xmlns="http://javafx.com/javafx/8.0.111"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingTabularPerspectiveController">
 	<padding>
 		<Insets bottom="5" left="5" right="5" top="5" />
 	</padding>
@@ -41,44 +41,41 @@
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 
-	<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
-		GridPane.rowIndex="0">
-		<columnConstraints>
-			<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints percentHeight="60" vgrow="ALWAYS" />
-			<RowConstraints percentHeight="40" vgrow="ALWAYS" />
-		</rowConstraints>
+	<TableView fx:id="tableViewBookings" GridPane.columnIndex="0"
+		GridPane.rowIndex="0" tableMenuButtonVisible="true">
+		<columnResizePolicy>
+			<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+		</columnResizePolicy>
 
-		<TableView tableMenuButtonVisible="true"
-			GridPane.columnIndex="0" GridPane.rowIndex="0">
+		<columns>
+			<TableColumn fx:id="tableColTaskName" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.task">
+			</TableColumn>
 
-			<columns>
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.task" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.description" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.starttime" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.endtime" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.duration" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.timespent" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.performer" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.role" />
-				<TableColumn editable="false" sortable="false"
-					text="%view.main.tab.workspace.grid.col.rate" />
-			</columns>
-		</TableView>
+			<TableColumn fx:id="tableColDescription" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.description" />
 
-		<!-- TODO -->
-		<VBox fx:id="stackEntityAttributes" GridPane.columnIndex="0"
-			GridPane.rowIndex="1" />
+			<TableColumn fx:id="tableColStartTime" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.starttime" />
 
-	</GridPane>
+			<TableColumn fx:id="tableColEndTime" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.endtime" />
+
+			<TableColumn fx:id="tableColDuration" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.duration" />
+
+			<!-- maybe remove this column or make configurable -->
+			<TableColumn fx:id="tableColHoursSpent" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.timespent" />
+
+			<TableColumn fx:id="tableColPerformerHandle" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.performer" />
+
+			<TableColumn fx:id="tableColRoleName" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.role" />
+
+			<TableColumn fx:id="tableColRoleBillingRate" editable="false"
+				sortable="true" text="%view.main.tab.workspace.grid.col.rate" />
+		</columns>
+	</TableView>
 </GridPane>
