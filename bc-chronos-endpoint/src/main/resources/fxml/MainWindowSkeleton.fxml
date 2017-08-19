@@ -62,7 +62,7 @@
 	<Label fx:id="lblLoggedUser" contentDisplay="CENTER"
 		text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
 		wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
-		GridPane.rowIndex="2" GridPane.valignment="CENTER">
+		GridPane.rowIndex="2" GridPane.valignment="CENTER" styleClass="text-button">
 		<padding>
 			<Insets bottom="0" left="10" right="10" top="0" />
 		</padding>
@@ -105,7 +105,7 @@
 		</padding>
 		<children>
 			<Label contentDisplay="RIGHT" text="%view.main.credits.label"
-				textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
+				textAlignment="RIGHT" HBox.hgrow="ALWAYS" styleClass="text-button" />
 		</children>
 	</HBox>
 </GridPane>

@@ -41,6 +41,10 @@
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 
+	<!-- https://stackoverflow.com/questions/11484960/table-column-wont-take-full-size-of-the-table-view-in-javafx -->
+	<!-- https://stackoverflow.com/questions/29603574/add-new-row-at-top-fxml-tableview -->
+	<!-- http://docs.oracle.com/javafx/2/fxml_get_started/fxml_tutorial_intermediate.htm -->
+	<!-- http://code.makery.ch/blog/javafx-8-tableview-cell-renderer/ -->
 	<TableView fx:id="tableViewBookings" GridPane.columnIndex="0"
 		GridPane.rowIndex="0" tableMenuButtonVisible="true">
 		<columnResizePolicy>

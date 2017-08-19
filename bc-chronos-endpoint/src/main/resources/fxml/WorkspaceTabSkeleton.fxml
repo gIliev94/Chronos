@@ -25,6 +25,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.CheckBox?>
 
 <!-- TODOs: -->
 <!-- 1) Remove unused imports -->
@@ -33,6 +34,8 @@
 <!-- 4) Apply CSS -->
 <!-- 5) Redefine min/pref/max sizes + GAPS -->
 <!-- 6) .... -->
+<!-- https://stackoverflow.com/a/23862864 -->
+<!-- http://blog.ngopal.com.np/2012/01/26/fxml-stuffs-include-and-define/ -->
 
 <GridPane gridLinesVisible="true" hgap="5"
 	AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
@@ -49,26 +52,29 @@
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="15" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="75" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="10" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="80" vgrow="ALWAYS" />
 		<RowConstraints percentHeight="10" vgrow="ALWAYS" />
 	</rowConstraints>
 
-	<AnchorPane GridPane.columnIndex="0" GridPane.rowIndex="0"
-		GridPane.rowSpan="3" GridPane.columnSpan="2" GridPane.valignment="TOP">
-		<TitledPane AnchorPane.bottomAnchor="0.0"
-			AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-			AnchorPane.topAnchor="0.0" collapsible="false" text="Entity context:"
-			contentDisplay="TEXT_ONLY">
-		</TitledPane>
-	</AnchorPane>
+	<!-- TODO improvise group boxes -->
+	<!-- https://stackoverflow.com/questions/29038701/javafx-accordion-with-transparent-background -->
+	<!-- http://stackoverflow.com.mevn.net/questions/14860960/groupbox-titledborder-in-javafx-2/37893213 -->
+	<!-- <AnchorPane GridPane.columnIndex="0" GridPane.rowIndex="0" -->
+	<!-- GridPane.rowSpan="3" GridPane.columnSpan="2" GridPane.valignment="TOP"> -->
+	<!-- <TitledPane AnchorPane.bottomAnchor="0.0" -->
+	<!-- AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" -->
+	<!-- AnchorPane.topAnchor="0.0" collapsible="false" text="Entity context:" -->
+	<!-- contentDisplay="TEXT_ONLY" underline="true"> -->
+	<!-- </TitledPane> -->
+	<!-- </AnchorPane> -->
 
-	<Label fx:id="lblLoggedUser" contentDisplay="CENTER"
+	<Label fx:id="lblLoggedUser" contentDisplay="CENTER" styleClass="text-button"
 		text="%view.main.tab.workspace.entity.instruction.label"
 		textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0"
 		GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER">
 		<padding>
-			<Insets bottom="0" left="10" right="10" top="0" />
+			<Insets bottom="5" left="10" right="10" top="0" />
 		</padding>
 	</Label>
 
@@ -85,27 +91,35 @@
 				<Insets bottom="10" left="5" right="5" top="10" />
 			</padding>
 			<columnConstraints>
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="30" />
 				<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="65" />
 			</columnConstraints>
 			<rowConstraints>
 				<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 			</rowConstraints>
 			<children>
-				<!-- prefWidth="200" maxWidth="200" -->
-				<!-- <DatePicker fx:id="datePickerBooking" -->
-				<!-- GridPane.valignment="CENTER" GridPane.columnIndex="0" -->
-				<!-- GridPane.rowIndex="0" showWeekNumbers="true" HBox.hgrow="ALWAYS" 
-					/> -->
-
 				<!-- Sub-panel for filter related actions -->
 				<HBox alignment="CENTER_LEFT" GridPane.columnIndex="0"
 					GridPane.rowIndex="0" GridPane.valignment="CENTER" styleClass="anchor-pane"
-					prefWidth="200" maxWidth="300">
+					prefWidth="300">
 					<children>
 						<DatePicker fx:id="datePickerBooking" showWeekNumbers="true"
-							HBox.hgrow="ALWAYS" prefWidth="200" maxWidth="200" />
+							promptText="Filter by date..." HBox.hgrow="ALWAYS" prefWidth="200"
+							maxWidth="200" />
+						<Button fx:id="btnToday" prefHeight="30" prefWidth="35"
+							text="T" styleClass="text-button" />
+
+						<!-- <Button fx:id="btnToday" mnemonicParsing="false" -->
+						<!-- styleClass="action-button" alignment="CENTER_LEFT"> -->
+						<!-- <graphic> -->
+						<!-- <ImageView fitHeight="50.0" preserveRatio="true"> -->
+						<!-- <image> -->
+						<!-- <Image url="@../images/home_icon.png" /> -->
+						<!-- </image> -->
+						<!-- </ImageView> -->
+						<!-- </graphic> -->
+						<!-- </Button> -->
 
 						<Button fx:id="btnRefreshFilter" mnemonicParsing="false"
 							styleClass="action-button" alignment="CENTER_LEFT">
@@ -131,10 +145,6 @@
 					</children>
 				</HBox>
 
-				<!-- <HBox fx:id="btnBarBookingActions" GridPane.columnIndex="1" -->
-				<!-- GridPane.rowIndex="0" alignment="CENTER_LEFT" styleClass="anchor-pane" -->
-				<!-- prefWidth="200" maxWidth="500" /> -->
-
 				<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
 					GridPane.valignment="CENTER" GridPane.halignment="CENTER"
 					GridPane.rowIndex="0">
@@ -142,8 +152,6 @@
 				</AnchorPane>
 			</children>
 		</GridPane>
-		<!-- OR -->
-		<!-- <fx:include fx:id="subform" source="BookingActionPanel.fxml" /> -->
 	</AnchorPane>
 
 	<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
@@ -289,19 +297,22 @@
 			source="BookingTabularPerspective.fxml" />
 	</AnchorPane>
 
-	<HBox alignment="CENTER" GridPane.columnIndex="2"
+	<HBox alignment="CENTER" GridPane.columnIndex="2" spacing="10"
 		GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+		<!-- <padding> -->
+		<!-- <Insets bottom="5" left="10" right="10" top="5" /> -->
+		<!-- </padding> -->
+
 		<children>
 			<Button fx:id="btnBookingTabluarPerspective" disable="true"
 				maxHeight="100" maxWidth="700" mnemonicParsing="false"
-				text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS" />
-
-			<Separator orientation="VERTICAL" halignment="CENTER"
-				valignment="CENTER" maxHeight="100" />
+				text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS"
+				styleClass="text-button" />
 
 			<Button fx:id="btnBookingGraphicalPerspective" disable="true"
 				maxHeight="100" maxWidth="700" mnemonicParsing="false"
-				text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" />
+				text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS"
+				styleClass="text-button" />
 		</children>
 	</HBox>
 
