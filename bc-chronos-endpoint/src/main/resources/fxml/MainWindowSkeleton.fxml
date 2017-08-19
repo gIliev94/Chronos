@@ -59,6 +59,15 @@
 		</menus>
 	</MenuBar>
 
+	<Label fx:id="lblLoggedUser" contentDisplay="CENTER"
+		text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
+		wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
+		GridPane.rowIndex="2" GridPane.valignment="CENTER">
+		<padding>
+			<Insets bottom="0" left="10" right="10" top="0" />
+		</padding>
+	</Label>
+
 	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
 		GridPane.columnIndex="0" GridPane.rowIndex="1">
 		<tabs>

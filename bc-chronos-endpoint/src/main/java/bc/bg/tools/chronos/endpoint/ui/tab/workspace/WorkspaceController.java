@@ -223,4 +223,8 @@ public class WorkspaceController implements Initializable {
 	// Store the active image(maybe move to model class if applicable)
 	btnToggleEntityDetails.setUserData(imgViewVisible.getId());
     }
+
+    public void toggleEntityPanelVisible() {
+	// ...
+    }
 }

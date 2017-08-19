@@ -49,15 +49,24 @@
 		<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints percentHeight="10" vgrow="ALWAYS" />
-		<RowConstraints percentHeight="80" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="15" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="75" vgrow="ALWAYS" />
 		<RowConstraints percentHeight="10" vgrow="ALWAYS" />
 	</rowConstraints>
 
+	<AnchorPane GridPane.columnIndex="0" GridPane.rowIndex="0"
+		GridPane.rowSpan="3" GridPane.columnSpan="2" GridPane.valignment="TOP">
+		<TitledPane AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+			AnchorPane.topAnchor="0.0" collapsible="false" text="Entity context:"
+			contentDisplay="TEXT_ONLY">
+		</TitledPane>
+	</AnchorPane>
+
 	<Label fx:id="lblLoggedUser" contentDisplay="CENTER"
-		text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
-		wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
-		GridPane.rowIndex="0" GridPane.valignment="CENTER">
+		text="%view.main.tab.workspace.entity.instruction.label"
+		textAlignment="CENTER" wrapText="true" GridPane.columnIndex="0"
+		GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER">
 		<padding>
 			<Insets bottom="0" left="10" right="10" top="0" />
 		</padding>
@@ -68,29 +77,65 @@
 
 	<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
 		GridPane.halignment="CENTER" GridPane.rowIndex="0">
-		<GridPane gridLinesVisible="true" hgap="10" minHeight="60"
+		<GridPane gridLinesVisible="true" hgap="0" minHeight="60"
 			maxHeight="120" minWidth="300" maxWidth="600"
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0"
-			AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" vgap="10">
+			AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" vgap="0">
 			<padding>
-				<Insets bottom="10" left="10" right="10" top="10" />
+				<Insets bottom="10" left="5" right="5" top="10" />
 			</padding>
 			<columnConstraints>
 				<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="80" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
 			</columnConstraints>
 			<rowConstraints>
 				<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 			</rowConstraints>
 			<children>
 				<!-- prefWidth="200" maxWidth="200" -->
-				<DatePicker fx:id="datePickerBooking"
-					GridPane.valignment="CENTER" GridPane.columnIndex="0"
-					GridPane.rowIndex="0" showWeekNumbers="true" HBox.hgrow="ALWAYS" />
+				<!-- <DatePicker fx:id="datePickerBooking" -->
+				<!-- GridPane.valignment="CENTER" GridPane.columnIndex="0" -->
+				<!-- GridPane.rowIndex="0" showWeekNumbers="true" HBox.hgrow="ALWAYS" 
+					/> -->
+
+				<!-- Sub-panel for filter related actions -->
+				<HBox alignment="CENTER_LEFT" GridPane.columnIndex="0"
+					GridPane.rowIndex="0" GridPane.valignment="CENTER" styleClass="anchor-pane"
+					prefWidth="200" maxWidth="300">
+					<children>
+						<DatePicker fx:id="datePickerBooking" showWeekNumbers="true"
+							HBox.hgrow="ALWAYS" prefWidth="200" maxWidth="200" />
+
+						<Button fx:id="btnRefreshFilter" mnemonicParsing="false"
+							styleClass="action-button" alignment="CENTER_LEFT">
+							<graphic>
+								<ImageView fitHeight="50.0" preserveRatio="true">
+									<image>
+										<Image url="@../images/refresh_filter_icon.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+
+						<Button fx:id="btnRemoveFilter" mnemonicParsing="false"
+							styleClass="action-button" alignment="CENTER_LEFT">
+							<graphic>
+								<ImageView fitHeight="50.0" preserveRatio="true">
+									<image>
+										<Image url="@../images/remove_filter_icon.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+					</children>
+				</HBox>
+
 				<!-- <HBox fx:id="btnBarBookingActions" GridPane.columnIndex="1" -->
 				<!-- GridPane.rowIndex="0" alignment="CENTER_LEFT" styleClass="anchor-pane" -->
 				<!-- prefWidth="200" maxWidth="500" /> -->
-				<AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1"
+
+				<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
 					GridPane.valignment="CENTER" GridPane.halignment="CENTER"
 					GridPane.rowIndex="0">
 					<fx:include fx:id="subformBookingActionPanel" source="BookingActionPanel.fxml" />
@@ -217,13 +262,13 @@
 					<!-- TODO: Do the same for action panel - no unnecessary dynamic -->
 					<!-- generation(keep entity action impl for show off later) -->
 					<StackPane>
-						<ImageView fx:id="imgViewShowEntityDetails" fitHeight="30.0"
+						<ImageView fx:id="imgViewShowEntityDetails" fitHeight="50.0"
 							preserveRatio="true">
 							<image>
 								<Image url="@../images/up_icon.png" />
 							</image>
 						</ImageView>
-						<ImageView fx:id="imgViewHideEntityDetails" fitHeight="30.0"
+						<ImageView fx:id="imgViewHideEntityDetails" fitHeight="50.0"
 							preserveRatio="true">
 							<image>
 								<Image url="@../images/down_icon.png" />
@@ -266,12 +311,29 @@
 		<Button fx:id="btnHideEntityPanel" mnemonicParsing="false"
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
-			onAction="#toggleEntityDetailsVisible">
+			onAction="#toggleEntityPanelVisible">
 			<graphic>
-				<ImageView fx:id="imgViewHideEntityDetails" fitHeight="30.0"
+				<ImageView fx:id="imgViewHideEntityPanel" fitHeight="50.0"
 					preserveRatio="true">
 					<image>
-						<Image url="@../images/down_icon.png" />
+						<Image url="@../images/left_icon.png" />
+					</image>
+				</ImageView>
+			</graphic>
+		</Button>
+	</AnchorPane>
+
+	<AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1"
+		GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.rowSpan="3">
+		<Button fx:id="btnShowEntityPanel" mnemonicParsing="false"
+			visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+			onAction="#toggleEntityPanelVisible">
+			<graphic>
+				<ImageView fx:id="imgViewShowEntityPanel" fitHeight="50.0"
+					preserveRatio="true">
+					<image>
+						<Image url="@../images/right_icon.png" />
 					</image>
 				</ImageView>
 			</graphic>
