@@ -5,9 +5,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <GridPane gridLinesVisible="true" hgap="10" minHeight="60"
-	maxHeight="120" minWidth="300" maxWidth="600" AnchorPane.bottomAnchor="0.0"
+	maxHeight="60" minWidth="300" maxWidth="600" AnchorPane.bottomAnchor="0.0"
 	AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
 	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css" vgap="10"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
@@ -17,17 +19,120 @@
 		<Insets bottom="10" left="10" right="10" top="10" />
 	</padding>
 	<columnConstraints>
-		<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
-		<ColumnConstraints hgrow="ALWAYS" percentWidth="80" />
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="75" />
 	</columnConstraints>
 	<rowConstraints>
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 	<children>
-		<!-- prefWidth="200" maxWidth="200" -->
-		<DatePicker GridPane.columnIndex="0" GridPane.rowIndex="0"
-			showWeekNumbers="true" HBox.hgrow="ALWAYS" />
-		<HBox GridPane.columnIndex="1" GridPane.rowIndex="0" alignment="CENTER_LEFT"
-			styleClass="anchor-pane" prefWidth="200" maxWidth="500" />
+
+		<!-- Sub-panel for filter related actions -->
+		<AnchorPane GridPane.columnIndex="0" GridPane.rowIndex="0"
+			styleClass="anchor-pane" prefWidth="100" maxWidth="200">
+			<HBox alignment="CENTER_LEFT" AnchorPane.bottomAnchor="0.0"
+				AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+				AnchorPane.topAnchor="0.0">
+				<children>
+					<Button fx:id="btnRefreshFilter" mnemonicParsing="false"
+						styleClass="action-button" alignment="CENTER_LEFT">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/refresh_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnRemoveFilter" mnemonicParsing="false"
+						styleClass="action-button" alignment="CENTER_LEFT">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/delete_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+				</children>
+			</HBox>
+		</AnchorPane>
+
+		<!-- Sub-panel for Booking related actions -->
+		<AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="0"
+			styleClass="anchor-pane" prefWidth="200" maxWidth="400">
+			<HBox alignment="CENTER_LEFT" AnchorPane.bottomAnchor="0.0"
+				AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+				AnchorPane.topAnchor="0.0">
+				<children>
+					<Button fx:id="btnDeselectBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/delete_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnRefreshBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/refresh_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnStartContinueBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/up_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnStopPauseBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/down_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnModifyBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/edit_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+
+					<Button fx:id="btnRemoveBooking" mnemonicParsing="false"
+						styleClass="action-button">
+						<graphic>
+							<ImageView fitHeight="30.0" preserveRatio="true">
+								<image>
+									<Image url="@../images/delete_icon.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+				</children>
+			</HBox>
+		</AnchorPane>
 	</children>
 </GridPane>

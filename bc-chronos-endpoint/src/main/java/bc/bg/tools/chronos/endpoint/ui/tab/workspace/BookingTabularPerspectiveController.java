@@ -4,14 +4,26 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
+import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
+import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
+import bg.bc.tools.chronos.dataprovider.db.entities.Project;
+import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.Task;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
 import javafx.beans.NamedArg;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,6 +77,9 @@ public class BookingTabularPerspectiveController implements Initializable {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private LocalBookingRepository bookingRepo;
+
     // This method is called by the FXMLLoader when initialization is complete
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,6 +91,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 	// TODO:
 	// tableColBillingRate.DEFAULT_CELL_FACTORY
 
+	clearBookingFilters();
     }
 
     private void initColumns() {
@@ -108,6 +124,50 @@ public class BookingTabularPerspectiveController implements Initializable {
     private void initTestData() {
 	// TODO Auto-generated method stub
 
+    }
+
+    public void filterBookingsForParent(final CategoricalEntity categoricalEntity) {
+	final Class<? extends CategoricalEntity> parentClass = categoricalEntity.getClass();
+
+	final Stream<Booking> allBookingStream = StreamSupport // nl
+		.stream(bookingRepo.findAll().spliterator(), false);
+
+	Stream<Booking> filteredBookingStream = Stream.empty();
+	if (Customer.class.isAssignableFrom(parentClass)) {
+	    filteredBookingStream = allBookingStream
+		    .filter(b -> categoricalEntity.getName().equals(b.getTask().getProject().getCustomer().getName()));
+	} else if (Project.class.isAssignableFrom(parentClass)) {
+	    filteredBookingStream = allBookingStream
+		    .filter(b -> categoricalEntity.getName().equals(b.getTask().getProject().getName()));
+	} else if (Task.class.isAssignableFrom(parentClass)) {
+	    filteredBookingStream = bookingRepo.findByTask((Task) categoricalEntity).stream();
+	} else if (Role.class.isAssignableFrom(parentClass)) {
+	    // filteredBookings = bookingRepo.findByrole((Role)
+	    // categoricalEntity).stream();
+	    filteredBookingStream = allBookingStream
+		    .filter(b -> categoricalEntity.getName().equals(b.getRole().getName()));
+	}
+
+	showBookings(filteredBookingStream);
+    }
+
+    private void clearBookingFilters() {
+	showAllBookings();
+    }
+
+    protected void showAllBookings() {
+	final Stream<Booking> allBookingStream = StreamSupport // nl
+		.stream(bookingRepo.findAll().spliterator(), false);
+	showBookings(allBookingStream);
+    }
+
+    private void showBookings(final Stream<Booking> filteredBookingStream) {
+	// Remove previously filtered items...
+	tableViewBookings.getItems().clear();
+
+	final List<Booking> bookingsToShow = filteredBookingStream.collect(Collectors.toList());
+
+	tableViewBookings.setItems(new ObservableListWrapper<Booking>(bookingsToShow));
     }
 
     /**

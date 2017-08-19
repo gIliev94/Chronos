@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
+import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -119,6 +120,13 @@ public class WorkspaceController implements Initializable {
 	this.resources = resources;
 
 	initToggleEntityDetails();
+
+	treeTasks.getSelectionModel().selectedItemProperty().addListener((obs, newVal, oldVal) -> {
+	    final Object oSelectedTask = newVal.getValue();
+	    if (oSelectedTask instanceof Task) {
+		bookingsTabularPerspectiveController.filterBookingsForParent((Task) oSelectedTask);
+	    }
+	});
     }
 
     /**

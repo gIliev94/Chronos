@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -84,11 +85,16 @@
 			<children>
 				<!-- prefWidth="200" maxWidth="200" -->
 				<DatePicker fx:id="datePickerBooking"
-					GridPane.columnIndex="0" GridPane.rowIndex="0" showWeekNumbers="true"
-					HBox.hgrow="ALWAYS" />
-				<HBox fx:id="btnBarBookingActions" GridPane.columnIndex="1"
-					GridPane.rowIndex="0" alignment="CENTER_LEFT" styleClass="anchor-pane"
-					prefWidth="200" maxWidth="500" />
+					GridPane.valignment="CENTER" GridPane.columnIndex="0"
+					GridPane.rowIndex="0" showWeekNumbers="true" HBox.hgrow="ALWAYS" />
+				<!-- <HBox fx:id="btnBarBookingActions" GridPane.columnIndex="1" -->
+				<!-- GridPane.rowIndex="0" alignment="CENTER_LEFT" styleClass="anchor-pane" -->
+				<!-- prefWidth="200" maxWidth="500" /> -->
+				<AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1"
+					GridPane.valignment="CENTER" GridPane.halignment="CENTER"
+					GridPane.rowIndex="0">
+					<fx:include fx:id="subformBookingActionPanel" source="BookingActionPanel.fxml" />
+				</AnchorPane>
 			</children>
 		</GridPane>
 		<!-- OR -->
@@ -242,11 +248,33 @@
 		GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
 		<children>
 			<Button fx:id="btnBookingTabluarPerspective" disable="true"
-				maxHeight="100" maxWidth="1000" mnemonicParsing="false"
+				maxHeight="100" maxWidth="700" mnemonicParsing="false"
 				text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS" />
-			<Button fx:id="btnBookingGraphicalPerspective" maxHeight="100"
-				maxWidth="1000" mnemonicParsing="false"
+
+			<Separator orientation="VERTICAL" halignment="CENTER"
+				valignment="CENTER" maxHeight="100" />
+
+			<Button fx:id="btnBookingGraphicalPerspective" disable="true"
+				maxHeight="100" maxWidth="700" mnemonicParsing="false"
 				text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS" />
 		</children>
 	</HBox>
+
+	<!-- TODO -->
+	<AnchorPane GridPane.columnIndex="0" GridPane.columnSpan="2"
+		GridPane.halignment="CENTER" GridPane.rowIndex="2">
+		<Button fx:id="btnHideEntityPanel" mnemonicParsing="false"
+			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+			onAction="#toggleEntityDetailsVisible">
+			<graphic>
+				<ImageView fx:id="imgViewHideEntityDetails" fitHeight="30.0"
+					preserveRatio="true">
+					<image>
+						<Image url="@../images/down_icon.png" />
+					</image>
+				</ImageView>
+			</graphic>
+		</Button>
+	</AnchorPane>
 </GridPane>
