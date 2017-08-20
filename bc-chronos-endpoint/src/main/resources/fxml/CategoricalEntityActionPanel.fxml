@@ -4,71 +4,111 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 
-<VBox alignment="TOP_CENTER" fillWidth="true" spacing="15"
-	stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
-	xmlns:fx="http://javafx.com/fxml/1" fx:id="actionButtonGeneratedContainer">
-	<!-- fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController" -->
+<!-- alignment="TOP_CENTER" -->
+<GridPane gridLinesVisible="true" hgap="0" minHeight="350"
+	minWidth="50" maxWidth="150" maxHeight="450" AnchorPane.bottomAnchor="0.0"
+	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" styleClass="anchor-pane"
+	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css" vgap="0"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.CategoricalActionPanelController">
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+	</rowConstraints>
 	<children>
-		<!-- onMouseClicked="#refresh" -->
-		<Button fx:id="btnRefresh" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/refresh_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
 
-		<Button fx:id="btnModify" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/edit_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+		<VBox spacing="0" minHeight="350" fx:id="actionButtonGeneratedContainer"
+			alignment="TOP_CENTER" GridPane.halignment="CENTER">
+			<!-- <VBox fillWidth="true" spacing="5" minHeight="350" maxWidth="350" -->
+			<!-- AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" -->
+			<!-- AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" styleClass="anchor-pane" -->
+			<!-- stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111" -->
+			<!-- xmlns:fx="http://javafx.com/fxml/1" fx:id="actionButtonGeneratedContainer"> -->
+			<!-- fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController" -->
+			<children>
+				<!-- onMouseClicked="#refresh" -->
+				<Button fx:id="btnRefresh" mnemonicParsing="false"
+					styleClass="action-button" alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/refresh_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
 
-		<Button fx:id="btnMerge" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/apply_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+				<Button fx:id="btnAddChild" mnemonicParsing="false"
+					styleClass="action-button" alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/add_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
 
-		<Button fx:id="btnHide" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/delete_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+				<Button fx:id="btnModify" mnemonicParsing="false" styleClass="action-button"
+					alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/edit_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
 
-		<Button fx:id="btnRemove" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/delete_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+				<Button fx:id="btnMerge" mnemonicParsing="false" styleClass="action-button"
+					alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/apply_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
 
-		<Button fx:id="btnAddChild" mnemonicParsing="false" styleClass="action-button">
-			<graphic>
-				<ImageView fitHeight="50.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/add_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+				<Button fx:id="btnHide" mnemonicParsing="false" styleClass="action-button"
+					alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/cancel_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnRemove" mnemonicParsing="false" styleClass="action-button"
+					alignment="TOP_CENTER">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/delete_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<!-- <Button fx:id="btnAddChild" mnemonicParsing="false" -->
+				<!-- styleClass="action-button" alignment="TOP_CENTER"> -->
+				<!-- <graphic> -->
+				<!-- <ImageView fitHeight="50.0" preserveRatio="true"> -->
+				<!-- <image> -->
+				<!-- <Image url="@../images/add_icon.png" /> -->
+				<!-- </image> -->
+				<!-- </ImageView> -->
+				<!-- </graphic> -->
+				<!-- </Button> -->
+			</children>
+		</VBox>
 	</children>
-</VBox>
+</GridPane>

@@ -78,8 +78,14 @@
 		</padding>
 	</Label>
 
-	<VBox fx:id="btnBarEntityActions" alignment="TOP_CENTER" spacing="15"
-		GridPane.columnIndex="1" GridPane.rowIndex="1" />
+	<!-- <VBox fx:id="btnBarEntityActions" alignment="TOP_CENTER" spacing="15" -->
+	<!-- GridPane.columnIndex="1" GridPane.rowIndex="1" /> -->
+
+	<AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1"
+		GridPane.valignment="TOP" GridPane.halignment="CENTER"
+		GridPane.rowIndex="1">
+		<fx:include fx:id="subformCategoricalActionPanel" source="CategoricalEntityActionPanel.fxml" />
+	</AnchorPane>
 
 	<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
 		GridPane.halignment="CENTER" GridPane.rowIndex="0">
