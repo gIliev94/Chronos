@@ -8,22 +8,23 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<GridPane gridLinesVisible="true" hgap="0" minHeight="60"
+<!-- TODO Remove unnecessary properties -->
+<!-- TODO Add Fx Constants -->
+<GridPane gridLinesVisible="true" hgap="0" vgap="0" minHeight="60"
 	maxHeight="60" minWidth="300" maxWidth="600" AnchorPane.bottomAnchor="0.0"
 	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css" vgap="0"
+	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css"
 	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="bc.bg.tools.chronos.endpoint.ui.actions.entity.BookingActionPanelController">
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingActionPanelController">
 	<columnConstraints>
-		<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+		<ColumnConstraints percentWidth="-1" hgrow="ALWAYS" />
 	</columnConstraints>
 	<rowConstraints>
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 	<children>
-
-		<HBox alignment="CENTER_LEFT" GridPane.columnIndex="0"
-			GridPane.rowIndex="0" styleClass="anchor-pane" prefWidth="200"
+		<HBox styleClass="anchor-pane" alignment="CENTER_LEFT"
+			GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="200"
 			maxWidth="400">
 			<children>
 				<!-- <Button fx:id="btnDeselectBooking" mnemonicParsing="false" -->
@@ -38,7 +39,7 @@
 				<!-- </Button> -->
 
 				<Button fx:id="btnRefreshBooking" mnemonicParsing="false"
-					styleClass="action-button">
+					styleClass="action-button" onAction="#refreshBooking">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
@@ -48,8 +49,8 @@
 					</graphic>
 				</Button>
 
-				<Button fx:id="btnStartContinueBooking" mnemonicParsing="false"
-					styleClass="action-button">
+				<Button fx:id="btnStartBooking" mnemonicParsing="false"
+					styleClass="action-button" onAction="#startBooking">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
@@ -59,8 +60,19 @@
 					</graphic>
 				</Button>
 
-				<Button fx:id="btnStopPauseBooking" mnemonicParsing="false"
-					styleClass="action-button">
+				<Button fx:id="btnContinueBooking" mnemonicParsing="false"
+					styleClass="action-button" onAction="#continueBooking">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/continue_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnStopBooking" mnemonicParsing="false"
+					styleClass="action-button" onAction="#stopBooking">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
@@ -70,8 +82,19 @@
 					</graphic>
 				</Button>
 
+				<Button fx:id="btnPauseBooking" mnemonicParsing="false"
+					styleClass="action-button" onAction="#pauseBooking">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/pause_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
 				<Button fx:id="btnModifyBooking" mnemonicParsing="false"
-					styleClass="action-button">
+					styleClass="action-button" onAction="#modifyBooking">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
@@ -81,8 +104,19 @@
 					</graphic>
 				</Button>
 
+				<Button fx:id="btnMergeBooking" mnemonicParsing="false"
+					styleClass="action-button" onAction="#modifyBooking">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/merge_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
 				<Button fx:id="btnRemoveBooking" mnemonicParsing="false"
-					styleClass="action-button">
+					styleClass="action-button" onAction="#removeBooking">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>

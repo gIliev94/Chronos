@@ -70,7 +70,7 @@
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
-								<Image url="@../images/apply_icon.png" />
+								<Image url="@../images/merge_icon.png" />
 							</image>
 						</ImageView>
 					</graphic>
@@ -81,7 +81,7 @@
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>
-								<Image url="@../images/cancel_icon.png" />
+								<Image url="@../images/hide_icon.png" />
 							</image>
 						</ImageView>
 					</graphic>
