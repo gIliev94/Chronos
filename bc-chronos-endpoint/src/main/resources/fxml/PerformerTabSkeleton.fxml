@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+
+<!-- TODOs: -->
+
+<GridPane gridLinesVisible="true" hgap="5"
+	AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
+	AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" prefHeight="500.0"
+	prefWidth="1000.0" stylesheets="@../css/dark.css" vgap="5"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.tab.performers.PerformersController">
+	<padding>
+		<Insets bottom="5" left="5" right="5" top="5" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="60" />
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
+		<ColumnConstraints hgrow="ALWAYS" percentWidth="35" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="10" vgrow="ALWAYS" />
+		<RowConstraints percentHeight="90" vgrow="ALWAYS" />
+	</rowConstraints>
+
+	<HBox fx:id="barFilterPerformers" alignment="CENTER_LEFT" spacing="10"
+		GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0"
+		GridPane.valignment="CENTER">
+		<children>
+			<Label text="Filter by:" prefWidth="70" />
+			<ComboBox fx:id="comboBoxFilterCriteria" prefWidth="200" />
+			<Label text="with value:" prefWidth="80" />
+			<StackPane fx:id="stackFilterValueFields" prefWidth="200">
+				<TextField fx:id="texFieldFilterValue" prefWidth="200" />
+				<ComboBox fx:id="comboBoxFilterValue" prefWidth="200" />
+			</StackPane>
+			<Button fx:id="btnAppendFilter" mnemonicParsing="false"
+				visible="true" onAction="#appendFilter" styleClass="action-button">
+				<graphic>
+					<ImageView fx:id="imgViewHideEntityDetails" fitHeight="50.0"
+						preserveRatio="true">
+						<image>
+							<Image url="@../images/add_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+			<Button fx:id="btnRefreshFilter" mnemonicParsing="false"
+				styleClass="action-button" alignment="CENTER_LEFT">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/refresh_filter_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+			<Button fx:id="btnRemoveFilter" mnemonicParsing="false"
+				styleClass="action-button" alignment="CENTER_LEFT">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/remove_filter_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+		</children>
+	</HBox>
+
+	<GridPane gridLinesVisible="true" hgap="5" vgap="5"
+		GridPane.columnIndex="0" GridPane.rowIndex="1">
+		<padding>
+			<Insets bottom="5" left="5" right="5" top="5" />
+		</padding>
+		<columnConstraints>
+			<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="60" vgrow="ALWAYS" />
+			<RowConstraints percentHeight="10" vgrow="ALWAYS" />
+			<RowConstraints percentHeight="30" vgrow="ALWAYS" />
+		</rowConstraints>
+
+		<TableView fx:id="tableViewPerformers" GridPane.columnIndex="0"
+			GridPane.rowIndex="0" />
+
+		<AnchorPane GridPane.columnIndex="0" GridPane.halignment="CENTER"
+			GridPane.rowIndex="1">
+			<Button fx:id="btnToggleEntityDetails" mnemonicParsing="false"
+				AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+				AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+				onAction="#toggleEntityDetailsVisible">
+				<graphic>
+					<!-- TODO: Do the same for action panel - no unnecessary dynamic -->
+					<!-- generation(keep entity action impl for show off later) -->
+					<StackPane>
+						<ImageView fx:id="imgViewShowEntityDetails" fitHeight="50.0"
+							preserveRatio="true">
+							<image>
+								<Image url="@../images/up_icon.png" />
+							</image>
+						</ImageView>
+						<ImageView fx:id="imgViewHideEntityDetails" fitHeight="50.0"
+							preserveRatio="true">
+							<image>
+								<Image url="@../images/down_icon.png" />
+							</image>
+						</ImageView>
+					</StackPane>
+				</graphic>
+			</Button>
+		</AnchorPane>
+
+		<!-- TODO -->
+		<!-- <ListView fx:id="listViewPerformers" orientation="VERTICAL" -->
+		<!-- GridPane.columnIndex="0" GridPane.rowIndex="1" /> -->
+
+		<!-- <TableView fx:id="tableViewRoles" GridPane.columnIndex="0" -->
+		<!-- GridPane.rowIndex="2" /> -->
+
+		<VBox fx:id="performerDetails" GridPane.columnIndex="0"
+			styleClass="anchor-pane" GridPane.rowIndex="2" />
+	</GridPane>
+
+
+	<GridPane GridPane.columnIndex="1" GridPane.columnSpan="1"
+		GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="1">
+		<columnConstraints>
+			<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
+		</columnConstraints>
+		<rowConstraints>
+			<RowConstraints percentHeight="50" vgrow="ALWAYS" />
+			<RowConstraints percentHeight="50" vgrow="ALWAYS" />
+		</rowConstraints>
+
+
+		<VBox alignment="CENTER" spacing="10" GridPane.halignment="CENTER"
+			GridPane.rowIndex="0" GridPane.valignment="CENTER">
+			<Button fx:id="btnShowEntityPanel2" mnemonicParsing="false"
+				visible="true" onAction="#toggleEntityPanelVisible" styleClass="action-button">
+				<graphic>
+					<ImageView fx:id="imgViewHideEntityDetails" fitHeight="50.0"
+						preserveRatio="true">
+						<image>
+							<Image url="@../images/right_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+
+			<Button fx:id="btnShowEntityPanel" mnemonicParsing="false"
+				visible="true" onAction="#toggleEntityPanelVisible" styleClass="action-button">
+				<graphic>
+					<ImageView fx:id="imgViewShowEntityDetails" fitHeight="50.0"
+						preserveRatio="true">
+						<image>
+							<Image url="@../images/left_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+		</VBox>
+	</GridPane>
+
+	<HBox alignment="CENTER_LEFT" spacing="0" GridPane.valignment="CENTER"
+		GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="300"
+		GridPane.halignment="CENTER">
+		<Label text="Selected performer:" prefWidth="150" />
+		<TextField promptText="Goes here..." disable="true"
+			prefWidth="150" />
+	</HBox>
+
+	<GridPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+
+	</GridPane>
+
+</GridPane>
