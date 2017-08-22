@@ -33,26 +33,36 @@
 			<Menu fx:id="menuFile" mnemonicParsing="false"
 				text="%view.main.menu.file.title">
 				<items>
-					<MenuItem mnemonicParsing="false" text="Close" />
+					<MenuItem mnemonicParsing="false" text="Generate statistics report" />
+					<MenuItem mnemonicParsing="false" text="Generate bookings report" />
+					<MenuItem mnemonicParsing="false" text="Log off" />
+					<MenuItem mnemonicParsing="false" text="Exit" />
 				</items>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%view.main.menu.edit.title">
 				<items>
-					<MenuItem mnemonicParsing="false" text="Delete" />
+					<MenuItem mnemonicParsing="false" text="Recent statistics reports" />
+					<MenuItem mnemonicParsing="false" text="Recent bookings reports" />
 				</items>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%view.main.menu.view.title">
 				<items>
-					<MenuItem mnemonicParsing="false" text="Action 1" />
+					<MenuItem mnemonicParsing="false" text="Minimal layout" />
+					<MenuItem mnemonicParsing="false" text="Full layout" />
+					<MenuItem mnemonicParsing="false" text="Tabular perspective" />
+					<MenuItem mnemonicParsing="false" text="Graphical perspective" />
 				</items>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%view.main.menu.settings.title">
 				<items>
-					<MenuItem mnemonicParsing="false" text="Action 1" />
+					<MenuItem mnemonicParsing="false" text="Preferences" />
 				</items>
 			</Menu>
 			<Menu mnemonicParsing="false" text="%view.main.menu.help.title">
 				<items>
+					<MenuItem mnemonicParsing="false" text="User manual" />
+					<MenuItem mnemonicParsing="false" text="Wiki" />
+					<MenuItem mnemonicParsing="false" text="Public API" />
 					<MenuItem mnemonicParsing="false" text="About" />
 				</items>
 			</Menu>
@@ -80,13 +90,17 @@
 			</Tab>
 			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
 				<content>
+					<AnchorPane>
+						<fx:include fx:id="subform" source="PerformerTabSkeleton.fxml" />
+					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title">
+			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title"
+				disable="true">
 				<content>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.statistics.title">
+			<Tab text="%view.main.tab.statistics.title" disable="true">
 				<content>
 				</content>
 			</Tab>
