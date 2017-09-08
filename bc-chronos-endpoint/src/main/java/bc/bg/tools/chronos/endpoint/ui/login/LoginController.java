@@ -146,7 +146,7 @@ public class LoginController implements ILoginModel {
 	// UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
 	// UIHelper.Defaults.APP_I18N_EN, context::getBean);
 
-	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor("WorkspaceTabSkeleton", UIHelper.Defaults.APP_I18N_EN,
+	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor("MainWindowSkeleton", UIHelper.Defaults.APP_I18N_EN,
 		context::getBean);
 
 	Parent rootContainer;
@@ -162,14 +162,9 @@ public class LoginController implements ILoginModel {
 	    return false;
 	}
 
-	// final MainViewController mainViewController =
-	// uiLoader.<MainViewController> getController();
-	// mainViewController.loginAs(user);
-	// mainViewController.setPrimaryStage(primaryStage);
-
-	final WorkspaceController mainViewController = uiLoader.<WorkspaceController> getController();
-	// mainViewController.loginAs(user);
-	// mainViewController.setPrimaryStage(primaryStage);
+	final MainViewController mainViewController = uiLoader.<MainViewController> getController();
+	mainViewController.loginAs(user);
+	mainViewController.setPrimaryStage(primaryStage);
 
 	primaryStage.getScene().setRoot(rootContainer);
 

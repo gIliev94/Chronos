@@ -1,4 +1,4 @@
-package bc.bg.tools.chronos.endpoint.ui.tab.workspace;
+package bc.bg.tools.chronos.endpoint.ui.tab.performers;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -7,15 +7,18 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
 
-<GridPane gridLinesVisible="true" hgap="5" vgap="5" prefHeight="700.0"
-	prefWidth="1000.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.111"
-	xmlns:fx="http://javafx.com/fxml/1" fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
+<GridPane gridLinesVisible="true" hgap="5" prefHeight="700.0"
+	prefWidth="1000.0" stylesheets="@../css/dark.css" vgap="5"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.main.MainViewController">
 	<padding>
 		<Insets bottom="5" left="5" right="5" top="5" />
 	</padding>
@@ -69,14 +72,23 @@
 		</menus>
 	</MenuBar>
 
-	<Label fx:id="lblLoggedUser" contentDisplay="CENTER"
-		text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
-		wrapText="true" GridPane.columnIndex="0" GridPane.halignment="LEFT"
-		GridPane.rowIndex="2" GridPane.valignment="CENTER" styleClass="text-button">
+	<HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0"
+		GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
 		<padding>
 			<Insets bottom="0" left="10" right="10" top="0" />
 		</padding>
-	</Label>
+
+		<Label fx:id="lblLoggedUser" contentDisplay="CENTER" styleClass="text-button"
+			text="%view.main.tab.workspace.user.label" textAlignment="CENTER"
+			wrapText="true" />
+
+		<StackPane>
+			<Circle fx:id="indicatorOffline" radius="6" smooth="true"
+				style="-fx-fill: rgb(255.0, 0.0, 0.0);" visible="true" />
+			<Circle fx:id="indicatorOnline" radius="6" smooth="true"
+				style="-fx-fill: rgb(0,0,255.0, 0.0);" visible="false" />
+		</StackPane>
+	</HBox>
 
 	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
 		GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -95,12 +107,12 @@
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabReporting" text="%view.main.tab.reporting.title"
-				disable="true">
+			<Tab fx:id="tabReporting" disable="true"
+				text="%view.main.tab.reporting.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.statistics.title" disable="true">
+			<Tab disable="true" text="%view.main.tab.statistics.title">
 				<content>
 				</content>
 			</Tab>
@@ -118,8 +130,8 @@
 			<Insets bottom="0" left="0" right="15" top="0" />
 		</padding>
 		<children>
-			<Label contentDisplay="RIGHT" text="%view.main.credits.label"
-				textAlignment="RIGHT" HBox.hgrow="ALWAYS" styleClass="text-button" />
+			<Label contentDisplay="RIGHT" styleClass="text-button"
+				text="%view.main.credits.label" textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
 		</children>
 	</HBox>
 </GridPane>

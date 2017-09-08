@@ -335,7 +335,7 @@
 
 			<AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0">
 				<Button fx:id="btnCancelModifications" mnemonicParsing="false"
-					onAction="##cancelModifications" AnchorPane.bottomAnchor="0"
+					onAction="#cancelModifications" AnchorPane.bottomAnchor="0"
 					AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
 					AnchorPane.rightAnchor="0">
 					<graphic>

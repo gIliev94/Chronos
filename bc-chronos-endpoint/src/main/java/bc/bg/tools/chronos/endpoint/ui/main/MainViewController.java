@@ -72,6 +72,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -226,7 +227,10 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     public void loginAs(Performer loggedPerformer) {
 	setLoggedPerformer(loggedPerformer);
 
-	loggedUserLabel.setText(loggedUserLabel.getText() + " " + loggedPerformer);
+	lblLoggedUser.setText(
+		MessageFormat.format(resources.getString("view.main.tab.workspace.user.label"), loggedPerformer));
+	// loggedUserLabel.setText(loggedUserLabel.getText() + " " +
+	// loggedPerformer);
 
 	if (loggedPerformer.getPriviledges().contains(Priviledge.ALL)) {
 	    tabPaneMain.getTabs().remove(tabPerformers);
@@ -238,21 +242,24 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     public void initialize(URL location, ResourceBundle resources) {
 	this.resources = resources;
 
-	// Initialize tree with 'empty' ROOT item...
-	treeCustomers.setRoot(new TreeItem<Object>());
-	treeProjects.setRoot(new TreeItem<Object>());
-	treeTasks.setRoot(new TreeItem<Object>());
-	treeRoles.setRoot(new TreeItem<Object>());
-
-	// TODO: Test code - clean up later...
-	createTestData();
+	// // Initialize tree with 'empty' ROOT item...
+	// treeCustomers.setRoot(new TreeItem<Object>());
+	// treeProjects.setRoot(new TreeItem<Object>());
+	// treeTasks.setRoot(new TreeItem<Object>());
+	// treeRoles.setRoot(new TreeItem<Object>());
+	//
+	// // TODO: Test code - clean up later...
+	// createTestData();
+	// //
+	//
+	// testPopulateTree(treeCustomers);
+	// testPopulateTree(treeProjects);
+	// testPopulateTree(treeTasks);
+	// testPopulateTree(treeRoles);
 	//
 
-	testPopulateTree(treeCustomers);
-	testPopulateTree(treeProjects);
-	testPopulateTree(treeTasks);
-	testPopulateTree(treeRoles);
-	//
+	indicatorOffline.setEffect(UIHelper.createBlur(indicatorOffline.getRadius()));
+	indicatorOnline.setEffect(UIHelper.createBlur(indicatorOnline.getRadius()));
     }
 
     @Transactional("transactionManager")
@@ -681,7 +688,7 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 	if (Category.class.isAssignableFrom(entityClass)) {
 	    specificEntityController = categoryActionController2;
 	} else {
-	   //TODO: Implement specific controllers for other entities...
+	    // TODO: Implement specific controllers for other entities...
 	    return;
 	}
 	actionPanel.setController(specificEntityController);
@@ -752,6 +759,15 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
     @FXML
     private GridPane gridPaneMain;
+
+    @FXML
+    Circle indicatorOffline;
+
+    @FXML
+    Circle indicatorOnline;
+
+    @FXML
+    Label lblLoggedUser;
 
     public void setPrimaryStage(Stage refStage) {
 	this.primaryStage = refStage;

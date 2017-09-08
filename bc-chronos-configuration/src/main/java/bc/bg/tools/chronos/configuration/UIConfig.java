@@ -13,6 +13,9 @@ import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryAction
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
+import bc.bg.tools.chronos.endpoint.ui.tab.performers.PerformersController;
+import bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingTabularPerspectiveController;
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import javafx.fxml.FXMLLoader;
@@ -106,5 +109,20 @@ public class UIConfig {
     @Bean
     public CategoryActionPanelController2 categoryActionController2() {
 	return new CategoryActionPanelController2();
+    }
+
+    @Bean
+    public BookingActionPanelController bookingActionController() {
+	return new BookingActionPanelController();
+    }
+
+    @Bean
+    public BookingTabularPerspectiveController bookingTabularPerspectiveController() {
+	return new BookingTabularPerspectiveController();
+    }
+
+    @Bean
+    public PerformersController performersController() {
+	return new PerformersController();
     }
 }

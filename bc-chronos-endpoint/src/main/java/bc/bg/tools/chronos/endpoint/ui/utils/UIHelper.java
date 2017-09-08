@@ -20,6 +20,8 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -116,10 +118,32 @@ public final class UIHelper {
 
     private static final double OFF_GLOW_INTENSITY = 0.0d;
 
-    public static Glow createGlow(boolean glowOn) {
+    public static Effect createGlow(boolean glowOn) {
 	final Glow glowEffect = new Glow();
 
 	glowEffect.setLevel(glowOn ? ON_GLOW_INTENSITY : OFF_GLOW_INTENSITY);
+
+	return glowEffect;
+    }
+
+    public static Effect createBlur(double radius) {
+	// final Distant light = new Distant();
+	// light.setAzimuth(-135.0);
+	//
+	// final Lighting lightEffect = new Lighting();
+	// lightEffect.setLight(light);
+	// lightEffect.setSurfaceScale(5.0);
+	//
+	// return lightEffect;
+
+	final GaussianBlur blurEffect = new GaussianBlur();
+	blurEffect.setRadius(radius);
+
+	// return blurEffect;
+
+	final Glow glowEffect = new Glow();
+	glowEffect.setLevel(1.0);
+	glowEffect.setInput(blurEffect);
 
 	return glowEffect;
     }
