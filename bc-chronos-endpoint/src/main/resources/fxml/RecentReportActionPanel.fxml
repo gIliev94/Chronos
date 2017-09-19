@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<!-- TODO Remove unnecessary properties -->
+<!-- TODO Add Fx Constants -->
+<GridPane gridLinesVisible="true" hgap="0" minHeight="350"
+	minWidth="50" maxWidth="150" maxHeight="450" AnchorPane.bottomAnchor="0.0"
+	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.tab.reporting.RecentReportActionPanelController">
+	<columnConstraints>
+		<ColumnConstraints percentWidth="-1" hgrow="ALWAYS" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+	</rowConstraints>
+	<children>
+		<VBox styleClass="anchor-pane" spacing="0" minHeight="350"
+			fx:id="actionButtonGeneratedContainer" alignment="TOP_CENTER"
+			GridPane.halignment="CENTER">
+			<children>
+				<Button fx:id="btnReprintRecentReport" mnemonicParsing="false"
+					styleClass="action-button" onAction="#reprintRecentReport">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/refresh_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnRedoRecentReport" mnemonicParsing="false"
+					styleClass="action-button" onAction="#redoRecentReport">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/start_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnDeleteRecentReport" mnemonicParsing="false"
+					styleClass="action-button" onAction="deleteRecentReport">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/delete_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</children>
+		</VBox>
+	</children>
+</GridPane>

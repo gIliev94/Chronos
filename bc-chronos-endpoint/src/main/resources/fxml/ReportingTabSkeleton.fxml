@@ -66,10 +66,15 @@
 	<Label text="%view.main.tab.reporting.recent.label" alignment="CENTER_LEFT"
 		GridPane.rowIndex="0" GridPane.columnIndex="0" />
 
+	<ScrollPane GridPane.rowIndex="1" GridPane.columnIndex="0"
+		fitToHeight="true" fitToWidth="true" vbarPolicy="ALWAYS">
+		<content>
+			<ListView fx:id="listViewRecentReports" />
+		</content>
+	</ScrollPane>
 
-	<Label text="%view.main.tab.reporting.settings.label" alignment="CENTER"
-		GridPane.hgrow="ALWAYS" GridPane.halignment="CENTER"
-		GridPane.rowIndex="0" GridPane.columnIndex="2" />
+	<Label text="%view.main.tab.reporting.settings.label" alignment="CENTER_LEFT"
+		GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.columnIndex="2" />
 
 	<AnchorPane GridPane.columnIndex="0" GridPane.halignment="CENTER"
 		GridPane.rowIndex="2">
@@ -106,7 +111,7 @@
 	<AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="1"
 		GridPane.valignment="TOP" GridPane.halignment="CENTER"
 		GridPane.rowIndex="1">
-		<fx:include fx:id="subformCategoricalActionPanel" source="CategoricalEntityActionPanel.fxml" />
+		<fx:include fx:id="subformRecentReportActionPanel" source="RecentReportActionPanel.fxml" />
 	</AnchorPane>
 
 	<GridPane gridLinesVisible="true" hgap="5"
@@ -157,11 +162,39 @@
 				</graphic>
 			</Button>
 
-			<Label text="%view.main.tab.reporting.setting.preset.label"
-				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+			<GridPane gridLinesVisible="true" hgap="5"
+				GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+				<columnConstraints>
+					<ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
+					<ColumnConstraints hgrow="ALWAYS" percentWidth="35" />
+					<ColumnConstraints hgrow="ALWAYS" percentWidth="35" />
+					<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
+				</columnConstraints>
+				<rowConstraints>
+					<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+				</rowConstraints>
 
-			<ComboBox fx:id="comboBoxReportPreset" GridPane.columnIndex="1"
-				GridPane.rowIndex="1" minWidth="350" />
+				<Label text="%view.main.tab.reporting.setting.preset.label"
+					alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+
+				<ComboBox fx:id="comboBoxReportPreset"
+					GridPane.columnIndex="1" GridPane.rowIndex="0" minWidth="350" />
+
+				<Label text="%view.main.tab.reporting.setting.preset.preview.label"
+					alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+				<Button fx:id="btnApplyPreset" mnemonicParsing="false"
+					disable="true" onAction="#applyPreset" styleClass="action-button"
+					GridPane.columnIndex="3" GridPane.rowIndex="0">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/apply_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</GridPane>
 		</GridPane>
 
 		<GridPane gridLinesVisible="true" hgap="5"
@@ -170,17 +203,17 @@
 				<Insets bottom="5" left="5" right="5" top="5" />
 			</padding>
 			<columnConstraints>
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="20" />
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="30" />
-				<ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="35" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="35" />
+				<ColumnConstraints hgrow="ALWAYS" percentWidth="5" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
-				<RowConstraints percentHeight="16.66" vgrow="ALWAYS" />
+				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
+				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
 			</rowConstraints>
 
 			<Label text="%view.main.tab.reporting.date.from.label"
@@ -195,38 +228,114 @@
 			<DatePicker fx:id="datePickerReportTo"
 				GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="350" />
 
-			<Label text="%view.main.tab.reporting.setting.entity.label"
+			<Label text="%view.main.tab.reporting.setting.effort.label"
 				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
-			<ComboBox fx:id="comboBoxRelatedEntity"
-				GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="350" />
-
-			<Label text="%view.main.tab.reporting.setting.effort.label"
-				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-
 			<CheckBox fx:id="checkBoxIncludeEffort" minHeight="50"
-				text="%view.main.tab.reporting.toggle.include.effort"
-				contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				text="%view.main.tab.reporting.toggle.include.no" contentDisplay="RIGHT"
+				GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
 			<Label text="%view.main.tab.reporting.setting.financial.label"
-				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="3" />
 
 			<CheckBox fx:id="checkBoxIncludeFinancial" minHeight="50"
-				text="%view.main.tab.reporting.toggle.include.financial"
-				contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+				text="%view.main.tab.reporting.toggle.include.no" contentDisplay="RIGHT"
+				GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
 			<Label text="%view.main.tab.reporting.setting.statistics.label"
-				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
 			<CheckBox fx:id="checkBoxIncludeStatistics" minHeight="50"
-				text="%view.main.tab.reporting.toggle.include.statistics"
-				contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+				text="%view.main.tab.reporting.toggle.include.no" contentDisplay="RIGHT"
+				GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
+			<!-- preset previews -->
+			<DatePicker fx:id="datePickerReportFrom" disable="true"
+				GridPane.columnIndex="2" GridPane.rowIndex="0" minWidth="350" />
 
+			<Button fx:id="btnApplyPresetFromDate" mnemonicParsing="false"
+				disable="true" onAction="#applyPresetSetting" styleClass="action-button"
+				GridPane.columnIndex="3" GridPane.rowIndex="0">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/apply_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
 
+			<DatePicker fx:id="datePickerReportTo" disable="true"
+				GridPane.columnIndex="2" GridPane.rowIndex="1" minWidth="350" />
+
+			<Button fx:id="btnApplyPresetToDate" mnemonicParsing="false"
+				disable="true" onAction="#applyPresetSetting" styleClass="action-button"
+				GridPane.columnIndex="3" GridPane.rowIndex="1">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/apply_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+
+			<CheckBox fx:id="checkBoxIncludeEffort" minHeight="50"
+				disable="true" text="%view.main.tab.reporting.toggle.include.no"
+				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+			<Button fx:id="btnApplyPresetIncludeEffor" mnemonicParsing="false"
+				disable="true" onAction="#applyPresetSetting" styleClass="action-button"
+				GridPane.columnIndex="3" GridPane.rowIndex="2">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/apply_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+
+			<CheckBox fx:id="checkBoxIncludeFinancial" minHeight="50"
+				disable="true" text="%view.main.tab.reporting.toggle.include.no"
+				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+			<Button fx:id="btnApplyPresetIncludeFinancial"
+				mnemonicParsing="false" disable="true" onAction="#applyPresetSetting"
+				styleClass="action-button" GridPane.columnIndex="3"
+				GridPane.rowIndex="3">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/apply_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
+
+			<CheckBox fx:id="checkBoxIncludeStatistics" minHeight="50"
+				disable="true" text="%view.main.tab.reporting.toggle.include.no"
+				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+			<Button fx:id="btnApplyPresetIncludeStatistics"
+				mnemonicParsing="false" disable="true" onAction="#applyPresetSetting"
+				styleClass="action-button" GridPane.columnIndex="3"
+				GridPane.rowIndex="4">
+				<graphic>
+					<ImageView fitHeight="50.0" preserveRatio="true">
+						<image>
+							<Image url="@../images/apply_icon.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
 		</GridPane>
-
 	</GridPane>
+
+	<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
+		GridPane.hgrow="ALWAYS" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+		<fx:include fx:id="subformReportActionPanel" source="ReportActionPanel.fxml" />
+	</AnchorPane>
 
 	<!-- <VBox GridPane.columnIndex="2" GridPane.halignment="CENTER" -->
 	<!-- GridPane.valignment="TOP" GridPane.rowIndex="1" spacing="10" -->

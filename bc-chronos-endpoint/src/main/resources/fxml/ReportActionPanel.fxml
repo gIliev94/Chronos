@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<!-- TODO Remove unnecessary properties -->
+<!-- TODO Add Fx Constants -->
+<GridPane gridLinesVisible="true" hgap="0" vgap="0" minHeight="60"
+	maxHeight="60" minWidth="200" maxWidth="400" AnchorPane.bottomAnchor="0.0"
+	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css"
+	xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="bc.bg.tools.chronos.endpoint.ui.tab.reporting.ReportActionPanelController">
+	<columnConstraints>
+		<ColumnConstraints percentWidth="-1" hgrow="ALWAYS" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
+	</rowConstraints>
+	<children>
+		<HBox styleClass="anchor-pane" alignment="CENTER_LEFT"
+			GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="200"
+			maxWidth="400">
+			<children>
+
+				<Button fx:id="btnPrepareReport" mnemonicParsing="false"
+					styleClass="action-button" onAction="#prepareReport">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/start_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnClearReportSettings" mnemonicParsing="false"
+					styleClass="action-button" onAction="#clearReportSettings">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/refresh_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+
+				<Button fx:id="btnSaveReportSettingsAsPreset"
+					mnemonicParsing="false" styleClass="action-button" onAction="#saveReportSettings">
+					<graphic>
+						<ImageView fitHeight="50.0" preserveRatio="true">
+							<image>
+								<Image url="@../images/edit_icon.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</children>
+		</HBox>
+	</children>
+</GridPane>

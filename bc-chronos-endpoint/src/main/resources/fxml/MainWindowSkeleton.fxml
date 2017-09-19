@@ -107,9 +107,12 @@
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabReporting" disable="true"
+			<Tab fx:id="tabReporting" disable="false"
 				text="%view.main.tab.reporting.title">
 				<content>
+					<AnchorPane>
+						<fx:include fx:id="subform" source="ReportingTabSkeleton.fxml" />
+					</AnchorPane>
 				</content>
 			</Tab>
 			<Tab disable="true" text="%view.main.tab.statistics.title">
