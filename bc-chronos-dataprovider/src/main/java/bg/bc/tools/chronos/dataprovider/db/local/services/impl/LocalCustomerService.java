@@ -83,7 +83,7 @@ public class LocalCustomerService implements ILocalCustomerService {
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
-	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setDeviceName(EntityHelper.getDeviceName());
 	    changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
 	    changelogRepo.save(changeLog);
 
@@ -117,7 +117,7 @@ public class LocalCustomerService implements ILocalCustomerService {
 
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
-	changeLog.setDeviceName(EntityHelper.getComputerName());
+	changeLog.setDeviceName(EntityHelper.getDeviceName());
 	changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
 	changelogRepo.save(changeLog);
 

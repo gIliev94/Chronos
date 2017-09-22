@@ -169,7 +169,7 @@ public final class DbToDomainMapper {
 	domainRole.setBooking(dbToDomainBooking(dbRole.getBooking()));
 	dbToDomainBooking(dbRole.getBooking()).setRole(domainRole);
 
-	dbToDomainCategory(dbRole.getCategory()).addCategoricalEntity(domainRole);
+	// dbToDomainCategory(dbRole.getCategory()).addCategoricalEntity(domainRole);
 
 	return domainRole;
     }

@@ -71,9 +71,10 @@ public class RemoteRoleService implements IRemoteRoleService {
     public List<DRole> getRoles(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return roleRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainRole) // nl
-		.collect(Collectors.toList());
+	// return roleRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainRole) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override
@@ -82,9 +83,10 @@ public class RemoteRoleService implements IRemoteRoleService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return roleRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainRole) // nl
-		.collect(Collectors.toList());
+	// return roleRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainRole) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override

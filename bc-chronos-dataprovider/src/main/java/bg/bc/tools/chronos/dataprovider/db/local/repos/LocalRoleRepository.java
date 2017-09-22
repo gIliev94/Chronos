@@ -16,9 +16,9 @@ public interface LocalRoleRepository extends CrudRepository<Role, Long> {
 
     // Collection<Role> findByCategoryIsNull();
 
-    Collection<Role> findByCategory(Category category);
+//    Collection<Role> findByCategory(Category category);
 
-    Collection<Role> findByCategoryIn(Collection<Category> categories);
+//    Collection<Role> findByCategoryIn(Collection<Category> categories);
 
     Collection<Role> findByBillingRateLessThan(double billingRateLessThan);
 

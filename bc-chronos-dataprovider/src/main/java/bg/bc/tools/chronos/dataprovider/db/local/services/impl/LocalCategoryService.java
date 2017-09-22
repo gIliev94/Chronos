@@ -40,7 +40,7 @@ public class LocalCategoryService implements ILocalCategoryService {
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
-	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setDeviceName(EntityHelper.getDeviceName());
 	    changeLog.setUpdatedEntityKey(managedNewCategory.getSyncKey());
 	    changelogRepo.save(changeLog);
 

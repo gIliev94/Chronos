@@ -115,9 +115,10 @@ public class LocalRoleService implements ILocalRoleService {
     public List<DRole> getRoles(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return roleRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainRole) // nl
-		.collect(Collectors.toList());
+	// return roleRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainRole) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override
@@ -126,9 +127,10 @@ public class LocalRoleService implements ILocalRoleService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return roleRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainRole) // nl
-		.collect(Collectors.toList());
+	// return roleRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainRole) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override

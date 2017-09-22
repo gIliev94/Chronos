@@ -63,7 +63,7 @@ public class LocalTaskService implements ILocalTaskService {
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
-	    changeLog.setDeviceName(EntityHelper.getComputerName());
+	    changeLog.setDeviceName(EntityHelper.getDeviceName());
 	    changeLog.setUpdatedEntityKey(managedNewTask.getSyncKey());
 	    changelogRepo.save(changeLog);
 
