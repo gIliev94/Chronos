@@ -23,6 +23,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalPerformerSer
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
+import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 
 //TODO: Test w/wo lazy init...
 @Lazy
@@ -30,7 +31,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 public class LocalDataProviderConfig {
     // TODO: Bad attempt of inheritance - remove later...
     // extends LocalDBConfig {
-    
+
     // TODO: Intercept service calls(is this an obsolete approach??)
     // http://web.archive.org/web/20150520175202/https://docs.codehaus.org/display/BTM/Spring+Framework2x#SpringFramework2x-Step6:Configuredeclarativetransactionmanagement
     // http://web.archive.org/web/20150504022713/http://docs.spring.io/spring/docs/2.5.x/api/org/springframework/transaction/interceptor/TransactionProxyFactoryBean.html
@@ -47,7 +48,7 @@ public class LocalDataProviderConfig {
     //
     // return interceptor;
     // }
-    
+
     @Bean(name = "localCategoryService")
     @DependsOn("transactionManager")
     public ILocalCategoryService categoryService() {
@@ -101,6 +102,20 @@ public class LocalDataProviderConfig {
     public ILocalChangelogService changelogService() {
 	return new LocalChangelogService();
     }
+
+    @Bean(name = "localDataCreator")
+    @DependsOn("transactionManager")
+    public DataCreator localDataCreator() {
+	return new DataCreator();
+    }
+
+    // TODO: Move maybe...
+    // @Bean(name = "globalDataCreator")
+    // @DependsOn("transactionManager")
+    // public DataCreator globalDataCreator() {
+    // return new DataCreator(false);
+    // }
+    //
 
     // TODO: Configure this properly
     // http://www.javaworld.com/article/2077714/java-web-development/xa-transactions-using-spring.html?page=3

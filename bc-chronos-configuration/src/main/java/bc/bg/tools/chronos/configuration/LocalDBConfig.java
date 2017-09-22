@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.derby.jdbc.EmbeddedXADataSource;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jta.bitronix.PoolingDataSourceBean;
@@ -110,61 +111,87 @@ public class LocalDBConfig {
     // return new PersistenceExceptionTranslationPostProcessor();
     // }
 
-    @Bean
-    public LrcXADataSource lrcLocalDataSource() {
-	LrcXADataSource lrcXaDs = new LrcXADataSource();
-	lrcXaDs.setDriverClassName(env.getProperty("local.jdbc.driverClassName"));
-	lrcXaDs.setUrl(env.getProperty("local.jdbc.url"));
-	lrcXaDs.setUser(env.getProperty("local.jdbc.user"));
-	lrcXaDs.setPassword(env.getProperty("local.jdbc.pass"));
+    // @Bean
+    // public LrcXADataSource lrcLocalDataSource() {
+    // LrcXADataSource lrcXaDs = new LrcXADataSource();
+    // lrcXaDs.setDriverClassName(env.getProperty("local.jdbc.driverClassName"));
+    // lrcXaDs.setUrl(env.getProperty("local.jdbc.url"));
+    // lrcXaDs.setUser(env.getProperty("local.jdbc.user"));
+    // lrcXaDs.setPassword(env.getProperty("local.jdbc.pass"));
+    //
+    // return lrcXaDs;
+    // }
 
-	return lrcXaDs;
+    // TODO: APACHE DERBY TEST
+    @Bean
+    public EmbeddedXADataSource embeddedLocalDataSource() {
+	EmbeddedXADataSource embeddedXaDs = new EmbeddedXADataSource();
+	embeddedXaDs.setDatabaseName("C:/Users/aswor/Desktop/squirrelsql-3.8.0-standard/ChronosLocal");
+	embeddedXaDs.setCreateDatabase("create");
+	embeddedXaDs.setUser(env.getProperty("local.jdbc.user"));
+	embeddedXaDs.setPassword(env.getProperty("local.jdbc.pass"));
+
+	return embeddedXaDs;
     }
+    //
 
     @Bean
-    @DependsOn("lrcLocalDataSource")
+    // @DependsOn("lrcLocalDataSource")
+    @DependsOn("embeddedLocalDataSource")
     @Primary
     public DataSource localDataSource() throws Exception {
+	// TODO: APACHE DERBY TEST
 	PoolingDataSourceBean poolingDs = new PoolingDataSourceBean();
-	poolingDs.setDataSource(lrcLocalDataSource());
-	// TODO: No more than 1 connection for an SQLITE database...
-	poolingDs.setMinPoolSize(0);
-	poolingDs.setMaxPoolSize(1);
-
-	// TODO: Try setting name HERE+BEANS+btm.props to be the same...
-	// https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
-	// http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
-	// poolingDs.setUniqueName("localDataSource");
-	// poolingDs.setBeanName("localDataSource");
+	poolingDs.setDataSource(embeddedLocalDataSource());
+	poolingDs.setMaxPoolSize(5);
 	poolingDs.setUniqueName("jdbc/local");
-
-	// TODO: Maybe remove...
-	// poolingDs.setClassName("bitronix.tm.resource.jdbc.lrc.LrcXADataSource");
-
-	// TODO: These 2 don`t seem to be doing shit...
 	poolingDs.setAutomaticEnlistingEnabled(true);
-	// poolingDs.setAllowLocalTransactions(true);
+	poolingDs.setAllowLocalTransactions(true);
+	//
 
-	poolingDs.setEnableJdbc4ConnectionTest(false);
-	poolingDs.setTestQuery("SELECT current_timestamp");
-
-	// final Properties p = new Properties();
-	// p.setProperty("journal_mode", "WAL");
-	// poolingDs.setDriverProperties(p);
-
-	// TODO: Play with these 2 if it ever gets to optimizing...
-	// poolingDs.setShareTransactionConnections(true);
-	// poolingDs.setTwoPcOrderingPosition(2);
-	// poolingDs.setDeferConnectionRelease(true);
-	// poolingDs.setAcquisitionInterval(0);
-
-	// TODO: Is this the more correct approach to use???
-	// BitronixXADataSourceWrapper xaDsWrapper = new
-	// BitronixXADataSourceWrapper();
-	// final PoolingDataSourceBean poolingDs =
-	// xaDsWrapper.wrapDataSource(lrcLocalDataSource());
-	// poolingDs.set
-	// return poolingDs;
+	// PoolingDataSourceBean poolingDs = new PoolingDataSourceBean();
+	// poolingDs.setDataSource(lrcLocalDataSource());
+	// // TODO: No more than 1 connection for an SQLITE database...
+	// poolingDs.setMinPoolSize(0);
+	// poolingDs.setMaxPoolSize(1);
+	//
+	// // TODO: Try setting name HERE+BEANS+btm.props to be the same...
+	// //
+	// https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/JdbcConfiguration2x.adoc
+	// //
+	// http://web.archive.org/web/20150520175152/https://docs.codehaus.org/display/BTM/Hibernate2x#Hibernate2x-Applicationcode
+	// // poolingDs.setUniqueName("localDataSource");
+	// // poolingDs.setBeanName("localDataSource");
+	// poolingDs.setUniqueName("jdbc/local");
+	//
+	// // TODO: Maybe remove...
+	// //
+	// poolingDs.setClassName("bitronix.tm.resource.jdbc.lrc.LrcXADataSource");
+	//
+	// // TODO: These 2 don`t seem to be doing shit...
+	// poolingDs.setAutomaticEnlistingEnabled(true);
+	// // poolingDs.setAllowLocalTransactions(true);
+	//
+	// poolingDs.setEnableJdbc4ConnectionTest(false);
+	// poolingDs.setTestQuery("SELECT current_timestamp");
+	//
+	// // final Properties p = new Properties();
+	// // p.setProperty("journal_mode", "WAL");
+	// // poolingDs.setDriverProperties(p);
+	//
+	// // TODO: Play with these 2 if it ever gets to optimizing...
+	// // poolingDs.setShareTransactionConnections(true);
+	// // poolingDs.setTwoPcOrderingPosition(2);
+	// // poolingDs.setDeferConnectionRelease(true);
+	// // poolingDs.setAcquisitionInterval(0);
+	//
+	// // TODO: Is this the more correct approach to use???
+	// // BitronixXADataSourceWrapper xaDsWrapper = new
+	// // BitronixXADataSourceWrapper();
+	// // final PoolingDataSourceBean poolingDs =
+	// // xaDsWrapper.wrapDataSource(lrcLocalDataSource());
+	// // poolingDs.set
+	// // return poolingDs;
 
 	return poolingDs;
     }

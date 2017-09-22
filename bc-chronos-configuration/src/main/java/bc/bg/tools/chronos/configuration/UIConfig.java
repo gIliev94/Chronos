@@ -14,6 +14,9 @@ import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
 import bc.bg.tools.chronos.endpoint.ui.tab.performers.PerformersController;
+import bc.bg.tools.chronos.endpoint.ui.tab.reporting.RecentReportActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.tab.reporting.ReportActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.tab.reporting.ReportingController;
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.BookingTabularPerspectiveController;
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
@@ -124,5 +127,20 @@ public class UIConfig {
     @Bean
     public PerformersController performersController() {
 	return new PerformersController();
+    }
+
+    @Bean
+    public ReportingController reportingController() {
+	return new ReportingController();
+    }
+
+    @Bean
+    public RecentReportActionPanelController recentReportActionPanelController() {
+	return new RecentReportActionPanelController();
+    }
+
+    @Bean
+    public ReportActionPanelController reportActionPanelController() {
+	return new ReportActionPanelController();
     }
 }

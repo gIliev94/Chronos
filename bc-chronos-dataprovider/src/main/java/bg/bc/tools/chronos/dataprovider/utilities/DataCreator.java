@@ -1,8 +1,12 @@
 package bg.bc.tools.chronos.dataprovider.utilities;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
@@ -66,15 +71,15 @@ public class DataCreator {
     @Autowired
     private LocalRoleRepository localRoleRepo;
 
-    public void createSampleWorkspaceData() throws Exception {
-	transactionTemplate.execute(transactionStatus -> {
-	    return createWorkspaceData();
-	});
-    }
-
     public void createSampleUserData() {
 	transactionTemplate.execute(transactionStatus -> {
 	    return createUserData();
+	});
+    }
+
+    public void createSampleWorkspaceData() throws Exception {
+	transactionTemplate.execute(transactionStatus -> {
+	    return createWorkspaceData();
 	});
     }
 
@@ -262,7 +267,7 @@ public class DataCreator {
 
 	final Task taskEmployeeRegistryPurge = new Task();
 	taskEmployeeRegistryPurge.setSyncKey(generateSyncKey());
-	taskEmployeeRegistryPurge.setDescription("Schedule a purge script for data of laid off employees.");
+	taskEmployeeRegistryPurge.setDescription("Write & Schedule a purge script for data of laid off employees.");
 	taskEmployeeRegistryPurge.setName("Add purging for laid off employees");
 	taskEmployeeRegistryPurge.setHoursEstimated(16);
 
@@ -278,7 +283,41 @@ public class DataCreator {
 	taskSurveilanceAutomaticSnapshots.setName("Take snap shots on motion");
 	taskSurveilanceAutomaticSnapshots.setHoursEstimated(32);
 
-	// Link & Persist
+	// Bookings
+	final Booking bookingFull = new Booking();
+	bookingFull.setSyncKey(generateSyncKey());
+	bookingFull.setDescription("Adding signature for every post on the message board.");
+	final LocalDateTime startTime1 = LocalDateTime.of(2017, 9, 9, 14, 25, 10);
+	bookingFull.setStartTime(Date.from(startTime1.atZone(ZoneId.systemDefault()).toInstant()));
+	final LocalDateTime endTime1 = LocalDateTime.of(2017, 9, 9, 17, 25, 42);
+	bookingFull.setEndTime(Date.from(endTime1.atZone(ZoneId.systemDefault()).toInstant()));
+	bookingFull.setHoursSpent(Duration.between(startTime1, endTime1).toHours());
+
+	final Booking bookingPartial = new Booking();
+	bookingPartial.setSyncKey(generateSyncKey());
+	bookingPartial.setDescription("Write purge script for laid off employees.");
+	final LocalDateTime startTime2 = LocalDateTime.of(2017, 9, 14, 10, 8, 11);
+	bookingPartial.setStartTime(Date.from(startTime2.atZone(ZoneId.systemDefault()).toInstant()));
+	final LocalDateTime endTime2 = LocalDateTime.of(2017, 9, 14, 15, 10, 3);
+	bookingPartial.setEndTime(Date.from(endTime2.atZone(ZoneId.systemDefault()).toInstant()));
+	bookingPartial.setHoursSpent(Duration.between(startTime2, endTime2).toHours());
+
+	// Billing Rate Modifiers
+	final BillingRateModifier modRateGovernmentDiscount = new BillingRateModifier();
+	modRateGovernmentDiscount.setSyncKey(generateSyncKey());
+	modRateGovernmentDiscount.setModifierAction(ModifierAction.PERCENT);
+	modRateGovernmentDiscount.setModifierValue(0.75d);
+
+	final BillingRateModifier modRateLoyalCustomerDiscount = new BillingRateModifier();
+	modRateLoyalCustomerDiscount.setSyncKey(generateSyncKey());
+	modRateLoyalCustomerDiscount.setModifierAction(ModifierAction.PERCENT);
+	modRateLoyalCustomerDiscount.setModifierValue(0.85d);
+
+	final BillingRateModifier modRateOvertime = new BillingRateModifier();
+	modRateOvertime.setSyncKey(generateSyncKey());
+	modRateOvertime.setModifierAction(ModifierAction.MULTIPLY);
+	modRateOvertime.setModifierValue(2.0d);
+
 	try {
 	    // Categories
 	    final Category sCatDefault = addCategory(catDefault);
@@ -317,6 +356,22 @@ public class DataCreator {
 		    sProjMinistrySightsSurveilance);
 	    final Task sTaskMessageBoardAddSignature = addTask(taskMessageBoardAddSignature, sCatDefault,
 		    sProjWritersMessageBoard);
+
+	    // Bookings
+	    final Booking sBookingFull = addBooking(bookingFull, sTaskEasyShortuctUpdateMaps,
+		    localPerformerRepo.findByHandle("gil"), localRoleRepo.findByName("Software Developer"));
+
+	    final Booking sBookingPartial = addBooking(bookingPartial, sTaskEmployeeRegistryPurge,
+		    localPerformerRepo.findByHandle("ilk"), localRoleRepo.findByName("Team Leader"));
+
+	    // Billing Rate Modifiers
+	    final BillingRateModifier sModRateGovernmentDiscount = addBillingRateModifier(modRateGovernmentDiscount,
+		    sBookingPartial);
+
+	    final BillingRateModifier sModRateLoyalCustomerDiscount = addBillingRateModifier(
+		    modRateLoyalCustomerDiscount, sBookingFull);
+
+	    final BillingRateModifier sModRateOvertime = addBillingRateModifier(modRateOvertime, sBookingFull);
 
 	} catch (Exception exc) {
 	    ExceptionUtils.printRootCauseStackTrace(exc);
@@ -370,12 +425,13 @@ public class DataCreator {
 	return saveEntity(billingRateModifier);
     }
 
-    private Role addRole(final Role role, final Category savedCategory, final Booking savedBooking) {
-	// role.setCategory(savedCategory);
-	role.setBooking(savedBooking);// TODO ???
-
-	return saveEntity(role);
-    }
+    // private Role addRole(final Role role, final Category savedCategory, final
+    // Booking savedBooking) {
+    // // role.setCategory(savedCategory);
+    // role.setBooking(savedBooking);// TODO ???
+    //
+    // return saveEntity(role);
+    // }
 
     private Role addRole(final Role role) {
 	return saveEntity(role);
