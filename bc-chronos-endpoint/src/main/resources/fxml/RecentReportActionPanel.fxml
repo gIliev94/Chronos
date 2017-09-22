@@ -50,7 +50,7 @@
 				</Button>
 
 				<Button fx:id="btnDeleteRecentReport" mnemonicParsing="false"
-					styleClass="action-button" onAction="deleteRecentReport">
+					styleClass="action-button" onAction="#deleteRecentReport">
 					<graphic>
 						<ImageView fitHeight="50.0" preserveRatio="true">
 							<image>

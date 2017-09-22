@@ -147,8 +147,9 @@
 				GridPane.rowIndex="0" />
 
 			<TextField fx:id="txtFieldSelectedTemplateDoc"
-				text="%view.main.tab.reporting.open.template.field" minHeight="50"
-				minWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				promptText="%view.main.tab.reporting.open.template.field.prompt"
+				minHeight="50" minWidth="200" GridPane.columnIndex="1"
+				GridPane.rowIndex="0" />
 
 			<Button fx:id="btnOpenTemplateFile" mnemonicParsing="false"
 				onAction="#openTemplateFile" styleClass="action-button"
@@ -216,14 +217,14 @@
 				<RowConstraints percentHeight="20" vgrow="ALWAYS" />
 			</rowConstraints>
 
-			<Label text="%view.main.tab.reporting.date.from.label"
+			<Label text="%view.main.tab.reporting.setting.date.from.label"
 				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0" />
 
 			<DatePicker fx:id="datePickerReportFrom"
 				GridPane.columnIndex="1" GridPane.rowIndex="0" minWidth="350" />
 
-			<Label text="%view.main.tab.reporting.date.to.label" alignment="CENTER_LEFT"
-				GridPane.columnIndex="0" GridPane.rowIndex="1" />
+			<Label text="%view.main.tab.reporting.setting.date.to.label"
+				alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
 			<DatePicker fx:id="datePickerReportTo"
 				GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="350" />
@@ -250,7 +251,7 @@
 				GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
 			<!-- preset previews -->
-			<DatePicker fx:id="datePickerReportFrom" disable="true"
+			<DatePicker fx:id="datePickerReportPresetFrom" disable="true"
 				GridPane.columnIndex="2" GridPane.rowIndex="0" minWidth="350" />
 
 			<Button fx:id="btnApplyPresetFromDate" mnemonicParsing="false"
@@ -265,7 +266,7 @@
 				</graphic>
 			</Button>
 
-			<DatePicker fx:id="datePickerReportTo" disable="true"
+			<DatePicker fx:id="datePickerReportPresetTo" disable="true"
 				GridPane.columnIndex="2" GridPane.rowIndex="1" minWidth="350" />
 
 			<Button fx:id="btnApplyPresetToDate" mnemonicParsing="false"
@@ -280,11 +281,11 @@
 				</graphic>
 			</Button>
 
-			<CheckBox fx:id="checkBoxIncludeEffort" minHeight="50"
+			<CheckBox fx:id="checkBoxPresetIncludeEffort" minHeight="50"
 				disable="true" text="%view.main.tab.reporting.toggle.include.no"
 				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-			<Button fx:id="btnApplyPresetIncludeEffor" mnemonicParsing="false"
+			<Button fx:id="btnApplyPresetIncludeEffort" mnemonicParsing="false"
 				disable="true" onAction="#applyPresetSetting" styleClass="action-button"
 				GridPane.columnIndex="3" GridPane.rowIndex="2">
 				<graphic>
@@ -296,7 +297,7 @@
 				</graphic>
 			</Button>
 
-			<CheckBox fx:id="checkBoxIncludeFinancial" minHeight="50"
+			<CheckBox fx:id="checkBoxPresetIncludeFinancial" minHeight="50"
 				disable="true" text="%view.main.tab.reporting.toggle.include.no"
 				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
@@ -313,7 +314,7 @@
 				</graphic>
 			</Button>
 
-			<CheckBox fx:id="checkBoxIncludeStatistics" minHeight="50"
+			<CheckBox fx:id="checkBoxPresetIncludeStatistics" minHeight="50"
 				disable="true" text="%view.main.tab.reporting.toggle.include.no"
 				contentDisplay="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 
@@ -336,60 +337,5 @@
 		GridPane.hgrow="ALWAYS" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
 		<fx:include fx:id="subformReportActionPanel" source="ReportActionPanel.fxml" />
 	</AnchorPane>
-
-	<!-- <VBox GridPane.columnIndex="2" GridPane.halignment="CENTER" -->
-	<!-- GridPane.valignment="TOP" GridPane.rowIndex="1" spacing="10" -->
-	<!-- alignment="CENTER_LEFT"> -->
-	<!-- <children> -->
-	<!-- <HBox spacing="10" alignment="CENTER_LEFT"> -->
-	<!-- <children> -->
-	<!-- <Label text="%view.main.tab.reporting.open.template.label" -->
-	<!-- alignment="CENTER_LEFT" minHeight="50" /> -->
-
-	<!-- <TextField text="@view.main.tab.reporting.open.template.field" -->
-	<!-- minHeight="50" minWidth="250" /> -->
-
-	<!-- <Button fx:id="btnOpenTemplateFile" mnemonicParsing="false" -->
-	<!-- onAction="#openTemplateFile" styleClass="action-button"> -->
-	<!-- <graphic> -->
-	<!-- <ImageView fitHeight="50.0" preserveRatio="true"> -->
-	<!-- <image> -->
-	<!-- <Image url="@../images/add_icon.png" /> -->
-	<!-- </image> -->
-	<!-- </ImageView> -->
-	<!-- </graphic> -->
-	<!-- </Button> -->
-	<!-- </children> -->
-	<!-- </HBox> -->
-
-	<!-- <CheckBox fx:id="checkBoxIncludeEffort" minHeight="50" -->
-	<!-- text="%view.main.tab.reporting.toggle.include.effort" -->
-	<!-- contentDisplay="RIGHT" /> -->
-
-	<!-- <CheckBox fx:id="checkBoxIncludeEffort" minHeight="50" -->
-	<!-- text="%view.main.tab.reporting.toggle.include.financial" -->
-	<!-- contentDisplay="RIGHT" /> -->
-
-	<!-- <CheckBox fx:id="checkBoxIncludeEffort" minHeight="50" -->
-	<!-- text="%view.main.tab.reporting.toggle.include.statistics" -->
-	<!-- contentDisplay="RIGHT" /> -->
-
-	<!-- <HBox spacing="10" alignment="CENTER_LEFT"> -->
-	<!-- <children> -->
-	<!-- <Label text="%view.main.tab.reporting.date.from.label" -->
-	<!-- alignment="CENTER_LEFT" minHeight="50" /> -->
-
-	<!-- <DatePicker fx:id="datePickerReportFrom" /> -->
-
-	<!-- <Label text="%view.main.tab.reporting.date.to.label" -->
-	<!-- alignment="CENTER_LEFT" minHeight="50" /> -->
-
-	<!-- <DatePicker fx:id="datePickerReportFrom" /> -->
-
-	<!-- </children> -->
-	<!-- </HBox> -->
-
-	<!-- </children> -->
-	<!-- </VBox> -->
 
 </GridPane>

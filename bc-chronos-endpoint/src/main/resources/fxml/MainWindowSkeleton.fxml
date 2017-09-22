@@ -96,30 +96,39 @@
 			<Tab fx:id="tabWorkspace" text="%view.main.tab.workspace.title">
 				<content>
 					<AnchorPane>
-						<fx:include fx:id="subform" source="WorkspaceTabSkeleton.fxml" />
+						<fx:include fx:id="subformWorkspace" source="WorkspaceTabSkeleton.fxml" />
 					</AnchorPane>
 				</content>
 			</Tab>
 			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
 				<content>
 					<AnchorPane>
-						<fx:include fx:id="subform" source="PerformerTabSkeleton.fxml" />
+						<fx:include fx:id="subformPerformers" source="PerformerTabSkeleton.fxml" />
 					</AnchorPane>
+				</content>
+			</Tab>
+			<Tab fx:id="tabRoles" disable="false" text="%view.main.tab.roles.title">
+				<content>
+					<!-- <AnchorPane> -->
+					<!-- <fx:include fx:id="subformReporting" source="ReportingTabSkeleton.fxml" 
+						/> -->
+					<!-- </AnchorPane> -->
 				</content>
 			</Tab>
 			<Tab fx:id="tabReporting" disable="false"
 				text="%view.main.tab.reporting.title">
 				<content>
 					<AnchorPane>
-						<fx:include fx:id="subform" source="ReportingTabSkeleton.fxml" />
+						<fx:include fx:id="subformReporting" source="ReportingTabSkeleton.fxml" />
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab disable="true" text="%view.main.tab.statistics.title">
+			<Tab fx:id="tabStatistics" disable="true"
+				text="%view.main.tab.statistics.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab text="%view.main.tab.synchronization.title">
+			<Tab fx:id="tabSynchronization" text="%view.main.tab.synchronization.title">
 				<content>
 				</content>
 			</Tab>

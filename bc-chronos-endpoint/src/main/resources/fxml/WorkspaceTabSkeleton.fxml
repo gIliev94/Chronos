@@ -178,89 +178,22 @@
 				<TitledPane fx:id="titlePaneCustomer" animated="false"
 					text="%view.main.tab.workspace.entity.customer.title.na">
 					<content>
-						<!-- <VBox style="-fx-background-color: transparent;"> -->
-						<!-- <VBox style="-fx-background-color: rgb(255.0, 0.0, 0.0);"> -->
-						<!-- <children> -->
-
-						<!-- styleClass="#ffs" stylesheets="@main.css" -->
-						<!-- https://stackoverflow.com/a/19116857 -->
-						<!-- https://www.google.bg/search?q=javafx+treeview+internal+scrollpane&oq=javafx+treeview+internal+scrollpane&aqs=chrome..69i57.6687j0j7&sourceid=chrome&ie=UTF-8 -->
-						<!-- <ScrollPane style="-fx-background-color: transparent;" -->
-						<!-- VBox.vgrow="ALWAYS"> -->
-						<!-- <content> -->
 						<TreeView fx:id="treeCustomers" showRoot="false"
 							style="-fx-background-color: transparent;" />
-						<!-- </content> -->
-						<!-- </ScrollPane> -->
-
-						<!-- </children> -->
-						<!-- </VBox> -->
 					</content>
 				</TitledPane>
 				<TitledPane fx:id="titlePaneProject" animated="false"
 					text="%view.main.tab.workspace.entity.project.title.na">
 					<content>
-						<!-- <VBox style="-fx-background-color: transparent;"> -->
-						<!-- <VBox style="-fx-background-color: rgb(255.0, 0.0, 0.0);"> -->
-						<!-- <children> -->
-
-						<!-- styleClass="#ffs" stylesheets="@main.css" -->
-						<!-- https://stackoverflow.com/a/19116857 -->
-						<!-- https://www.google.bg/search?q=javafx+treeview+internal+scrollpane&oq=javafx+treeview+internal+scrollpane&aqs=chrome..69i57.6687j0j7&sourceid=chrome&ie=UTF-8 -->
-						<!-- <ScrollPane style="-fx-background-color: transparent;" -->
-						<!-- VBox.vgrow="ALWAYS"> -->
-						<!-- <content> -->
 						<TreeView fx:id="treeProjects" showRoot="false"
 							style="-fx-background-color: transparent;" />
-						<!-- </content> -->
-						<!-- </ScrollPane> -->
-
-						<!-- </children> -->
-						<!-- </VBox> -->
 					</content>
 				</TitledPane>
 				<TitledPane fx:id="titlePaneTask" animated="false"
 					style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.task.title.na">
 					<content>
-						<!-- <VBox style="-fx-background-color: transparent;"> -->
-						<!-- <VBox style="-fx-background-color: rgb(255.0, 0.0, 0.0);"> -->
-						<!-- <children> -->
-
-						<!-- styleClass="#ffs" stylesheets="@main.css" -->
-						<!-- https://stackoverflow.com/a/19116857 -->
-						<!-- https://www.google.bg/search?q=javafx+treeview+internal+scrollpane&oq=javafx+treeview+internal+scrollpane&aqs=chrome..69i57.6687j0j7&sourceid=chrome&ie=UTF-8 -->
-						<!-- <ScrollPane style="-fx-background-color: transparent;" -->
-						<!-- VBox.vgrow="ALWAYS"> -->
-						<!-- <content> -->
 						<TreeView fx:id="treeTasks" showRoot="false"
 							style="-fx-background-color: transparent;" />
-						<!-- </content> -->
-						<!-- </ScrollPane> -->
-
-						<!-- </children> -->
-						<!-- </VBox> -->
-					</content>
-				</TitledPane>
-				<TitledPane fx:id="titlePaneRole" animated="false"
-					style="-fx-background-color: transparent;" text="%view.main.tab.workspace.entity.role.title.na">
-					<content>
-						<!-- <VBox style="-fx-background-color: transparent;"> -->
-						<!-- <VBox style="-fx-background-color: rgb(255.0, 0.0, 0.0);"> -->
-						<!-- <children> -->
-
-						<!-- styleClass="#ffs" stylesheets="@main.css" -->
-						<!-- https://stackoverflow.com/a/19116857 -->
-						<!-- https://www.google.bg/search?q=javafx+treeview+internal+scrollpane&oq=javafx+treeview+internal+scrollpane&aqs=chrome..69i57.6687j0j7&sourceid=chrome&ie=UTF-8 -->
-						<!-- <ScrollPane style="-fx-background-color: transparent;" -->
-						<!-- VBox.vgrow="ALWAYS"> -->
-						<!-- <content> -->
-						<TreeView fx:id="treeRoles" showRoot="false"
-							style="-fx-background-color: transparent;" />
-						<!-- </content> -->
-						<!-- </ScrollPane> -->
-
-						<!-- </children> -->
-						<!-- </VBox> -->
 					</content>
 				</TitledPane>
 			</panes>
