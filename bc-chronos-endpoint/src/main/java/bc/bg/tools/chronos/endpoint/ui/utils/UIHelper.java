@@ -40,7 +40,7 @@ public final class UIHelper {
 	public static final String APP_TITLE = "Chronos";
 	public static final String APP_ICON = "chronos_icon";
 	public static final String APP_START_WINDOW = "LoginWindow";
-	public static final String APP_MAIN_WINDOW = "MainWindowSandbox";
+	public static final String APP_MAIN_WINDOW = "MainWindowSkeleton";
 	public static final String APP_MSG_ID_ERR_WINDOW_NOT_LOADED = "view.error.could.not.be.loaded";
 	public static final String APP_I18N_EN = "i18n.Bundle";
 	public static final String APP_STYLE_SHEET_BASE = "dark";

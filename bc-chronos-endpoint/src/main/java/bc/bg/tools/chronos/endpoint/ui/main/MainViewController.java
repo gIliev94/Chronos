@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.derby.jdbc.EmbeddedXADataSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +29,7 @@ import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEnt
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController2;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoryActionModel;
+import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
@@ -153,9 +155,13 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     @Autowired
     public PlatformTransactionManager transactionManager;
 
+    // @Autowired
+    // @Qualifier("lrcLocalDataSource")
+    // private LrcXADataSource lrcLocalDataSource;
+
     @Autowired
-    @Qualifier("lrcLocalDataSource")
-    private LrcXADataSource lrcLocalDataSource;
+    @Qualifier("embeddedLocalDataSource")
+    private EmbeddedXADataSource lrcLocalDataSource;
 
     // TODO: Consider swapping remote LRC source with SQL server XA(like below)
     // https://github.com/bitronix/btm/blob/master/btm-docs/src/main/asciidoc/LastResourceCommit2x.adoc
@@ -204,6 +210,9 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     private Tab tabPerformers;
 
     @FXML
+    private Tab tabRoles;
+
+    @FXML
     private Tab tabReporting;
 
     @FXML
@@ -215,6 +224,9 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
     @FXML
     private VBox actionButtonBar;
+
+    @FXML
+    private WorkspaceController subformWorkspaceController;
 
     public Performer getLoggedPerformer() {
 	return loggedPerformer;
@@ -234,6 +246,7 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
 	if (loggedPerformer.getPriviledges().contains(Priviledge.ALL)) {
 	    tabPaneMain.getTabs().remove(tabPerformers);
+	    tabPaneMain.getTabs().remove(tabRoles);
 	    tabPaneMain.getTabs().remove(tabReporting);
 	}
     }
@@ -260,6 +273,9 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 
 	indicatorOffline.setEffect(UIHelper.createBlur(indicatorOffline.getRadius()));
 	indicatorOnline.setEffect(UIHelper.createBlur(indicatorOnline.getRadius()));
+
+	subformWorkspaceController.setLoggedPerformer(loggedPerformer);
+	subformWorkspaceController.setPrimaryStage(primaryStage);
     }
 
     @Transactional("transactionManager")
@@ -531,7 +547,7 @@ public class MainViewController implements Initializable, ICategoryActionModel {
     private void appendChangelog(String entitySyncKey) {
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
-	changeLog.setDeviceName(EntityHelper.getComputerName());
+	changeLog.setDeviceName(EntityHelper.getDeviceName());
 	changeLog.setUpdatedEntityKey(entitySyncKey);
 
 	changelogRepo.save(changeLog);
@@ -564,9 +580,10 @@ public class MainViewController implements Initializable, ICategoryActionModel {
 		    subEntities = projectRepo.findByCategory(catObj);
 		} else if (Objects.equals(tree.getId(), "treeTasks")) {
 		    subEntities = taskRepo.findByCategory(catObj);
-		} else if (Objects.equals(tree.getId(), "treeRoles")) {
-		    subEntities = roleRepo.findByCategory(catObj);
 		}
+		// else if (Objects.equals(tree.getId(), "treeRoles")) {
+		// subEntities = roleRepo.findByCategory(catObj);
+		// }
 		subEntities.stream() // nl
 			.map(TreeItem<Object>::new) // nl
 			.forEach(catNode.getChildren()::add);

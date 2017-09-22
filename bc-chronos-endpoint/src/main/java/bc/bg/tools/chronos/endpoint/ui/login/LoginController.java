@@ -14,12 +14,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
-import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
+import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,6 +36,12 @@ import javafx.stage.Stage;
  * @author giliev
  */
 public class LoginController implements ILoginModel {
+
+    // TODO: Use these links to refactor...
+    // https://gist.github.com/jewelsea/4631319
+    // https://stackoverflow.com/questions/17226948/switching-scene-in-javafx
+    // http://www.javafxtutorials.com/tutorials/switching-to-different-screens-in-javafx-and-fxml/
+    // https://www.google.bg/search?q=javafx+swap+scene&oq=javafx+swap+sc&aqs=chrome.0.0j69i57.8207j0j7&sourceid=chrome&ie=UTF-8
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -87,28 +94,33 @@ public class LoginController implements ILoginModel {
 		.set(UIHelper.createTooltip(resources.getString(ILoginModel.MSG_ID_TOOLTIP_LOGIN_BUTTON)));
     }
 
-    // TODO: Refactor(maybe use colors to highlight)...
+    // TODO: Refactor (maybe use colors to highlight)...
     // https://stackoverflow.com/a/29616567
     // https://www.javacodegeeks.com/2012/06/in-this-tutorial-i-will-design-nice.html
     // http://zoranpavlovic.blogspot.bg/2012/05/javafx-2-create-nice-login-form.html
     protected void toggleLoginButtonOnInput() {
 	loginButton.disableProperty().set(true);
 
-	userField.textProperty().addListener((obs, oldVal, newVal) -> {
-	    if (!newVal.isEmpty() && !passwordField.getText().isEmpty()) {
-		loginButton.disableProperty().set(false);
-	    } else {
-		loginButton.disableProperty().set(true);
-	    }
-	});
+	// TODO: One at a time binding via Listeners OR multiple bindings
 
-	passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
-	    if (!newVal.isEmpty() && !userField.getText().isEmpty()) {
-		loginButton.disableProperty().set(false);
-	    } else {
-		loginButton.disableProperty().set(true);
-	    }
-	});
+	// userField.textProperty().addListener((obs, oldVal, newVal) -> {
+	// if (!newVal.isEmpty() && !passwordField.getText().isEmpty()) {
+	// loginButton.disableProperty().set(false);
+	// } else {
+	// loginButton.disableProperty().set(true);
+	// }
+	// });
+	//
+	// passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
+	// if (!newVal.isEmpty() && !userField.getText().isEmpty()) {
+	// loginButton.disableProperty().set(false);
+	// } else {
+	// loginButton.disableProperty().set(true);
+	// }
+	// });
+
+	loginButton.disableProperty()
+		.bind(Bindings.or(userField.textProperty().isEmpty(), passwordField.textProperty().isEmpty()));
     }
 
     @FXML
@@ -142,12 +154,8 @@ public class LoginController implements ILoginModel {
     }
 
     protected Boolean displayMainWindow(final Performer user) {
-	// final FXMLLoader uiLoader =
-	// UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
-	// UIHelper.Defaults.APP_I18N_EN, context::getBean);
-
-	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor("MainWindowSkeleton", UIHelper.Defaults.APP_I18N_EN,
-		context::getBean);
+	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
+		UIHelper.Defaults.APP_I18N_EN, context::getBean);
 
 	Parent rootContainer;
 	try {
@@ -187,41 +195,23 @@ public class LoginController implements ILoginModel {
 	return true;
     }
 
+    @Autowired
+    private DataCreator localDataCreator;
+
     public void loadLoginTestData() {
 	final Iterable<Performer> testDataInserted = transactionTemplate.execute(txStatus -> {
-	    return createTestUsers();
+	    // return createTestUsers();
+	    try {
+		localDataCreator.createSampleUserData();
+	    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	    }
+	    return null;
 	});
 
 	assert (testDataInserted != null && testDataInserted.iterator().hasNext()) : "No test data could be inserted!";
-    }
-
-    // TODO: Use these links to refactor...
-    // https://gist.github.com/jewelsea/4631319
-    // https://stackoverflow.com/questions/17226948/switching-scene-in-javafx
-    // http://www.javafxtutorials.com/tutorials/switching-to-different-screens-in-javafx-and-fxml/
-    // https://www.google.bg/search?q=javafx+swap+scene&oq=javafx+swap+sc&aqs=chrome.0.0j69i57.8207j0j7&sourceid=chrome&ie=UTF-8
-    protected Iterable<Performer> createTestUsers() {
-	final Performer userNorm = new Performer();
-	userNorm.setSyncKey(UUID.randomUUID().toString());
-	userNorm.setName("Georgi Iliev");
-	userNorm.setHandle("gil");
-	userNorm.setEmail("gil@abv.bg");
-	userNorm.setPassword("1232".toCharArray());
-	userNorm.setPrimaryDeviceName(EntityHelper.getComputerName() + "1");
-	userNorm.setPriviledges(Arrays.asList(Priviledge.READ, Priviledge.WRITE));
-	userNorm.setLogged(false);
-
-	final Performer userAdmin = new Performer();
-	userAdmin.setSyncKey(UUID.randomUUID().toString());
-	userAdmin.setName("Lachezar Dimitrov");
-	userAdmin.setHandle("lad");
-	userAdmin.setEmail("lad@abv.bg");
-	userAdmin.setPassword("l".toCharArray());
-	userAdmin.setPrimaryDeviceName(EntityHelper.getComputerName() + "2");
-	userAdmin.setPriviledges(Arrays.asList(Priviledge.ALL));
-	userAdmin.setLogged(false);
-
-	return performerRepo.save(Arrays.asList(userNorm, userAdmin));
     }
 
     @Override
