@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
-import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController2;
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
@@ -107,11 +106,6 @@ public class UIConfig {
     @Bean
     public CategoryActionPanelController categoryActionController() {
 	return new CategoryActionPanelController();
-    }
-
-    @Bean
-    public CategoryActionPanelController2 categoryActionController2() {
-	return new CategoryActionPanelController2();
     }
 
     @Bean

@@ -14,11 +14,10 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController;
-import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController2;
-import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoryActionModel;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
+import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoricalEntityActionModel;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
@@ -26,7 +25,6 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
@@ -47,6 +45,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
@@ -58,7 +57,7 @@ import javafx.util.Pair;
  * 
  * @author giliev
  */
-public class WorkspaceController implements Initializable, ICategoryActionModel {
+public class WorkspaceController implements Initializable, ICategoricalEntityActionModel {
 
     private static final Logger LOGGER = Logger.getLogger(WorkspaceController.class);
 
@@ -313,12 +312,13 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
     }
 
     public void toggleEntityPanelVisible() {
+	// TODO: Implement
 	// ...
     }
 
-    // TODO: Test data input
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+    // TODO: Need commented out repos???
+    // @Autowired
+    // private TransactionTemplate transactionTemplate;
 
     @Autowired
     private LocalTaskRepository taskRepo;
@@ -332,8 +332,8 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
     @Autowired
     private LocalCategoryRepository categoryRepo;
 
-    @Autowired
-    private LocalChangelogRepository changelogRepo;
+    // @Autowired
+    // private LocalChangelogRepository changelogRepo;
     //
     // @Autowired
     // private LocalBookingRepository bookingRepo;
@@ -361,6 +361,7 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 
 		final Category catObj = (Category) catNode.getValue();
 
+		// TODO: Refactor
 		Collection<?> subEntities = null;
 		if (Objects.equals(tree.getId(), "treeCustomers")) {
 		    subEntities = customerRepo.findByCategory(catObj);
@@ -387,28 +388,21 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 	});
 
 	entityAttrList.clear();
+	selectedCategoryNode = new_val;
 
 	Class<? extends Serializable> entityClass = null;
 
 	final Object newValueObj = new_val.getValue();
 	if (newValueObj instanceof Category) {
-	    Category catObj = (Category) newValueObj;
+	    final Category catObj = (Category) newValueObj;
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(catObj.getName())));
 	    entityAttrList
 		    .add(createHBox(new Label("Sort order: "), new TextField(String.valueOf(catObj.getSortOrder()))));
 
-	    selectedCategoryNode = new_val;
-
 	    entityClass = Category.class;
-	    // showCategoryActions();
-	    // showCategoryActionsAlt();
-
-	    // titlePaneCustomer.setText(MessageFormat
-	    // .format(resources.getString("view.main.tab.workspace.entity.customer.title"),
-	    // custObj.getName()));
 
 	} else if (newValueObj instanceof Customer) {
-	    Customer custObj = (Customer) newValueObj;
+	    final Customer custObj = (Customer) newValueObj;
 	    entityAttrList.add(createHBox(new Label("Name: "), new TextField(custObj.getName())));
 	    entityAttrList.add(createHBox(new Label("Description: "), new TextField(custObj.getDescription())));
 
@@ -417,12 +411,8 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 	    titlePaneCustomer.setText(MessageFormat
 		    .format(resources.getString("view.main.tab.workspace.entity.customer.title"), custObj.getName()));
 
-	    selectedCategoryNode = new_val;
-	    // showCategoryActions();
-	    // showCategoryActionsAlt();
-
 	} else if (newValueObj instanceof Project) {
-	    Project projObj = (Project) newValueObj;
+	    final Project projObj = (Project) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(projObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(projObj.getDescription())));
 
@@ -430,8 +420,12 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 
 	    titlePaneProject.setText(MessageFormat
 		    .format(resources.getString("view.main.tab.workspace.entity.project.title"), projObj.getName()));
+	    titlePaneCustomer
+		    .setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.customer.title"),
+			    projObj.getCustomer().getName()));
+
 	} else if (newValueObj instanceof Task) {
-	    Task taskObj = (Task) newValueObj;
+	    final Task taskObj = (Task) newValueObj;
 	    entityAttrList.add(new HBox(new Label("Name: "), new TextField(taskObj.getName())));
 	    entityAttrList.add(new HBox(new Label("Description: "), new TextField(taskObj.getDescription())));
 	    entityAttrList.add(new HBox(new Label("Hours estimated: "),
@@ -441,6 +435,13 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 
 	    titlePaneTask.setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.task.title"),
 		    taskObj.getName()));
+
+	    titlePaneProject
+		    .setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.project.title"),
+			    taskObj.getProject().getName()));
+	    titlePaneCustomer
+		    .setText(MessageFormat.format(resources.getString("view.main.tab.workspace.entity.customer.title"),
+			    taskObj.getProject().getCustomer().getName()));
 	}
 
 	showCategoricalEntityActions(entityClass);
@@ -461,37 +462,39 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 	return hBox;
     }
 
-    // TODO: Entity action panel impl tests
-
-    // http://code.makery.ch/blog/javafx-8-event-handling-examples/
-    // https://stackoverflow.com/questions/10518458/javafx-create-custom-button-with-image
-
-    // Example :: replace container`s children approach
-    // private Parent currentActionPanel;
-
-    // private static final String ACTION_PANEL_CATEGORY =
-    // "CategoryActionPanel";
-
     private static final String ACTION_PANEL_CATEGORICAL = "CategoricalEntityActionPanel";
 
     @Autowired
-    private CategoryActionPanelController2 categoryActionController2;
+    private CategoryActionPanelController categoryActionController;
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    protected void showCategoricalEntityActions(final Class<? extends Serializable> entityClass) {
-	// rename to categorical action button bar...
-	btnBarEntityActions.getChildren().clear();
+    @FXML
+    private AnchorPane paneCategoricalActions;
 
+    @FXML
+    private AnchorPane paneShowEntityPanel;
+
+    // @FXML
+    // private CategoricalEntityActionPanelController
+    // subformCategoricalActionPanelController;
+
+    // @FXML
+    // private Parent subformCategoricalActionPanel;
+
+    protected void showCategoricalEntityActions(final Class<? extends Serializable> entityClass) {
 	final FXMLLoader actionPanel = UIHelper.getWindowLoaderFor(ACTION_PANEL_CATEGORICAL,
 		UIHelper.Defaults.APP_I18N_EN, applicationContext::getBean);
 
 	Object specificEntityController = null;
 	if (Category.class.isAssignableFrom(entityClass)) {
-	    specificEntityController = categoryActionController2;
+	    specificEntityController = categoryActionController;
 	} else {
 	    // TODO: Implement specific controllers for other entities...
+	    // paneCategoricalActions.getChildren().forEach(n ->
+	    // n.setVisible(false));
+	    // paneCategoricalActions.getChildren().clear();
 	    return;
 	}
 	actionPanel.setController(specificEntityController);
@@ -503,62 +506,17 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
 		    .<CategoricalEntityActionPanelController> getController();
 	    actionController.setActionModel(this);
 
-	    btnBarEntityActions.getChildren().add(actionPanelRoot);
+	    // paneCategoricalActions.getChildren().clear();
+	    paneCategoricalActions.getChildren().add(actionPanelRoot);
+	    // TODO:
+	    paneShowEntityPanel.toBack();
 
 	} catch (IOException e) {
-	    // TODO: i18n
 	    LOGGER.error(e);
-	    UIHelper.showErrorDialog("Problem loading UI for :: " + ACTION_PANEL_CATEGORICAL);
+	    UIHelper.showErrorDialog(
+		    i18n(UIHelper.Defaults.APP_MSG_ID_ERR_WINDOW_NOT_LOADED, ACTION_PANEL_CATEGORICAL));
 	}
     }
-
-    // public void showCategoryActionsAlt() {
-    // // Example :: replace container`s children approach
-    // // if (currentActionPanel != null) {
-    // // gridPaneMain.getChildren().remove(currentActionPanel);
-    // // }
-    //
-    // // Example :: replace container`s children approach
-    // btnBarEntityActions.getChildren().clear();
-    //
-    // if (!(selectedCategoryNode.getValue() instanceof Category)) {
-    // return;
-    // }
-    //
-    // final FXMLLoader actionView =
-    // UIHelper.getWindowLoaderFor(ACTION_PANEL_CATEGORY,
-    // UIHelper.Defaults.APP_I18N_EN,
-    // applicationContext::getBean);
-    //
-    // try {
-    // final Parent actionRoot = actionView.load();
-    //
-    // // Example :: replace container`s children approach
-    // // currentActionPanel = actionRoot;
-    //
-    // final CategoryActionPanelController actionController = actionView
-    // .<CategoryActionPanelController> getController();
-    //
-    // actionController.setCategoryActionModel(this);
-    //
-    // // SwingFXUtils.
-    // // final GridPane gridRoot = (GridPane)
-    // // primaryStage.getScene().getRoot();
-    // // gridRoot.add(actionRoot, 1, 1);
-    //
-    // // Example :: replace container approach
-    // // gridPaneMain.add(actionRoot, 1, 1);
-    //
-    // // Example :: replace container`s children approach
-    // btnBarEntityActions.getChildren().add(actionRoot);
-    //
-    // } catch (IOException e) {
-    // // TODO: i18n
-    // LOGGER.error(e);
-    // UIHelper.showErrorDialog("Problem loading UI for :: " +
-    // ACTION_PANEL_CATEGORY);
-    // }
-    // }
 
     @Override
     public void refreshSelectedEntityNode(Object modifiedEntity) {
@@ -595,5 +553,9 @@ public class WorkspaceController implements Initializable, ICategoryActionModel 
     @Override
     public TreeItem<Object> getSelectedEntityNode() {
 	return selectedCategoryNode;
+    }
+
+    private String i18n(String msgId, Object... arguments) {
+	return MessageFormat.format(resources.getString(msgId), arguments);
     }
 }

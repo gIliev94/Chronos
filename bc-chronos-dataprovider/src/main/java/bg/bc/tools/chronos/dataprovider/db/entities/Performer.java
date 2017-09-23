@@ -50,7 +50,7 @@ public class Performer implements Serializable {
     @Column(unique = true, nullable = true)
     private String email;
 
-    @Column(unique = false, nullable = false)
+    @Column(unique = true, nullable = false)
     private String primaryDeviceName;
 
     @Column(unique = false, nullable = false)

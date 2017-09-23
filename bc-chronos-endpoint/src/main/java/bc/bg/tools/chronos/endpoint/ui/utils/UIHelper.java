@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.EntityActionInfo;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,8 @@ import javafx.util.Callback;
  * @author giliev
  */
 public final class UIHelper {
+
+    private static final Logger LOGGER = Logger.getLogger(UIHelper.class);
 
     public static class Defaults {
 	public static final JavaFXBuilderFactory FX_BUILDER_FACTORY = new JavaFXBuilderFactory();
@@ -74,7 +77,8 @@ public final class UIHelper {
 
     public static Tooltip createTooltip(final String tooltipText) {
 	final Tooltip tooltip = new Tooltip(tooltipText);
-	// TODO: Style maybe???
+	// TODO: Style maybe - bold, font size++ ???
+
 	return tooltip;
     }
 
@@ -95,22 +99,25 @@ public final class UIHelper {
 
     public static void wireEntityActionUI(final EntityActionInfo entityActionInfo) {
 	final Button actionButton = entityActionInfo.getActionButton();
-	// TODO: Test...
+
+	// Add capability to toggle visibility of the button
 	makeToggleVisibilityCapable(actionButton);
 	actionButton.setVisible(entityActionInfo.isVisibleToUser());
-	//
 
-	actionButton.setOnMouseClicked(clickEvent -> {
+	// Highlight button image on hover
+	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {
+	    actionButton.setEffect(createGlow(newValue.booleanValue()));
+	});
+
+	// Wire button`s on click action
+	actionButton.setOnAction(clickEvent -> {
 	    try {
 		entityActionInfo.executeActionSequence((Void) null);
 	    } catch (Exception genericException) {
+		LOGGER.error(genericException);
 		// TODO: This or allow proceeding with Q dialog...
 		showErrorDialog(genericException.getMessage());
 	    }
-	});
-
-	actionButton.hoverProperty().addListener((observedProperty, oldValue, newValue) -> {
-	    actionButton.setEffect(createGlow(newValue.booleanValue()));
 	});
     }
 
@@ -156,7 +163,6 @@ public final class UIHelper {
     public static void removeHiddenNodesFromContainer(final Pane parentContainer) {
 	parentContainer.getChildren().removeIf(node -> !node.isVisible());
     }
-    //
 
     public static FXMLLoader getWindowLoaderFor(final String fxml, final String i18n,
 	    final Callback<Class<?>, Object> controllerFactory) {

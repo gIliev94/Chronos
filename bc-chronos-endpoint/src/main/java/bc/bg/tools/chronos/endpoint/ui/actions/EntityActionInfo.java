@@ -178,8 +178,11 @@ public class EntityActionInfo {
      * @param dummyArg
      *            - dummy argument because of functional interface(not actually
      *            used).
+     * @throws Exception
+     *             If in any way an action in the sequence could not be
+     *             completed.
      */
-    public void executeActionSequence(final Void dummyArg) {
+    public void executeActionSequence(final Void dummyArg) throws Exception {
 	if (action == null) {
 	    logIncompleteEntityAction();
 	    return;

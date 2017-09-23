@@ -123,12 +123,13 @@
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabStatistics" disable="true"
+			<Tab fx:id="tabStatistics" disable="false"
 				text="%view.main.tab.statistics.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab fx:id="tabSynchronization" text="%view.main.tab.synchronization.title">
+			<Tab fx:id="tabSynchronization" disable="false"
+				text="%view.main.tab.synchronization.title">
 				<content>
 				</content>
 			</Tab>
