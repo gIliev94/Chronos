@@ -71,6 +71,15 @@ public class DataCreator {
     @Autowired
     private LocalRoleRepository localRoleRepo;
 
+    // @Autowired
+    // private RemoteCategoryRepository remoteCategoryRepo;
+    //
+    // @Autowired
+    // private RemoteCustomerRepository remoteCustomerRepo;
+    //
+    // @Autowired
+    // private RemoteBookingRepository remoteBookingRepo;
+
     public void createSampleUserData() {
 	transactionTemplate.execute(transactionStatus -> {
 	    return createUserData();
@@ -323,6 +332,25 @@ public class DataCreator {
 	    final Category sCatDefault = addCategory(catDefault);
 	    final Category sCatLowPriority = addCategory(catLowPriority);
 	    final Category sCatHighPriority = addCategory(catHighPriority);
+
+	    // final Category rCatDefault = new Category();
+	    // rCatDefault.setSyncKey(generateSyncKey());
+	    // rCatDefault.setName("[CATEGORY] DEFAULT");
+	    // rCatDefault.setSortOrder(1);
+	    // final Category rsCatDefault =
+	    // remoteCategoryRepo.save(rCatDefault);
+	    //
+	    // final Customer rCustNegotiationInProgress = new Customer();
+	    // rCustNegotiationInProgress.setSyncKey(generateSyncKey());
+	    // rCustNegotiationInProgress.setName("'Still In Negotiation'
+	    // Inc.");
+	    // rCustNegotiationInProgress.setDescription("Potential new
+	    // customer... Not yet booked.");
+	    // rCustNegotiationInProgress.setCategory(rsCatDefault);
+	    //
+	    // final Customer rsCustNegotiationInProgress =
+	    // remoteCustomerRepo.save(rCustNegotiationInProgress);
+	    // //
 
 	    // Customers
 	    final Customer sCustNegotiationInProgress = addCustomer(custNegotiationInProgress, sCatDefault);
