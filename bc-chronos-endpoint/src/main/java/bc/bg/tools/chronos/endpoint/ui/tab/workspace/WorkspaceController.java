@@ -28,7 +28,6 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
-import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -146,9 +145,6 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
     private TreeItem<Object> selectedCategoryNode;
 
-    @Autowired
-    private DataCreator localDataCreator;
-
     // This method is called by the FXMLLoader when initialization is complete
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -179,13 +175,6 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
     }
 
     private void initTreeContents() {
-	// Create sample workspace data...
-	try {
-	    localDataCreator.createSampleWorkspaceData();
-	} catch (Exception e) {
-	    throw new RuntimeException(e);
-	}
-
 	// Initialize tree with 'empty' ROOT item...
 	treeCustomers.setRoot(new TreeItem<Object>());
 	treeProjects.setRoot(new TreeItem<Object>());

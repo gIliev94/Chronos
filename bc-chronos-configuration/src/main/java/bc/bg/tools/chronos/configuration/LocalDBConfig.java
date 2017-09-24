@@ -15,11 +15,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-
-import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 
 //TODO: Test w/wo lazy init...
 //@Lazy
@@ -58,8 +56,13 @@ public class LocalDBConfig {
 	factoryBean.setPersistenceUnitName(LOCAL_PERSISTENCE_UNIT);
 	factoryBean.setPackagesToScan(env.getProperty("local.entities.lookup"));
 
-	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+	HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+	vendorAdapter.setDatabase(Database.DERBY);
+	vendorAdapter.setDatabasePlatform("org.hibernate.dialect.DerbyDialect");
+	vendorAdapter.setShowSql(true);
+
 	factoryBean.setJpaVendorAdapter(vendorAdapter);
+
 	factoryBean.setJpaProperties(this.additionalProperties());
 
 	return factoryBean;

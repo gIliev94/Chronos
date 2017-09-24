@@ -39,12 +39,13 @@ public class Booking implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    //TODO: Change to DOUBLE
+    // TODO: Change to DOUBLE
     @Column(unique = false, nullable = false)
     private long hoursSpent;
 
     @ManyToOne(optional = false)
-    // , cascade = CascadeType.ALL)
+    // , cascade = CascadeType.ALL)O
+    // @JoinColumn(name = "performer_id")
     private Performer performer;
 
     @OneToOne(optional = false)
@@ -54,8 +55,13 @@ public class Booking implements Serializable {
 
     @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
+    // @JoinColumn(name = "task_id")
     private Task task;
 
+    // @LazyCollection(LazyCollectionOption.FALSE)
+    // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch =
+    // FetchType.EAGER)
+    // @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     // , orphanRemoval = true,fetch = FetchType.LAZY)
     private Collection<BillingRateModifier> billingRateModifiers;

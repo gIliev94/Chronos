@@ -48,7 +48,7 @@
 	<TableView fx:id="tableViewBookings" GridPane.columnIndex="0"
 		GridPane.rowIndex="0" tableMenuButtonVisible="true">
 		<columnResizePolicy>
-			<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+			<TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
 		</columnResizePolicy>
 
 		<columns>

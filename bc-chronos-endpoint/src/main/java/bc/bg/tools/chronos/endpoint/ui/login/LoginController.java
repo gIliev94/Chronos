@@ -199,6 +199,7 @@ public class LoginController implements ILoginModel {
 	    // return createTestUsers();
 	    try {
 		localDataCreator.createSampleUserData();
+		localDataCreator.createSampleWorkspaceData();
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

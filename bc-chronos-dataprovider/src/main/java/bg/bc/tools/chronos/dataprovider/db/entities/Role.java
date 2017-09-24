@@ -86,4 +86,9 @@ public class Role implements Serializable {
     public void setBooking(Booking booking) {
 	this.booking = booking;
     }
+
+    @Override
+    public String toString() {
+	return this.name;
+    }
 }
