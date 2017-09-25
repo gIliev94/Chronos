@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRateModifierRepository;
@@ -31,7 +33,11 @@ import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteTaskRepository;
 public class DataSynchronizer {
 
     private enum SyncDirection {
-	LOCAL_TO_REMOTE, REMOTE_TO_LOCAL
+	LOCAL_TO_REMOTE, REMOTE_TO_LOCAL;
+
+	private CrudRepository getRepoForEntity(Class entityClass) {
+	    return null;
+	}
     }
 
     @Autowired
@@ -131,7 +137,29 @@ public class DataSynchronizer {
 	return Collections.emptyList();
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void synchronizeObjects(final List<Serializable> unsyncedEntities) throws Exception {
+	final SyncDirection[] syncDirections = SyncDirection.values();
+
+	Stream.of(syncDirections).forEach(syncDirection -> {
+	    try {
+		final List<Serializable> unsyncedObjects = findUnsyncedObjects(syncDirection);
+
+		unsyncedObjects.stream().forEach(entity -> {
+		    final Class<? extends Serializable> entityClass = entity.getClass();
+		    final CrudRepository entityRepo = syncDirection.getRepoForEntity(entityClass);
+		    entityRepo.save(entityClass.cast(entity));
+		});
+
+	    } catch (Exception e) {
+		showErrorDialog("Unsuccessful sync attempt! Please contact administrator!", e);
+	    }
+
+	});
+    }
+
+    private void showErrorDialog(String string, Exception e) {
+	// TODO Auto-generated method stub
 
     }
 }
