@@ -162,6 +162,11 @@ public class MainViewController implements Initializable {
 	tabPaneMain.getTabs().forEach(tab -> {
 	    tab.setDisable(!(performerPrivileges.containsAll((List<Priviledge>) tab.getUserData())));
 	});
+
+	// TODO: Remove
+	tabRoles.setDisable(true);
+	tabStatistics.setDisable(true);
+	tabSynchronization.setDisable(true);
     }
 
     @Override

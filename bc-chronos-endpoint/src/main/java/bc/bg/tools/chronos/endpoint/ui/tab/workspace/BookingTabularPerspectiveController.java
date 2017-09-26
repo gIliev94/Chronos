@@ -106,8 +106,8 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	// TODO: REFACTOR
 	tableViewBookings.setOnMouseClicked((MouseEvent event) -> {
-	    if (event.getButton().equals(MouseButton.PRIMARY)) {
-		startBooking();
+	    if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+		toggleBooking();
 	    }
 	});
     }
@@ -115,14 +115,28 @@ public class BookingTabularPerspectiveController implements Initializable {
     // TODO: REFACTOR
     private Map<Integer, Node> timerLabels = new HashMap<>();
 
-    protected void startBooking() {
+    protected void toggleBooking() {
 	final int selectedIndex = tableViewBookings.getSelectionModel().getSelectedIndex();
 
 	if (timerLabels.containsKey(selectedIndex)) {
 	    final Node label = timerLabels.get(selectedIndex);
 	    final Object attachedObject = label.getUserData();
 	    if (attachedObject instanceof BookingTimer) {
-		((BookingTimer) attachedObject).start();
+		BookingTimer bookingTimer = (BookingTimer) attachedObject;
+		if (bookingTimer.isActive()) {
+		    bookingTimer.stop();
+		    // label.setStyle("-fx-font-weight: plain");
+		    label.setEffect(null);
+		} else {
+		    if (bookingTimer.isStopped()) {
+			bookingTimer = new BookingTimer(label);
+			label.setUserData(bookingTimer);
+		    }
+
+		    bookingTimer.start();
+		    // label.setStyle("-fx-font-weight: bold");
+		    label.setEffect(UIHelper.createBlur(2));
+		}
 	    }
 	}
     }
@@ -441,9 +455,12 @@ public class BookingTabularPerspectiveController implements Initializable {
 		// final LocalTime nextTime = currTime.plusSeconds(1L);
 
 		if (item.equals("00:00")) {
-		    setText(LocalTime.of(0, 0).format(DateTimeFormatter.ofPattern("HH:mm")));
+		    ((Label) rootNode).setText(LocalTime.of(0, 0).format(DateTimeFormatter.ofPattern("HH:mm")));
+		    // setText(LocalTime.of(0,
+		    // 0).format(DateTimeFormatter.ofPattern("HH:mm")));
 		} else {
-		    setText(item);
+		    ((Label) rootNode).setText(item);
+		    // setText(item);
 		}
 	    }
 	}
@@ -457,6 +474,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 	private Timer innerTimer = new Timer();
 	private TimerTask innerTask;
 	private boolean isActive;
+	private boolean isStopped;
 
 	private Node label;
 
@@ -499,12 +517,17 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	public void stop() {
 	    isActive = false;
+	    isStopped = true;
 	    innerTimer.cancel();
 	    innerTimer.purge();
 	}
 
 	public boolean isActive() {
 	    return isActive;
+	}
+
+	public boolean isStopped() {
+	    return isStopped;
 	}
 
 	public String getTime() {
