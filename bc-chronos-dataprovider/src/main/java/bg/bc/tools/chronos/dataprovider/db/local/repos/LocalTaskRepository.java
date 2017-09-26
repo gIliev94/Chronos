@@ -14,8 +14,6 @@ public interface LocalTaskRepository extends CrudRepository<Task, Long> {
 
     Collection<Task> findByNameIgnoreCaseContaining(String name);
 
-    // Collection<Task> findByCategoryIsNull();
-
     Collection<Task> findByCategory(Category category);
 
     Collection<Task> findByCategoryIn(Collection<Category> categories);
@@ -27,4 +25,6 @@ public interface LocalTaskRepository extends CrudRepository<Task, Long> {
     Collection<Task> findByHoursEstimatedGreaterThan(long hoursEstimatedGreaterThan);
 
     Collection<Task> findByProject(Project project);
+
+    Task findBySyncKey(String syncKey);
 }

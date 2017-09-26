@@ -21,4 +21,6 @@ public interface LocalProjectRepository extends CrudRepository<Project, Long> {
     Collection<Project> findByCategoryIn(Collection<Category> categories);
 
     Collection<Project> findByCustomer(Customer customer);
+
+    Project findBySyncKey(String syncKey);
 }

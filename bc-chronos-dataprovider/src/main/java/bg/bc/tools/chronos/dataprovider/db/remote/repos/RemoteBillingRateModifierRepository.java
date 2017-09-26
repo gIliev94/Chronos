@@ -5,11 +5,11 @@ import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
-import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
+import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 
 public interface RemoteBillingRateModifierRepository extends CrudRepository<BillingRateModifier, Long> {
-    
+
     Collection<BillingRateModifier> findByModifierAction(ModifierAction modifierAction);
 
     Collection<BillingRateModifier> findByModifierActionIn(Collection<ModifierAction> modifierAction);
@@ -24,4 +24,6 @@ public interface RemoteBillingRateModifierRepository extends CrudRepository<Bill
 	    double greaterThanModifierValue);
 
     Collection<BillingRateModifier> findByBooking(Booking booking);
+
+    BillingRateModifier findBySyncKey(String syncKey);
 }

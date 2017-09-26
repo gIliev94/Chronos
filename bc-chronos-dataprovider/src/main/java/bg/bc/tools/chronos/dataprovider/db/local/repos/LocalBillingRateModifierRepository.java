@@ -9,7 +9,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.Modifier
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 
 public interface LocalBillingRateModifierRepository extends CrudRepository<BillingRateModifier, Long> {
-    
+
     Collection<BillingRateModifier> findByModifierAction(ModifierAction modifierAction);
 
     Collection<BillingRateModifier> findByModifierActionIn(Collection<ModifierAction> modifierAction);
@@ -24,4 +24,6 @@ public interface LocalBillingRateModifierRepository extends CrudRepository<Billi
 	    double greaterThanModifierValue);
 
     Collection<BillingRateModifier> findByBooking(Booking booking);
+
+    BillingRateModifier findBySyncKey(String syncKey);
 }

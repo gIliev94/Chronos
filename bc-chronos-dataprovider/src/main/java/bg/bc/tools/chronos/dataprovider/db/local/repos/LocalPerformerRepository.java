@@ -23,4 +23,6 @@ public interface LocalPerformerRepository extends CrudRepository<Performer, Long
 
     // https://stackoverflow.com/a/32099527
     Collection<Performer> findDistinctByPriviledgesIn(Collection<Priviledge> priviledges);
+
+    Performer findBySyncKey(String syncKey);
 }

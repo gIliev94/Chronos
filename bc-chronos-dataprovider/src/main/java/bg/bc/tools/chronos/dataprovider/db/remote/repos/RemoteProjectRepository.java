@@ -13,12 +13,14 @@ public interface RemoteProjectRepository extends CrudRepository<Project, Long> {
     Project findByName(String name);
 
     Collection<Project> findByNameIgnoreCaseContaining(String name);
-    
-    Collection<Project> findByCategoryIsNull();
+
+    // Collection<Project> findByCategoryIsNull();
 
     Collection<Project> findByCategory(Category category);
 
     Collection<Project> findByCategoryIn(Collection<Category> categories);
 
     Collection<Project> findByCustomer(Customer customer);
+
+    Project findBySyncKey(String syncKey);
 }
