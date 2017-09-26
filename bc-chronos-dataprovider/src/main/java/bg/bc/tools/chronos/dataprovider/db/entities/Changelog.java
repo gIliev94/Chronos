@@ -25,6 +25,9 @@ public class Changelog implements Serializable {
     private String updatedEntityKey;
 
     @Column(unique = false, nullable = false)
+    private String updatedEntityType;
+
+    @Column(unique = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date changeTime;
 
@@ -45,6 +48,14 @@ public class Changelog implements Serializable {
 
     public void setUpdatedEntityKey(String updatedEntityKey) {
 	this.updatedEntityKey = updatedEntityKey;
+    }
+
+    public String getUpdatedEntityType() {
+	return updatedEntityType;
+    }
+
+    public void setUpdatedEntityType(String updatedEntityType) {
+	this.updatedEntityType = updatedEntityType;
     }
 
     public Date getChangeTime() {

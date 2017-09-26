@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
@@ -28,6 +30,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
+import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -145,6 +148,14 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
     private TreeItem<Object> selectedCategoryNode;
 
+    // TODO:
+    @Autowired
+    private DataSynchronizer dataSynchronizer;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+    //
+
     // This method is called by the FXMLLoader when initialization is complete
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -172,6 +183,24 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
 	initToggleEntityDetails();
 	initTreeContents();
+
+	// TODO:
+
+	btnBookingGraphicalPerspective.setOnAction(e -> {
+	    transactionTemplate.execute(transactionStatus -> {
+		try {
+		    // final Map<String, List<Object>> epa = dataSynchronizer
+		    // .findUnsyncedObjects(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
+		    // System.out.println(epa);
+		    dataSynchronizer.synchronizeDatabases(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
+		    return UIHelper.showInfoDialog("SYNC SUCCESS!!!");
+		} catch (Exception e1) {
+		    // TODO Auto-generated catch block
+		    e1.printStackTrace();
+		    return UIHelper.showErrorDialog(e1.getMessage());
+		}
+	    });
+	});
     }
 
     private void initTreeContents() {

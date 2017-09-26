@@ -24,6 +24,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalProjectServi
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalRoleService;
 import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
+import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer;
 
 //TODO: Test w/wo lazy init...
 @Lazy
@@ -107,6 +108,12 @@ public class LocalDataProviderConfig {
     @DependsOn("transactionManager")
     public DataCreator localDataCreator() {
 	return new DataCreator();
+    }
+
+    @Bean(name = "dataSynchronizer")
+    @DependsOn("transactionManager")
+    public DataSynchronizer dataSynchronizer() {
+	return new DataSynchronizer();
     }
 
     // TODO: Move maybe...

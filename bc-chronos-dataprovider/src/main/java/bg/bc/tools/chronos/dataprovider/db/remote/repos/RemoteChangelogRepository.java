@@ -15,11 +15,11 @@ public interface RemoteChangelogRepository extends CrudRepository<Changelog, Lon
 
     Collection<Changelog> findByChangeTimeBetween(Date changeTimeLower, Date changeTimeUpper);
 
-    Collection<Changelog> findByUpdateCounterLessThan(double lessThanModifierValue);
+    Collection<Changelog> findByUpdateCounterLessThan(long lessThanUpdateCounter);
 
-    Collection<Changelog> findByUpdateCounterGreaterThan(double greaterThanModifierValue);
+    Collection<Changelog> findByUpdateCounterGreaterThan(long greaterThanUpdateCounter);
 
-    Collection<Changelog> findByUpdateCounterBetween(double lessThanUpdateCounter, double greaterThanUpdateCounter);
+    Collection<Changelog> findByUpdateCounterBetween(long lessThanUpdateCounter, long greaterThanUpdateCounter);
 
     Collection<Changelog> findByDeviceNameOrderByUpdateCounterDesc(String deviceName);
 

@@ -469,50 +469,50 @@ public class DataCreator {
     private <E extends Serializable> E saveEntity(final E entity) {
 	if (Category.class.isAssignableFrom(entity.getClass())) {
 	    final Category category = localCategoryRepo.save((Category) entity);
-	    appendChangelog(category.getSyncKey());
+	    appendChangelog(category.getSyncKey(), Category.class);
 
 	    return (E) category;
 
 	} else if (Customer.class.isAssignableFrom(entity.getClass())) {
 	    final Customer customer = localCustomerRepo.save((Customer) entity);
-	    appendChangelog(customer.getSyncKey());
+	    appendChangelog(customer.getSyncKey(), Customer.class);
 
 	    return (E) customer;
 
 	} else if (Project.class.isAssignableFrom(entity.getClass())) {
 	    final Project project = localProjectRepo.save((Project) entity);
-	    appendChangelog(project.getSyncKey());
+	    appendChangelog(project.getSyncKey(), Project.class);
 
 	    return (E) project;
 
 	} else if (Task.class.isAssignableFrom(entity.getClass())) {
 	    final Task task = localTaskRepo.save((Task) entity);
-	    appendChangelog(task.getSyncKey());
+	    appendChangelog(task.getSyncKey(), Task.class);
 
 	    return (E) task;
 
 	} else if (Booking.class.isAssignableFrom(entity.getClass())) {
 	    final Booking booking = localBookingRepo.save((Booking) entity);
-	    appendChangelog(booking.getSyncKey());
+	    appendChangelog(booking.getSyncKey(), Booking.class);
 
 	    return (E) booking;
 
 	} else if (Performer.class.isAssignableFrom(entity.getClass())) {
 	    final Performer performer = localPerformerRepo.save((Performer) entity);
-	    appendChangelog(performer.getSyncKey());
+	    appendChangelog(performer.getSyncKey(), Performer.class);
 
 	    return (E) performer;
 
 	} else if (Role.class.isAssignableFrom(entity.getClass())) {
 	    final Role role = localRoleRepo.save((Role) entity);
-	    appendChangelog(role.getSyncKey());
+	    appendChangelog(role.getSyncKey(), Role.class);
 
 	    return (E) role;
 
 	} else if (BillingRateModifier.class.isAssignableFrom(entity.getClass())) {
 	    final BillingRateModifier billingRateModifier = localBillingRateModifierRepo
 		    .save((BillingRateModifier) entity);
-	    appendChangelog(billingRateModifier.getSyncKey());
+	    appendChangelog(billingRateModifier.getSyncKey(), BillingRateModifier.class);
 
 	    return (E) billingRateModifier;
 
@@ -521,10 +521,11 @@ public class DataCreator {
 	throw new RuntimeException("NO ENTITY SAVED!!!");
     }
 
-    private void appendChangelog(final String entitySyncKey) {
+    private void appendChangelog(final String entitySyncKey, final Class<? extends Serializable> entityClass) {
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
 	changeLog.setDeviceName(EntityHelper.getDeviceName());
+	changeLog.setUpdatedEntityType(entityClass.getSimpleName());
 	changeLog.setUpdatedEntityKey(entitySyncKey);
 
 	localChangelogRepo.save(changeLog);
