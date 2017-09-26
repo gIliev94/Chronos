@@ -90,7 +90,7 @@
 
 	<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
 		GridPane.halignment="CENTER" GridPane.rowIndex="0">
-		<GridPane gridLinesVisible="true" hgap="0" minHeight="60"
+		<GridPane gridLinesVisible="false" hgap="0" minHeight="60"
 			maxHeight="120" minWidth="300" maxWidth="600"
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0"
 			AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" vgap="0">
@@ -107,9 +107,9 @@
 			</rowConstraints>
 			<children>
 				<!-- Sub-panel for filter related actions -->
+				<!-- styleClass="anchor-pane" -->
 				<HBox alignment="CENTER_LEFT" GridPane.columnIndex="0"
-					GridPane.rowIndex="0" GridPane.valignment="CENTER" styleClass="anchor-pane"
-					prefWidth="300">
+					GridPane.rowIndex="0" GridPane.valignment="CENTER" prefWidth="300">
 					<children>
 						<DatePicker fx:id="datePickerBooking" showWeekNumbers="true"
 							promptText="Filter by date..." HBox.hgrow="ALWAYS" prefWidth="200"
@@ -161,7 +161,7 @@
 		</GridPane>
 	</AnchorPane>
 
-	<GridPane gridLinesVisible="true" GridPane.columnIndex="0"
+	<GridPane gridLinesVisible="false" GridPane.columnIndex="0"
 		GridPane.rowIndex="1">
 		<columnConstraints>
 			<ColumnConstraints hgrow="ALWAYS" percentWidth="-1" />
@@ -227,8 +227,9 @@
 			</Button>
 		</AnchorPane>
 
+		<!-- style="-fx-background-color: rgb(255.0, 0.0, 0.0);" -->
 		<VBox fx:id="barEntityDetails" GridPane.columnIndex="0"
-			GridPane.rowIndex="2" style="-fx-background-color: rgb(255.0, 0.0, 0.0);" />
+			GridPane.rowIndex="2" />
 	</GridPane>
 
 	<AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="1"
@@ -249,7 +250,7 @@
 				text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS"
 				styleClass="text-button" />
 
-			<Button fx:id="btnBookingGraphicalPerspective" disable="true"
+			<Button fx:id="btnBookingGraphicalPerspective" disable="false"
 				maxHeight="100" maxWidth="700" mnemonicParsing="false"
 				text="%view.main.tab.workspace.perspective.graphical" HBox.hgrow="ALWAYS"
 				styleClass="text-button" />
@@ -274,8 +275,9 @@
 		</Button>
 	</AnchorPane>
 
-	<AnchorPane fx:id="paneShowEntityPanel" GridPane.columnIndex="1" GridPane.columnSpan="1"
-		GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.rowSpan="3">
+	<AnchorPane fx:id="paneShowEntityPanel"
+		GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.halignment="CENTER"
+		GridPane.rowIndex="0" GridPane.rowSpan="3">
 		<Button fx:id="btnShowEntityPanel" mnemonicParsing="false"
 			visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"

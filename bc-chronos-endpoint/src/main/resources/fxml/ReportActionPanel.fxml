@@ -10,7 +10,7 @@
 
 <!-- TODO Remove unnecessary properties -->
 <!-- TODO Add Fx Constants -->
-<GridPane gridLinesVisible="true" hgap="0" vgap="0" minHeight="60"
+<GridPane gridLinesVisible="false" hgap="0" vgap="0" minHeight="60"
 	maxHeight="60" minWidth="200" maxWidth="400" AnchorPane.bottomAnchor="0.0"
 	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css"
@@ -23,9 +23,8 @@
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 	<children>
-		<HBox styleClass="anchor-pane" alignment="CENTER_LEFT"
-			GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="200"
-			maxWidth="400">
+		<HBox alignment="CENTER_LEFT" GridPane.columnIndex="0"
+			GridPane.rowIndex="0" prefWidth="200" maxWidth="400">
 			<children>
 
 				<Button fx:id="btnPrepareReport" mnemonicParsing="false"

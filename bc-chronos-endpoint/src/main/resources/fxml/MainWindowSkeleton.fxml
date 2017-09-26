@@ -107,7 +107,7 @@
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabRoles" disable="false" text="%view.main.tab.roles.title">
+			<Tab fx:id="tabRoles" disable="true" text="%view.main.tab.roles.title">
 				<content>
 					<!-- <AnchorPane> -->
 					<!-- <fx:include fx:id="subformReporting" source="ReportingTabSkeleton.fxml" 
@@ -123,12 +123,12 @@
 					</AnchorPane>
 				</content>
 			</Tab>
-			<Tab fx:id="tabStatistics" disable="false"
+			<Tab fx:id="tabStatistics" disable="true"
 				text="%view.main.tab.statistics.title">
 				<content>
 				</content>
 			</Tab>
-			<Tab fx:id="tabSynchronization" disable="false"
+			<Tab fx:id="tabSynchronization" disable="true"
 				text="%view.main.tab.synchronization.title">
 				<content>
 				</content>

@@ -10,7 +10,7 @@
 
 <!-- TODO Remove unnecessary properties -->
 <!-- TODO Add Fx Constants -->
-<GridPane gridLinesVisible="true" hgap="0" minHeight="350"
+<GridPane gridLinesVisible="false" hgap="0" minHeight="350"
 	minWidth="50" maxWidth="150" maxHeight="450" AnchorPane.bottomAnchor="0.0"
 	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 	AnchorPane.topAnchor="0.0" stylesheets="@../css/dark.css"
@@ -23,7 +23,7 @@
 		<RowConstraints percentHeight="-1" vgrow="ALWAYS" />
 	</rowConstraints>
 	<children>
-		<VBox styleClass="anchor-pane" spacing="0" minHeight="350"
+		<VBox spacing="0" minHeight="350"
 			fx:id="actionButtonGeneratedContainer" alignment="TOP_CENTER"
 			GridPane.halignment="CENTER">
 			<children>

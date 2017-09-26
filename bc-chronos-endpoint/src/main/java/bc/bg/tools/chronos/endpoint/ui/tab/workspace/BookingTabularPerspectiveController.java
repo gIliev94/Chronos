@@ -5,18 +5,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -27,14 +32,11 @@ import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
+import javafx.application.Platform;
 import javafx.beans.NamedArg;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,6 +47,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 public class BookingTabularPerspectiveController implements Initializable {
@@ -71,7 +75,8 @@ public class BookingTabularPerspectiveController implements Initializable {
     private TableColumn<BookingTableEntry, Date> tableColEndTime;
 
     @FXML // fx:id="tableColDuration"
-    private TableColumn<BookingTableEntry, Date> tableColDuration;
+    // private TableColumn<BookingTableEntry, Date> tableColDuration;
+    private TableColumn<BookingTableEntry, String> tableColDuration;
 
     @FXML // fx:id="tableColHoursSpent"
     private TableColumn<BookingTableEntry, Long> tableColHoursSpent;
@@ -98,9 +103,32 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	initColumns();
 	clearBookingFilters();
+
+	// TODO: REFACTOR
+	tableViewBookings.setOnMouseClicked((MouseEvent event) -> {
+	    if (event.getButton().equals(MouseButton.PRIMARY)) {
+		startBooking();
+	    }
+	});
+    }
+
+    // TODO: REFACTOR
+    private Map<Integer, Node> timerLabels = new HashMap<>();
+
+    protected void startBooking() {
+	final int selectedIndex = tableViewBookings.getSelectionModel().getSelectedIndex();
+
+	if (timerLabels.containsKey(selectedIndex)) {
+	    final Node label = timerLabels.get(selectedIndex);
+	    final Object attachedObject = label.getUserData();
+	    if (attachedObject instanceof BookingTimer) {
+		((BookingTimer) attachedObject).start();
+	    }
+	}
     }
 
     private void initColumns() {
+	// TODO: Refactor/Constants/
 	tableColTaskName.setCellFactory(new StringTableCellFactory());
 	tableColTaskName.setCellValueFactory(new PropertyValueFactory<BookingTableEntry, String>("taskName"));
 
@@ -113,8 +141,8 @@ public class BookingTabularPerspectiveController implements Initializable {
 	tableColEndTime.setCellFactory(new DateTableCellFactory());
 	tableColEndTime.setCellValueFactory(new PropertyValueFactory<BookingTableEntry, Date>("endTime"));
 
-	tableColDuration.setCellFactory(new DateTableCellFactory());
-	tableColDuration.setCellValueFactory(new PropertyValueFactory<BookingTableEntry, Date>("duration"));
+	tableColDuration.setCellFactory(new TimerTableCellFactory());
+	tableColDuration.setCellValueFactory(new PropertyValueFactory<BookingTableEntry, String>("durationStr"));
 
 	tableColHoursSpent.setCellFactory(new IntegerTableCellFactory());
 	tableColHoursSpent.setCellValueFactory(new PropertyValueFactory<BookingTableEntry, Long>("hoursSpent"));
@@ -165,16 +193,14 @@ public class BookingTabularPerspectiveController implements Initializable {
 	// Remove previously filtered items...
 	tableViewBookings.getItems().clear();
 
-	final List<BookingTableEntry> bs = filteredBookingStream.map(b -> new BookingTableEntry(b))
+	// TODO: Show all or filtered???
+	final List<BookingTableEntry> bookingsToShow = filteredBookingStream.map(b -> new BookingTableEntry(b))
 		.collect(Collectors.toList());
-	System.err.println(bs);
 
-	// final List<Booking> bookingsToShow =
-	// filteredBookingStream.collect(Collectors.toList());
-	//
-	tableViewBookings.setItems(new ObservableListWrapper<BookingTableEntry>(bs));
+	tableViewBookings.setItems(new ObservableListWrapper<BookingTableEntry>(bookingsToShow));
     }
 
+    // TODO: Use??
     /**
      * @author giliev
      */
@@ -197,6 +223,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 		// TODO: Set field properly in Abstract or Concrete
 		// controller...
 		// https://stackoverflow.com/a/40049810
+		@SuppressWarnings("unused")
 		final Object controller = loader.getController();
 		// controller.setValue
 
@@ -246,27 +273,19 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	@Override
 	public TableCell<BookingTableEntry, String> call(TableColumn<BookingTableEntry, String> param) {
-	    // final FXMLLoader loader =
-	    // UIHelper.getWindowLoaderFor("StringTableCol",
-	    // UIHelper.Defaults.APP_I18N_EN,
-	    // applicationContext::getBean);
-	    // try {
-	    // final Parent rootNode = loader.load();
-	    //
-	    // // TODO: Set field properly in Abstract or Concrete
-	    // // controller...
-	    // // https://stackoverflow.com/a/40049810
-	    // final Object controller = loader.getController();
-	    // // controller.setValue
-	    //
-	    // return new StringTableCell(rootNode);
-
 	    return new StringTableCell(new Label());
-	    // } catch (IOException e) {
-	    // // TODO Auto-generated catch block
-	    // e.printStackTrace();
-	    // return new TableCell<Booking, String>();
-	    // }
+	}
+    }
+
+    /**
+     * @author giliev
+     */
+    protected class TimerTableCellFactory
+	    implements Callback<TableColumn<BookingTableEntry, String>, TableCell<BookingTableEntry, String>> {
+
+	@Override
+	public TableCell<BookingTableEntry, String> call(TableColumn<BookingTableEntry, String> param) {
+	    return new TimerTableCell(new Label());
 	}
     }
 
@@ -278,25 +297,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	@Override
 	public TableCell<BookingTableEntry, Date> call(TableColumn<BookingTableEntry, Date> param) {
-	    // final FXMLLoader loader =
-	    // UIHelper.getWindowLoaderFor("DateTableCol", null,
-	    // applicationContext::getBean);
-	    // try {
-	    // final Parent rootNode = loader.load();
-	    //
-	    // // TODO: Set field properly in Abstract or Concrete
-	    // // controller...
-	    // // https://stackoverflow.com/a/40049810
-	    // final Object controller = loader.getController();
-	    // // controller.setValue
-	    //
-	    // return new DateTableCell(rootNode);
 	    return new DateTableCell(new Label());
-	    // } catch (IOException e) {
-	    // // TODO Auto-generated catch block
-	    // e.printStackTrace();
-	    // return new TableCell<Booking, Date>();
-	    // }
 	}
     }
 
@@ -308,25 +309,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	@Override
 	public TableCell<BookingTableEntry, Double> call(TableColumn<BookingTableEntry, Double> param) {
-	    // final FXMLLoader loader =
-	    // UIHelper.getWindowLoaderFor("StringTableCol", null,
-	    // applicationContext::getBean);
-	    // try {
-	    // final Parent rootNode = loader.load();
-	    //
-	    // // TODO: Set field properly in Abstract or Concrete
-	    // // controller...
-	    // // https://stackoverflow.com/a/40049810
-	    // final Object controller = loader.getController();
-	    // // controller.setValue
-	    //
-	    // return new DecimalTableCell(rootNode);
 	    return new DecimalTableCell(new Label());
-	    // } catch (IOException e) {
-	    // // TODO Auto-generated catch block
-	    // e.printStackTrace();
-	    // return new TableCell<Booking, Double>();
-	    // }
 	}
     }
 
@@ -338,25 +321,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	@Override
 	public TableCell<BookingTableEntry, Long> call(TableColumn<BookingTableEntry, Long> param) {
-	    // final FXMLLoader loader =
-	    // UIHelper.getWindowLoaderFor("StringTableCol", null,
-	    // applicationContext::getBean);
-	    // try {
-	    // final Parent rootNode = loader.load();
-	    //
-	    // // TODO: Set field properly in Abstract or Concrete
-	    // // controller...
-	    // // https://stackoverflow.com/a/40049810
-	    // final Object controller = loader.getController();
-	    // // controller.setValue
-	    //
-	    // return new DecimalTableCell(rootNode);
 	    return new IntegerTableCell(new Label());
-	    // } catch (IOException e) {
-	    // // TODO Auto-generated catch block
-	    // e.printStackTrace();
-	    // return new TableCell<Booking, Double>();
-	    // }
 	}
     }
 
@@ -453,6 +418,104 @@ public class BookingTabularPerspectiveController implements Initializable {
     /**
      * @author giliev
      */
+    protected class TimerTableCell extends TableCell<BookingTableEntry, String> {
+
+	private Node rootNode;
+
+	public TimerTableCell(final Object rootNode) {
+	    this.rootNode = (Node) rootNode;
+	}
+
+	@Override
+	protected void updateItem(String item, boolean empty) {
+	    super.updateItem(item, empty);
+	    if (item == null || empty) {
+		setGraphic(null);
+		setText(null);
+	    } else {
+		rootNode.setUserData(new BookingTimer(rootNode));
+		timerLabels.put(getIndex(), rootNode);
+		setGraphic(rootNode);
+
+		// final LocalTime currTime = LocalTime.parse(item);
+		// final LocalTime nextTime = currTime.plusSeconds(1L);
+
+		if (item.equals("00:00")) {
+		    setText(LocalTime.of(0, 0).format(DateTimeFormatter.ofPattern("HH:mm")));
+		} else {
+		    setText(item);
+		}
+	    }
+	}
+    }
+
+    public class BookingTimer {
+	private int hours;
+	private int minutes;
+	private int seconds;
+
+	private Timer innerTimer = new Timer();
+	private TimerTask innerTask;
+	private boolean isActive;
+
+	private Node label;
+
+	public BookingTimer(Node label) {
+	    this.hours = 0;
+	    this.minutes = 0;
+	    this.seconds = 0;
+
+	    this.label = label;
+	}
+
+	public void start() {
+	    innerTask = new TimerTask() {
+		@Override
+		public void run() {
+		    isActive = true;
+
+		    seconds++;
+
+		    if (seconds == 59) {
+			minutes += 1;
+			seconds = 0;
+		    }
+
+		    if (minutes == 59) {
+			hours += 1;
+			minutes = 0;
+		    }
+
+		    Platform.runLater(new Runnable() {
+			public void run() {
+			    if (label instanceof Label)
+				((Label) label).setText(getTime());
+			}
+		    });
+		}
+	    };
+	    innerTimer.scheduleAtFixedRate(innerTask, 0, 1000);
+	}
+
+	public void stop() {
+	    isActive = false;
+	    innerTimer.cancel();
+	    innerTimer.purge();
+	}
+
+	public boolean isActive() {
+	    return isActive;
+	}
+
+	public String getTime() {
+	    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":"
+		    + (seconds < 10 ? "0" + seconds : seconds);
+	}
+    }
+
+    /**
+     * @author giliev
+     */
     protected class IntegerTableCell extends TableCell<BookingTableEntry, Long> {
 
 	private Node rootNode;
@@ -514,16 +577,9 @@ public class BookingTabularPerspectiveController implements Initializable {
 
 	private Booking booking;
 
-	// private String description;
-	//
-	// private Date startTime;
-	//
-	// private Date endTime;
+	// private Date duration;
 
-	private Date duration;
-
-	// TODO: Change to DOUBLE
-	// private long hoursSpent;
+	private String durationStr;
 
 	private String performerHandle;
 
@@ -532,8 +588,6 @@ public class BookingTabularPerspectiveController implements Initializable {
 	private String taskName;
 
 	private Double roleBillingRate;
-
-	// private Collection<BillingRateModifier> billingRateModifiers;
 
 	public BookingTableEntry(final Booking booking) {
 	    this.booking = booking;
@@ -547,15 +601,31 @@ public class BookingTabularPerspectiveController implements Initializable {
 	}
 
 	private void determineDuration() {
+	    // if (booking.getEndTime() == null) {
+	    // duration = null;
+	    // }
+	    //
 	    final LocalDateTime startTime = LocalDateTime.ofInstant(booking.getStartTime().toInstant(),
 		    ZoneId.systemDefault());
 	    final LocalDateTime endTime = LocalDateTime.ofInstant(booking.getEndTime().toInstant(),
 		    ZoneId.systemDefault());
 
 	    final Duration elapsedTime = Duration.between(startTime, endTime);
-	    final LocalDateTime dTime = endTime.minusHours(elapsedTime.toHours());
 
-	    duration = Date.from(dTime.atZone(ZoneId.systemDefault()).toInstant());
+	    // final LocalDateTime dTime =
+	    // endTime.minusHours(elapsedTime.toHours());
+	    // duration =
+	    // Date.from(dTime.atZone(ZoneId.systemDefault()).toInstant());
+
+	    // final LocalTime ffzTime = LocalTime.of((int)
+	    // elapsedTime.get(ChronoUnit.HOURS),
+	    // (int) elapsedTime.get(ChronoUnit.MINUTES), (int)
+	    // elapsedTime.get(ChronoUnit.SECONDS));
+	    // final LocalTime ffzTime = LocalTime.of(hrs, mins);
+	    // durationStr =
+	    // ffzTime.format(DateTimeFormatter.ofPattern("hh:mm"));
+
+	    durationStr = DurationFormatUtils.formatDuration(elapsedTime.toMillis(), "HH:mm");
 	}
 
 	private void determineBillingRate() {
@@ -598,8 +668,12 @@ public class BookingTabularPerspectiveController implements Initializable {
 	    return booking.getEndTime();
 	}
 
-	public Date getDuration() {
-	    return duration;
+	// public Date getDuration() {
+	// return duration;
+	// }
+
+	public String getDurationStr() {
+	    return durationStr;
 	}
 
 	public long getHoursSpent() {

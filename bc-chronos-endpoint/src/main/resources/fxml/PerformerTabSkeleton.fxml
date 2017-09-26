@@ -66,7 +66,7 @@
 		</children>
 	</HBox>
 
-	<GridPane gridLinesVisible="true" hgap="5" vgap="5"
+	<GridPane gridLinesVisible="false" hgap="5" vgap="5"
 		GridPane.columnIndex="0" GridPane.rowIndex="1">
 		<padding>
 			<Insets bottom="5" left="5" right="5" top="5" />
@@ -104,7 +104,7 @@
 
 				<!-- Column: Performer name/s -->
 				<TableColumn fx:id="tableColName" editable="false"
-					sortable="true" text="view.main.tab.performers.grid.col.name" />
+					sortable="true" text="%view.main.tab.performers.grid.col.name" />
 
 				<!-- Column: Performer e-mail -->
 				<TableColumn fx:id="tableColEmail" editable="false"

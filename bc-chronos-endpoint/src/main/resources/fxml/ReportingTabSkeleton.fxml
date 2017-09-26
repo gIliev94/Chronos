@@ -114,7 +114,7 @@
 		<fx:include fx:id="subformRecentReportActionPanel" source="RecentReportActionPanel.fxml" />
 	</AnchorPane>
 
-	<GridPane gridLinesVisible="true" hgap="5"
+	<GridPane gridLinesVisible="false" hgap="5"
 		GridPane.columnIndex="2" GridPane.rowIndex="1">
 		<padding>
 			<Insets bottom="5" left="5" right="5" top="5" />
@@ -127,7 +127,7 @@
 			<RowConstraints percentHeight="75" vgrow="ALWAYS" />
 		</rowConstraints>
 
-		<GridPane gridLinesVisible="true" hgap="5"
+		<GridPane gridLinesVisible="false" hgap="5"
 			GridPane.columnIndex="0" GridPane.rowIndex="0">
 			<padding>
 				<Insets bottom="5" left="5" right="5" top="5" />
@@ -163,7 +163,7 @@
 				</graphic>
 			</Button>
 
-			<GridPane gridLinesVisible="true" hgap="5"
+			<GridPane gridLinesVisible="false" hgap="5"
 				GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
 				<columnConstraints>
 					<ColumnConstraints hgrow="ALWAYS" percentWidth="25" />
@@ -198,7 +198,7 @@
 			</GridPane>
 		</GridPane>
 
-		<GridPane gridLinesVisible="true" hgap="5"
+		<GridPane gridLinesVisible="false" hgap="5"
 			GridPane.columnIndex="0" GridPane.rowIndex="1">
 			<padding>
 				<Insets bottom="5" left="5" right="5" top="5" />
