@@ -55,24 +55,33 @@ public class LocalChangelogService implements ILocalChangelogService {
 
     @Override
     public List<DChangelog> getChangelogsForUpdateCounterLessThan(double lessThanModifierValue) {
-	return changelogRepo.findByUpdateCounterLessThan(lessThanModifierValue).stream() // nl
-		.map(DbToDomainMapper::dbToDomainChangelog) // nl
-		.collect(Collectors.toList());
+	// return
+	// changelogRepo.findByUpdateCounterLessThan(lessThanModifierValue).stream()
+	// // nl
+	// .map(DbToDomainMapper::dbToDomainChangelog) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override
     public List<DChangelog> getChangelogsForUpdateCounterGreaterThan(double greaterThanModifierValue) {
-	return changelogRepo.findByUpdateCounterGreaterThan(greaterThanModifierValue).stream() // nl
-		.map(DbToDomainMapper::dbToDomainChangelog) // nl
-		.collect(Collectors.toList());
+	// return
+	// changelogRepo.findByUpdateCounterGreaterThan(greaterThanModifierValue).stream()
+	// // nl
+	// .map(DbToDomainMapper::dbToDomainChangelog) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override
     public List<DChangelog> getChangelogsForUpdateCounterBetween(double lessThanUpdateCounter,
 	    double greaterThanUpdateCounter) {
-	return changelogRepo.findByUpdateCounterBetween(lessThanUpdateCounter, greaterThanUpdateCounter).stream() // nl
-		.map(DbToDomainMapper::dbToDomainChangelog) // nl
-		.collect(Collectors.toList());
+	// return
+	// changelogRepo.findByUpdateCounterBetween(lessThanUpdateCounter,
+	// greaterThanUpdateCounter).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainChangelog) // nl
+	// .collect(Collectors.toList());
+	return null;
     }
 
     @Override
