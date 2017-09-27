@@ -1,0 +1,52 @@
+@import url("dark.css");
+
+.dialog-pane{
+  -fx-border-color:black;
+ }
+
+/**Costumization of The Bar where the buttons are located**/
+.dialog-pane > .button-bar > .container {
+  -fx-background-color:black;
+}
+
+.dialog-pane > .content.label {
+   -fx-background-color: mediumturquoise;
+   -fx-text-fill:black;
+   /**
+   -fx-font-size:14.0px;
+   -fx-font-weight: bold;
+   **/
+   	-fx-font: bold italic 12.0pt "Arial"; 
+}
+
+/**Costumization of DialogPane Header**/
+.dialog-pane:header .header-panel {
+  -fx-background-color: black;
+}
+
+.dialog-pane:header .header-panel .label{
+  -fx-background-color: mediumturquoise;
+  -fx-background-radius:10.0px;
+  -fx-text-fill:black;
+  /**-fx-font-size:14.0px;
+  -fx-font-weight: bold;
+  **/
+   -fx-font: bold italic 16.0pt "Arial";
+   -fx-text-alignment: center;
+}
+
+
+/**Costumization of Buttons**/
+.dialog-pane .button{
+   -fx-background-color:black;
+   -fx-text-fill:white;
+   -fx-wrap-text: true;
+   -fx-effect: dropshadow( three-pass-box, mediumturquoise, 10.0, 0.0, 0.0, 0.0);
+   -fx-cursor:hand;
+ }
+
+.dialog-pane .button:hover{     
+  -fx-background-color:white;
+  -fx-text-fill:black;
+  -fx-font-weight:bold; 
+ }

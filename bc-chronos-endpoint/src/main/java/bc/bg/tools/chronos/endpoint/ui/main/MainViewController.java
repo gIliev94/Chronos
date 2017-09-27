@@ -1,16 +1,22 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.TimerTask;
 
 import org.apache.derby.jdbc.EmbeddedXADataSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
@@ -18,6 +24,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -50,8 +57,8 @@ public class MainViewController implements Initializable {
     // @Autowired
     // private BitronixTransactionManager btm;
 
-    // @Autowired
-    // private ApplicationContext applicationContext;
+    @Autowired
+    private ApplicationContext applicationContext;
     //
     // @Autowired
     // public PlatformTransactionManager transactionManager;
@@ -130,6 +137,13 @@ public class MainViewController implements Initializable {
 	this.primaryStage = primaryStage;
 	LOGGER.info("Primary stage component :: " + primaryStage);
 
+	// https: //
+	// stackoverflow.com/questions/12153622/how-to-close-a-javafx-application-on-window-close
+	primaryStage.setOnCloseRequest(e -> {
+	    Platform.exit();
+	    ((ConfigurableApplicationContext) applicationContext).close();
+	});
+
 	// Set primary stage for every other sub-controller
 	subformWorkspaceController.setPrimaryStage(primaryStage);
     }
@@ -175,11 +189,102 @@ public class MainViewController implements Initializable {
 
 	initTabAccess();
 	initLoginIndicator();
+
+	// TODO: Sync REMOTE_TO_LOCAL...
     }
 
     protected void initLoginIndicator() {
 	indicatorOffline.setEffect(UIHelper.createBlur(indicatorOffline.getRadius()));
 	indicatorOnline.setEffect(UIHelper.createBlur(indicatorOnline.getRadius()));
+
+	// // try {
+	// // final InetAddress testLink =
+	// // InetAddress.getByName("https://www.google.bg/");
+	//
+	// // if (testLink.isReachable(15)) {
+	//
+	// // } catch (IOException e) {
+	// // e.printStackTrace();
+	// //
+	// // System.out.println("OFFLINE");
+	// // Platform.runLater(new Runnable() {
+	// // public void run() {
+	// // indicatorOffline.setVisible(true);
+	// // indicatorOffline.setVisible(true);
+	// //
+	// // indicatorOnline.setVisible(false);
+	// // indicatorOnline.setManaged(false);
+	// // }
+	// // });
+	// // }
+	//
+	// final TimerTask innerTask = new TimerTask() {
+	// @Override
+	// public void run() {
+	// try {
+	// final InetAddress testLink = InetAddress.getByName("google.com");
+	//
+	// if (testLink.isReachable(15)) {
+	// Platform.runLater(new Runnable() {
+	// public void run() {
+	// indicatorOnline.setVisible(true);
+	// indicatorOnline.setManaged(true);
+	//
+	// indicatorOffline.setVisible(false);
+	// indicatorOffline.setVisible(false);
+	// }
+	// });
+	// } else {
+	// Platform.runLater(new Runnable() {
+	// public void run() {
+	// indicatorOffline.setVisible(true);
+	// indicatorOffline.setVisible(true);
+	//
+	// indicatorOnline.setVisible(false);
+	// indicatorOnline.setManaged(false);
+	// }
+	// });
+	// }
+	//
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	//
+	// Platform.runLater(new Runnable() {
+	// public void run() {
+	// indicatorOffline.setVisible(true);
+	// indicatorOffline.setVisible(true);
+	//
+	// indicatorOnline.setVisible(false);
+	// indicatorOnline.setManaged(false);
+	// }
+	// });
+	// }
+	// }
+	// };
+	//
+	// // final Timer connectionCheckTimer = new Timer();
+	// // connectionCheckTimer.scheduleAtFixedRate(innerTask, 20000,
+	// 100000);
+    }
+
+    private boolean isInternetReachable() {
+	try {
+	    // make a URL to a known source
+	    URL url = new URL("http://www.google.com");
+
+	    // open a connection to that source
+	    HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+
+	    // trying to retrieve data from the source. If there
+	    // is no connection, this line will fail
+	    urlConnect.getContent();
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return false;
+	}
+
+	return true;
     }
 
     // TODO: Refactor hidden panes...
@@ -201,5 +306,32 @@ public class MainViewController implements Initializable {
 
     private String i18n(String msgId, Object... arguments) {
 	return MessageFormat.format(resources.getString(msgId), arguments);
+    }
+
+    @FXML
+    public void attemptReconnect() {
+	if (isInternetReachable()) {
+	    System.out.println("ONLINE");
+	    Platform.runLater(new Runnable() {
+		public void run() {
+		    indicatorOnline.setVisible(true);
+		    indicatorOnline.setManaged(true);
+
+		    indicatorOffline.setVisible(false);
+		    indicatorOffline.setVisible(false);
+		}
+	    });
+	} else {
+	    System.out.println("OFFLINE");
+	    Platform.runLater(new Runnable() {
+		public void run() {
+		    indicatorOffline.setVisible(true);
+		    indicatorOffline.setVisible(true);
+
+		    indicatorOnline.setVisible(false);
+		    indicatorOnline.setManaged(false);
+		}
+	    });
+	}
     }
 }

@@ -38,7 +38,7 @@
 			GridPane.columnSpan="2" GridPane.rowIndex="2">
 			<children>
 				<Button fx:id="loginButton" alignment="CENTER_RIGHT"
-					defaultButton="true" mnemonicParsing="false" onMouseClicked="#performLogin"
+					defaultButton="true" mnemonicParsing="false" onAction="#performLogin"
 					text="%view.login.button.login.text" />
 			</children>
 		</HBox>

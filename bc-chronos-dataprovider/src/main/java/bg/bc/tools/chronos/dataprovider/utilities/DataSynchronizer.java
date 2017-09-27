@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -333,30 +334,72 @@ public class DataSynchronizer {
 	return Collections.emptyMap();
     }
 
-    public void synchronizeDatabases(final SyncDirection direction) throws Exception {
+    public SyncResponse synchronizeDatabases(final SyncDirection direction) throws Exception {
 	final Map<String, List<Object>> unsyncedEntities = findUnsyncedObjects(direction);
 
-	final List<Category> unsyncedCategories = unsyncedEntities.get("Category").stream().map(o -> ((Category) o))
+	final List<Category> unsyncedCategories = unsyncedEntities.get("Category").stream() // nl
+		.map(o -> ((Category) o)) // nl
 		.collect(Collectors.toList());
-	syncCategories(unsyncedCategories, direction);
+
+	return syncCategories(unsyncedCategories, direction);
     }
 
-    private void syncCategories(final List<Category> unsyncedCategories, final SyncDirection initialDirection)
+    private SyncResponse syncCategories(final List<Category> unsyncedCategories, final SyncDirection initialDirection)
 	    throws Exception {
+	Stream<Category> categoriesToSyncStream = unsyncedCategories.stream() // nl
+		.map(this::cloneCategory);
+
 	switch (initialDirection) {
 	case LOCAL_TO_REMOTE:
-	    unsyncedCategories.stream().map(this::cloneCategory).forEach(remoteCategoryRepo::save);
+	    // unsyncedClonesStream // nl
+	    // .map(remoteCategoryRepo::save) // nl
+	    // .forEach(syncedCategories::add);
+	    categoriesToSyncStream = categoriesToSyncStream // nl
+		    .map(remoteCategoryRepo::save); // nl
 	    break;
+
 	case REMOTE_TO_LOCAL:
-	    unsyncedCategories.stream().map(this::cloneCategory).forEach(localCategoryRepo::save);
+	    categoriesToSyncStream = categoriesToSyncStream // nl
+		    .map(remoteCategoryRepo::save); // nl
 	    break;
+
 	default:
-	    throw new Exception("Inexistent channel!");
+	    return new SyncResponse(unsyncedCategories, new Exception("Invalid/inexistent sync direction!"));
 	}
+
+	final List<Category> syncedCategories = new LinkedList<>();
+	categoriesToSyncStream.forEach(syncedCategories::add);
+
+	return new SyncResponse(syncedCategories, findStillNotSyncedCategories(unsyncedCategories, syncedCategories));
     }
 
+    protected List<Category> findStillNotSyncedCategories(final List<Category> unsyncedCategories,
+	    final List<Category> syncedCategories) {
+	final List<String> syncedObjectNames = syncedCategories.stream() // nl
+		.map(Category::getName) // nl
+		.collect(Collectors.toList());
+	final List<String> notSyncedObjectNames = unsyncedCategories.stream() // nl
+		.map(Category::getName) // nl
+		.collect(Collectors.toList());
+	notSyncedObjectNames.removeAll(syncedObjectNames);
+
+	final List<Category> notSyncedCategories = unsyncedCategories.stream() // nl
+		.filter(c -> (notSyncedObjectNames.contains(c.getName()))) // nl
+		.collect(Collectors.toList());
+	return notSyncedCategories;
+    }
+
+    /**
+     * Necessary to make a clone without the ID(primary key) set - Hibernate
+     * will manage it for the receiving database.
+     * 
+     * @param original
+     *            - the original object
+     * @return A clone of the specified original object with no PK set.
+     */
     private Category cloneCategory(final Category original) {
 	final Category clone = new Category();
+	// clone.setId(id); // NO ID(PK) SET
 	clone.setName(original.getName());
 	clone.setSortOrder(original.getSortOrder());
 	clone.setSyncKey(original.getSyncKey());
@@ -388,11 +431,67 @@ public class DataSynchronizer {
     }
 
     private void resolveConflicts() {
-
+	// TODO:
     }
 
     private void showErrorDialog(String string, Exception e) {
 	// TODO Auto-generated method stub
 
+    }
+
+    public class SyncResponse {
+
+	public static final String MSG_ID_SYNC_SUCCESS = "view.popup.synchronization.success";
+
+	public static final String MSG_ID_SYNC_ERROR = "view.popup.synchronization.error";
+
+	private boolean isSuccessful;
+
+	private String messageId;
+
+	private Throwable error;
+
+	private List<? extends Serializable> syncedEntities;
+
+	private List<? extends Serializable> notSyncedEntities;
+
+	public SyncResponse(final List<? extends Serializable> syncedEntities,
+		final List<? extends Serializable> notSyncedEntities, final Throwable error) {
+	    this.notSyncedEntities = notSyncedEntities;
+	    this.syncedEntities = syncedEntities;
+	    this.error = error;
+
+	    this.isSuccessful = ((error == null) && notSyncedEntities.isEmpty());
+	    this.messageId = (isSuccessful ? MSG_ID_SYNC_SUCCESS : MSG_ID_SYNC_ERROR);
+	}
+
+	public SyncResponse(final List<? extends Serializable> syncedEntities,
+		final List<? extends Serializable> notSyncedEntities) {
+	    this(syncedEntities, notSyncedEntities, null);
+	}
+
+	public SyncResponse(final List<? extends Serializable> notSyncedEntities, final Throwable error) {
+	    this(Collections.emptyList(), notSyncedEntities, error);
+	}
+
+	public String getMessageId() {
+	    return messageId;
+	}
+
+	public Throwable getError() {
+	    return error;
+	}
+
+	public List<? extends Serializable> getSyncedEntities() {
+	    return syncedEntities;
+	}
+
+	public List<? extends Serializable> getNotSyncedEntities() {
+	    return notSyncedEntities;
+	}
+
+	public boolean isSuccessful() {
+	    return isSuccessful;
+	}
     }
 }

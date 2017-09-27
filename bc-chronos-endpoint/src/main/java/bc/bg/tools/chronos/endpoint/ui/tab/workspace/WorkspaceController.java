@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer;
+import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer.SyncResponse;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,6 +42,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -52,6 +55,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 /**
@@ -189,15 +193,51 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 	btnBookingGraphicalPerspective.setOnAction(e -> {
 	    transactionTemplate.execute(transactionStatus -> {
 		try {
-		    // final Map<String, List<Object>> epa = dataSynchronizer
-		    // .findUnsyncedObjects(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
-		    // System.out.println(epa);
-		    dataSynchronizer.synchronizeDatabases(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
-		    return UIHelper.showInfoDialog("SYNC SUCCESS!!!");
+		    final SyncResponse syncResponse = dataSynchronizer
+			    .synchronizeDatabases(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
+		    if (syncResponse.isSuccessful()) {
+			final List<String> syncedObjectNames = syncResponse.getSyncedEntities().stream() // nl
+				.map(Object::toString) // nl
+				.collect(Collectors.toList());
+
+			LOGGER.info(MessageFormat.format("Synchronized entities:\n{0}",
+				String.join("\n", syncedObjectNames)));
+			final Optional<ButtonType> result = UIHelper.showInfoDialog(
+				i18n(syncResponse.getMessageId(), String.join("\n[+]", syncedObjectNames)));
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+			    populateTree(treeCustomers);
+			    populateTree(treeProjects);
+			    populateTree(treeTasks);
+			}
+
+			final Optional<String> r2 = UIHelper.showChoiceDialog("Stay", Arrays.asList("Stay", "Exit"));
+			r2.ifPresent(c -> {
+			    if ("Exit".equals(c)) {
+				// Platform.exit();
+
+				final Stage stage = getPrimaryStage();
+				stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+			    }
+			});
+
+			// TODO: Show sync status pop-up...
+		    } else {
+			final List<String> notSyncedObjectNames = syncResponse.getNotSyncedEntities().stream() // nl
+				.map(Object::toString) // nl
+				.collect(Collectors.toList());
+
+			LOGGER.error(MessageFormat.format("Still Missing entities:\n{0}",
+				String.join("\n", notSyncedObjectNames)));
+			UIHelper.showErrorDialog(i18n(syncResponse.getMessageId(), syncResponse.getError().getMessage(),
+				String.join("\n[-]", notSyncedObjectNames)));
+		    }
+
+		    return null;
 		} catch (Exception e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		    return UIHelper.showErrorDialog(e1.getMessage());
+		    // TODO Log/remove exceptions...
+		    LOGGER.error(e1);
+		    UIHelper.showErrorDialog(e1.getMessage());
+		    return null;
 		}
 	    });
 	});
@@ -361,6 +401,8 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
     // https://github.com/tomoTaka01/FileTreeViewSample/blob/master/src/filetreeviewsample/FileTreeViewSample.java
     private void populateTree(final TreeView<Object> tree) {
+	Optional.ofNullable(tree.getRoot().getChildren()).ifPresent(c -> c.clear());
+
 	final List<Category> categories = ((List<Category>) categoryRepo.findAll());
 	// TODO; Keep the sorter idea - works nicely...
 	categories.sort( // nl

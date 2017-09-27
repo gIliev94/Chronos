@@ -17,13 +17,13 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
@@ -120,7 +120,7 @@ public class LoginController implements ILoginModel {
     }
 
     @FXML
-    void performLogin(MouseEvent loginBtnClickedEvt) {
+    void performLogin(ActionEvent loginBtnClickedEvt) {
 	final String username = userField.getText();
 
 	final Performer user = transactionTemplate.execute(txStatus -> {

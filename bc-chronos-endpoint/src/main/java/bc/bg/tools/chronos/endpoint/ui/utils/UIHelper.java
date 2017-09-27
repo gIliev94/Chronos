@@ -26,6 +26,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -186,6 +187,7 @@ public final class UIHelper {
     }
 
     private static void styleDialog(final Dialog<?> dialog) {
+	// https://stackoverflow.com/questions/37354686/costumize-javafx-alert-with-css
 	String styleSheet = Defaults.APP_STYLE_SHEET_BASE;
 
 	// TODO: Distinguish styles for types dialog/s
@@ -196,29 +198,35 @@ public final class UIHelper {
 	    final AlertType alertType = ((Alert) dialog).getAlertType();
 	    switch (alertType) {
 	    case ERROR:
-		styleSheet = "PLACEHOLDER";
+		styleSheet = "alertNOK";
 		break;
 	    case WARNING:
-		styleSheet = "PLACEHOLDER";
+		styleSheet = "alertNOK";
 		break;
 	    case INFORMATION:
-		styleSheet = "PLACEHOLDER";
+		styleSheet = "alertOK";
 		break;
 	    case CONFIRMATION:
-		styleSheet = "PLACEHOLDER";
+		styleSheet = "alertOPT";
 		break;
 	    case NONE:
 	    default:
 		break;
 	    }
 	} else if (dialog instanceof ChoiceDialog) {
-	    styleSheet = "PLACEHOLDER";
+	    styleSheet = "alertOPT";
 	} else if (dialog instanceof TextInputDialog) {
-	    styleSheet = "PLACEHOLDER";
+	    styleSheet = "alertOPT";
 	}
 
+	Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+	stage.getIcons().add(createImageIcon(Defaults.APP_ICON));
+
+	// TODO:
+	// https://stackoverflow.com/questions/27976345/how-do-you-set-the-icon-of-a-dialog-control-java-fx-java-8
 	dialog.getDialogPane().getStylesheets().add(Paths.getStyleSheetPath(styleSheet));
-	dialog.getDialogPane().getStyleClass().add(STYLE_CLASS_DIALOGS);
+	dialog.getDialogPane().getStyleClass().add("dialog-pane");
+	// dialog.getDialogPane().getStyleClass().add(STYLE_CLASS_DIALOGS);
     }
 
     // TODO: com.sun.deploy.uitoolkit.impl.fx.ui.FXUIFactory => consider for
