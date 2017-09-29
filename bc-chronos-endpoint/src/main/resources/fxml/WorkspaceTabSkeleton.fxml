@@ -245,10 +245,14 @@
 		<!-- </padding> -->
 
 		<children>
-			<Button fx:id="btnBookingTabluarPerspective" disable="true"
+			<Button fx:id="btnBookingTabluarPerspective" disable="false"
 				maxHeight="100" maxWidth="700" mnemonicParsing="false"
 				text="%view.main.tab.workspace.perspective.tabular" HBox.hgrow="ALWAYS"
 				styleClass="text-button" />
+
+			<Button fx:id="btnCreateRemoteData" disable="false" maxHeight="100"
+				maxWidth="700" mnemonicParsing="false" text="CREATE REMOTE DATA"
+				HBox.hgrow="ALWAYS" styleClass="text-button" />
 
 			<Button fx:id="btnBookingGraphicalPerspective" disable="false"
 				maxHeight="100" maxWidth="700" mnemonicParsing="false"

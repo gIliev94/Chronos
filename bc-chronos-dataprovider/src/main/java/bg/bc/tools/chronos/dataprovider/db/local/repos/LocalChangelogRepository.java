@@ -28,4 +28,6 @@ public interface LocalChangelogRepository extends CrudRepository<Changelog, Long
     // TODO: test
     // http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.limit-query-result
     Changelog findTopByOrderByUpdateCounterDesc();
+    
+    Changelog findTopByUpdatedEntityTypeOrderByUpdateCounterDesc(String updatedEntityType);
 }

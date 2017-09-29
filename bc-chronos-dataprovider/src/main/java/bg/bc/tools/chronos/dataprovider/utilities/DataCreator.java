@@ -33,6 +33,8 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
+import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteChangelogRepository;
 
 /**
  * Creator of sample data for Chronos.
@@ -71,8 +73,11 @@ public class DataCreator {
     @Autowired
     private LocalRoleRepository localRoleRepo;
 
-    // @Autowired
-    // private RemoteCategoryRepository remoteCategoryRepo;
+    @Autowired
+    private RemoteChangelogRepository remoteChangelogRepo;
+
+    @Autowired
+    private RemoteCategoryRepository remoteCategoryRepo;
     //
     // @Autowired
     // private RemoteCustomerRepository remoteCustomerRepo;
@@ -94,6 +99,24 @@ public class DataCreator {
 
     private String generateSyncKey() {
 	return UUID.randomUUID().toString();
+    }
+
+    public void createRemoteData() {
+	// (GETDATE(), HOST_NAME() + '10', @category1Id, 'Category'),
+	// (GETDATE(), HOST_NAME () + '20', @category2Id, 'Category');
+
+	final Category dl1 = new Category();
+	dl1.setName("[CATEGORY] DOWNLOADED 1");
+	dl1.setSortOrder(4);
+	dl1.setSyncKey(generateSyncKey());
+
+	final Category dl2 = new Category();
+	dl2.setName("[CATEGORY] DOWNLOADED 2");
+	dl2.setSortOrder(4);
+	dl2.setSyncKey(generateSyncKey());
+
+	final Category sCatDefault = addCategoryR(dl1);
+	final Category sCatLowPriority = addCategoryR(dl2);
     }
 
     /**
@@ -417,6 +440,10 @@ public class DataCreator {
 	return saveEntity(category);
     }
 
+    private Category addCategoryR(final Category category) {
+	return saveEntityR(category);
+    }
+
     private Customer addCustomer(final Customer customer, final Category savedCategory) {
 	customer.setCategory(savedCategory);
 
@@ -529,6 +556,29 @@ public class DataCreator {
 	changeLog.setUpdatedEntityKey(entitySyncKey);
 
 	localChangelogRepo.save(changeLog);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private <E extends Serializable> E saveEntityR(final E entity) {
+	if (Category.class.isAssignableFrom(entity.getClass())) {
+	    final Category category = remoteCategoryRepo.save((Category) entity);
+	    appendChangelogR(category.getSyncKey(), Category.class);
+
+	    return (E) category;
+
+	}
+
+	throw new RuntimeException("NO ENTITY SAVED!!!");
+    }
+
+    private void appendChangelogR(final String entitySyncKey, final Class<? extends Serializable> entityClass) {
+	final Changelog changeLog = new Changelog();
+	changeLog.setChangeTime(Calendar.getInstance().getTime());
+	changeLog.setDeviceName(EntityHelper.getDeviceName());
+	changeLog.setUpdatedEntityType(entityClass.getSimpleName());
+	changeLog.setUpdatedEntityKey(entitySyncKey);
+
+	remoteChangelogRepo.save(changeLog);
     }
 
 }

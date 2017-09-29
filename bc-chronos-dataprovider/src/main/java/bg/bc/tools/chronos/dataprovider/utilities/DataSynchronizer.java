@@ -1,13 +1,14 @@
 package bg.bc.tools.chronos.dataprovider.utilities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,13 +42,16 @@ import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteTaskRepository;
 public class DataSynchronizer {
 
     public enum SyncDirection {
-	LOCAL_TO_REMOTE, // nl
-	REMOTE_TO_LOCAL; // nl
+	LOCAL_TO_REMOTE("view.popup.synchronization.upload"), // nl
+	REMOTE_TO_LOCAL("view.popup.synchronization.download"); // nl
+
+	private String directionSuffix;
 
 	private Map<Class<? extends Serializable>, CrudRepository<? extends Serializable, Long>> repoMap;
 
-	private SyncDirection() {
+	private SyncDirection(final String directionSuffix) {
 	    repoMap = new HashMap<Class<? extends Serializable>, CrudRepository<? extends Serializable, Long>>();
+	    this.directionSuffix = directionSuffix;
 	}
 
 	public void addRepo(final CrudRepository<? extends Serializable, Long> repo) {
@@ -60,6 +64,10 @@ public class DataSynchronizer {
 	@SuppressWarnings("unchecked")
 	public <T extends Serializable> CrudRepository<T, Long> getRepoForEntity(Class<T> entityClass) {
 	    return (CrudRepository<T, Long>) repoMap.get(entityClass);
+	}
+
+	public String getDirectionSuffix() {
+	    return directionSuffix;
 	}
 
 	public Object getEntity(final Changelog change, final CrudRepository localRepo,
@@ -276,8 +284,10 @@ public class DataSynchronizer {
 
     public Map<String, List<Object>> findUnsyncedObjects(final SyncDirection syncDirection) throws Exception {
 	// Find last change for both DBs
-	final Changelog lastLocalChange = localChangelogRepo.findTopByOrderByUpdateCounterDesc();
-	final Changelog lastRemoteChange = remoteChangelogRepo.findTopByOrderByUpdateCounterDesc();
+	final Changelog lastLocalChange = localChangelogRepo
+		.findTopByUpdatedEntityTypeOrderByUpdateCounterDesc("Category");
+	final Changelog lastRemoteChange = remoteChangelogRepo
+		.findTopByUpdatedEntityTypeOrderByUpdateCounterDesc("Category");
 
 	final long localUpdateCount = (lastLocalChange == null) ? 0 : lastLocalChange.getUpdateCounter();
 	final long remoteUpdateCount = (lastRemoteChange == null) ? 0 : lastRemoteChange.getUpdateCounter();
@@ -301,9 +311,12 @@ public class DataSynchronizer {
 		break;
 
 	    case REMOTE_TO_LOCAL:
-		diffFrom = localUpdateCount;
-		diffTo = (remoteUpdateCount - localUpdateCount);
+		// diffFrom = localUpdateCount;
+		// diffTo = (remoteUpdateCount - localUpdateCount);
+		diffFrom = 4;
+		diffTo = 5;
 
+		System.out.println(remoteChangelogRepo.findAll());
 		differentEntities.addAll(remoteChangelogRepo.findByUpdateCounterBetween(diffFrom, diffTo));
 		break;
 
@@ -349,6 +362,11 @@ public class DataSynchronizer {
 	Stream<Category> categoriesToSyncStream = unsyncedCategories.stream() // nl
 		.map(this::cloneCategory);
 
+	Stream<Category> chngToSyncStream = unsyncedCategories.stream() // nl
+		.map(this::cloneCategory);
+
+	List<Collection<Changelog>> chagesToSync = new LinkedList<>();
+
 	switch (initialDirection) {
 	case LOCAL_TO_REMOTE:
 	    // unsyncedClonesStream // nl
@@ -356,21 +374,45 @@ public class DataSynchronizer {
 	    // .forEach(syncedCategories::add);
 	    categoriesToSyncStream = categoriesToSyncStream // nl
 		    .map(remoteCategoryRepo::save); // nl
+	    // categoriesToSyncStream.forEach(cat -> {
+	    // final Collection<Changelog> changes =
+	    // localChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey());
+	    // changes.stream().map(remoteChangelogRepo::save).count();
+	    // });
+
+	    chagesToSync = chngToSyncStream // nl
+		    .map(cat -> localChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) // nl
+		    .collect(Collectors.toList());
+	    chagesToSync.stream() // nl
+		    .flatMap(o -> o.stream()) // nl
+		    .map(this::cloneChangelog) // nl
+		    .forEach(remoteChangelogRepo::save);
+
 	    break;
 
 	case REMOTE_TO_LOCAL:
 	    categoriesToSyncStream = categoriesToSyncStream // nl
-		    .map(remoteCategoryRepo::save); // nl
+		    .map(localCategoryRepo::save); // nl
+
+	    chagesToSync = chngToSyncStream // nl
+		    .map(cat -> remoteChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) // nl
+		    .collect(Collectors.toList());
+	    chagesToSync.stream() // nl
+		    .flatMap(o -> o.stream()) // nl
+		    .map(this::cloneChangelog) // nl
+		    .forEach(localChangelogRepo::save);
 	    break;
 
 	default:
-	    return new SyncResponse(unsyncedCategories, new Exception("Invalid/inexistent sync direction!"));
+	    return new SyncResponse(initialDirection, unsyncedCategories,
+		    new Exception("Invalid/inexistent sync direction!"));
 	}
 
 	final List<Category> syncedCategories = new LinkedList<>();
 	categoriesToSyncStream.forEach(syncedCategories::add);
 
-	return new SyncResponse(syncedCategories, findStillNotSyncedCategories(unsyncedCategories, syncedCategories));
+	return new SyncResponse(initialDirection, syncedCategories,
+		findStillNotSyncedCategories(unsyncedCategories, syncedCategories));
     }
 
     protected List<Category> findStillNotSyncedCategories(final List<Category> unsyncedCategories,
@@ -407,36 +449,23 @@ public class DataSynchronizer {
 	return clone;
     }
 
-    // @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void synchronizeObjects() throws Exception {
-	final SyncDirection[] syncDirections = SyncDirection.values();
+    /**
+     * Necessary to make a clone without the ID(primary key) set - Hibernate
+     * will manage it for the receiving database.
+     * 
+     * @param original
+     *            - the original object
+     * @return A clone of the specified original object with no PK set.
+     */
+    private Changelog cloneChangelog(final Changelog original) {
+	final Changelog clone = new Changelog();
+	// clone.setId(id); // NO ID(PK) SET
+	clone.setChangeTime(original.getChangeTime());
+	clone.setDeviceName(original.getDeviceName());
+	clone.setUpdatedEntityKey(original.getUpdatedEntityKey());
+	clone.setUpdatedEntityType(original.getUpdatedEntityType());
 
-	Stream.of(syncDirections).forEach(syncDirection -> {
-	    try {
-		final Map<String, List<Object>> unsyncedObjects = findUnsyncedObjects(syncDirection);
-
-		// unsyncedObjects.stream().forEach(entity -> {
-		// final Class<? extends Serializable> entityClass =
-		// entity.getClass();
-		// final CrudRepository entityRepo =
-		// syncDirection.getRepoForEntity(entityClass);
-		// entityRepo.save(entityClass.cast(entity));
-		// });
-
-	    } catch (Exception e) {
-		showErrorDialog("Unsuccessful sync attempt! Please contact administrator!", e);
-	    }
-
-	});
-    }
-
-    private void resolveConflicts() {
-	// TODO:
-    }
-
-    private void showErrorDialog(String string, Exception e) {
-	// TODO Auto-generated method stub
-
+	return clone;
     }
 
     public class SyncResponse {
@@ -451,27 +480,31 @@ public class DataSynchronizer {
 
 	private Throwable error;
 
+	private SyncDirection direction;
+
 	private List<? extends Serializable> syncedEntities;
 
 	private List<? extends Serializable> notSyncedEntities;
 
-	public SyncResponse(final List<? extends Serializable> syncedEntities,
+	public SyncResponse(final SyncDirection direction, final List<? extends Serializable> syncedEntities,
 		final List<? extends Serializable> notSyncedEntities, final Throwable error) {
 	    this.notSyncedEntities = notSyncedEntities;
 	    this.syncedEntities = syncedEntities;
 	    this.error = error;
+	    this.direction = direction;
 
 	    this.isSuccessful = ((error == null) && notSyncedEntities.isEmpty());
 	    this.messageId = (isSuccessful ? MSG_ID_SYNC_SUCCESS : MSG_ID_SYNC_ERROR);
 	}
 
-	public SyncResponse(final List<? extends Serializable> syncedEntities,
+	public SyncResponse(final SyncDirection direction, final List<? extends Serializable> syncedEntities,
 		final List<? extends Serializable> notSyncedEntities) {
-	    this(syncedEntities, notSyncedEntities, null);
+	    this(direction, syncedEntities, notSyncedEntities, null);
 	}
 
-	public SyncResponse(final List<? extends Serializable> notSyncedEntities, final Throwable error) {
-	    this(Collections.emptyList(), notSyncedEntities, error);
+	public SyncResponse(final SyncDirection direction, final List<? extends Serializable> notSyncedEntities,
+		final Throwable error) {
+	    this(direction, Collections.emptyList(), notSyncedEntities, error);
 	}
 
 	public String getMessageId() {
@@ -480,6 +513,10 @@ public class DataSynchronizer {
 
 	public Throwable getError() {
 	    return error;
+	}
+
+	public SyncDirection getDirection() {
+	    return direction;
 	}
 
 	public List<? extends Serializable> getSyncedEntities() {

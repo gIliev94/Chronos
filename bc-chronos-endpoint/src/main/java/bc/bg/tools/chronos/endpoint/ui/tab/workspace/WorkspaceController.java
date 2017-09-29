@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEntityActionPanelController;
@@ -31,6 +32,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
+import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer;
 import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer.SyncResponse;
 import javafx.beans.value.ObservableValue;
@@ -160,6 +162,9 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
     private TransactionTemplate transactionTemplate;
     //
 
+    @Autowired
+    private DataCreator localDataCreator;
+
     // This method is called by the FXMLLoader when initialization is complete
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -189,58 +194,75 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 	initTreeContents();
 
 	// TODO:
+	btnBookingTabluarPerspective.setOnAction(e -> {
+	    transactionTemplate.execute(triggerSync(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE));
+	});
 
-	btnBookingGraphicalPerspective.setOnAction(e -> {
-	    transactionTemplate.execute(transactionStatus -> {
-		try {
-		    final SyncResponse syncResponse = dataSynchronizer
-			    .synchronizeDatabases(DataSynchronizer.SyncDirection.LOCAL_TO_REMOTE);
-		    if (syncResponse.isSuccessful()) {
-			final List<String> syncedObjectNames = syncResponse.getSyncedEntities().stream() // nl
-				.map(Object::toString) // nl
-				.collect(Collectors.toList());
-
-			LOGGER.info(MessageFormat.format("Synchronized entities:\n{0}",
-				String.join("\n", syncedObjectNames)));
-			final Optional<ButtonType> result = UIHelper.showInfoDialog(
-				i18n(syncResponse.getMessageId(), String.join("\n[+]", syncedObjectNames)));
-			if (result.isPresent() && result.get() == ButtonType.OK) {
-			    populateTree(treeCustomers);
-			    populateTree(treeProjects);
-			    populateTree(treeTasks);
-			}
-
-			final Optional<String> r2 = UIHelper.showChoiceDialog("Stay", Arrays.asList("Stay", "Exit"));
-			r2.ifPresent(c -> {
-			    if ("Exit".equals(c)) {
-				// Platform.exit();
-
-				final Stage stage = getPrimaryStage();
-				stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-			    }
-			});
-
-			// TODO: Show sync status pop-up...
-		    } else {
-			final List<String> notSyncedObjectNames = syncResponse.getNotSyncedEntities().stream() // nl
-				.map(Object::toString) // nl
-				.collect(Collectors.toList());
-
-			LOGGER.error(MessageFormat.format("Still Missing entities:\n{0}",
-				String.join("\n", notSyncedObjectNames)));
-			UIHelper.showErrorDialog(i18n(syncResponse.getMessageId(), syncResponse.getError().getMessage(),
-				String.join("\n[-]", notSyncedObjectNames)));
-		    }
-
-		    return null;
-		} catch (Exception e1) {
-		    // TODO Log/remove exceptions...
-		    LOGGER.error(e1);
-		    UIHelper.showErrorDialog(e1.getMessage());
-		    return null;
-		}
+	btnCreateRemoteData.setOnAction(e -> {
+	    transactionTemplate.execute(r -> {
+		localDataCreator.createRemoteData();
+		return null;
 	    });
 	});
+
+	btnBookingGraphicalPerspective.setOnAction(e -> {
+	    transactionTemplate.execute(triggerSync(DataSynchronizer.SyncDirection.REMOTE_TO_LOCAL));
+	});
+    }
+
+    protected TransactionCallback<Object> triggerSync(final DataSynchronizer.SyncDirection direction) {
+	return transactionStatus -> {
+	    try {
+		final SyncResponse syncResponse = dataSynchronizer.synchronizeDatabases(direction);
+		if (syncResponse.isSuccessful()) {
+		    final List<String> syncedObjectNames = syncResponse.getSyncedEntities().stream() // nl
+			    .map(Object::toString) // nl
+			    .collect(Collectors.toList());
+
+		    LOGGER.info(
+			    MessageFormat.format("Synchronized entities:\n{0}", String.join("\n", syncedObjectNames)));
+		    final Optional<ButtonType> result = UIHelper.showInfoDialog(
+			    i18n(syncResponse.getMessageId(), i18n(syncResponse.getDirection().getDirectionSuffix()),
+				    String.join("\n[+]", syncedObjectNames)));
+		    if (result.isPresent() && result.get() == ButtonType.OK) {
+			populateTree(treeCustomers);
+			populateTree(treeProjects);
+			populateTree(treeTasks);
+		    }
+
+		    // final Optional<String> r2 =
+		    // UIHelper.showChoiceDialog("Stay", Arrays.asList("Stay",
+		    // "Exit"));
+		    // r2.ifPresent(c -> {
+		    // if ("Exit".equals(c)) {
+		    // // Platform.exit();
+		    // final Stage stage = getPrimaryStage();
+		    // stage.fireEvent(new WindowEvent(stage,
+		    // WindowEvent.WINDOW_CLOSE_REQUEST));
+		    // }
+		    // });
+
+		    // TODO: Show sync status pop-up...
+		} else {
+		    final List<String> notSyncedObjectNames = syncResponse.getNotSyncedEntities().stream() // nl
+			    .map(Object::toString) // nl
+			    .collect(Collectors.toList());
+
+		    LOGGER.error(MessageFormat.format("Still Missing entities:\n{0}",
+			    String.join("\n", notSyncedObjectNames)));
+		    UIHelper.showErrorDialog(
+			    i18n(syncResponse.getMessageId(), i18n(syncResponse.getDirection().getDirectionSuffix()),
+				    syncResponse.getError().getMessage(), String.join("\n[-]", notSyncedObjectNames)));
+		}
+
+		return null;
+	    } catch (Exception e1) {
+		// TODO Log/remove exceptions...
+		LOGGER.error(e1);
+		UIHelper.showErrorDialog(e1.getMessage());
+		return null;
+	    }
+	};
     }
 
     private void initTreeContents() {
@@ -535,6 +557,9 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
     @FXML
     private AnchorPane paneShowEntityPanel;
+
+    @FXML
+    Button btnCreateRemoteData;
 
     // @FXML
     // private CategoricalEntityActionPanelController

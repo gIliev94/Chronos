@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -92,16 +93,16 @@
 				style="-fx-fill: rgb(0.0, 255.0, 0.0);" visible="true" />
 		</StackPane>
 
-		<Button fx:id="btnAttemptReconnect" mnemonicParsing="false"
-			onAction="#attemptReconnect">
-			<graphic>
-				<ImageView fitHeight="30.0" preserveRatio="true">
-					<image>
-						<Image url="@../images/home_icon.png" />
-					</image>
-				</ImageView>
-			</graphic>
-		</Button>
+		<!-- <Button fx:id="btnAttemptReconnect" mnemonicParsing="false" -->
+		<!-- onAction="#attemptReconnect"> -->
+		<!-- <graphic> -->
+		<!-- <ImageView fitHeight="30.0" preserveRatio="true"> -->
+		<!-- <image> -->
+		<!-- <Image url="@../images/home_icon.png" /> -->
+		<!-- </image> -->
+		<!-- </ImageView> -->
+		<!-- </graphic> -->
+		<!-- </Button> -->
 	</HBox>
 
 	<TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE"
@@ -109,9 +110,11 @@
 		<tabs>
 			<Tab fx:id="tabWorkspace" text="%view.main.tab.workspace.title">
 				<content>
-					<AnchorPane>
-						<fx:include fx:id="subformWorkspace" source="WorkspaceTabSkeleton.fxml" />
-					</AnchorPane>
+					<ScrollPane>
+						<AnchorPane>
+							<fx:include fx:id="subformWorkspace" source="WorkspaceTabSkeleton.fxml" />
+						</AnchorPane>
+					</ScrollPane>
 				</content>
 			</Tab>
 			<Tab fx:id="tabPerformers" text="%view.main.tab.performers.title">
