@@ -4,12 +4,14 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
+@Repository
 public interface RemoteBookingRepository extends CrudRepository<Booking, Long> {
 
     // Collection<Booking> findByIsOvertimeTrue();

@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 
+@Repository
 public interface RemoteChangelogRepository extends CrudRepository<Changelog, Long> {
 
     Collection<Changelog> findByChangeTimeBefore(Date changeTimeBefore);

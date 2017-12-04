@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 
+@Repository
 public interface LocalChangelogRepository extends CrudRepository<Changelog, Long> {
 
     Collection<Changelog> findByChangeTimeBefore(Date changeTimeBefore);
@@ -28,6 +30,6 @@ public interface LocalChangelogRepository extends CrudRepository<Changelog, Long
     // TODO: test
     // http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.limit-query-result
     Changelog findTopByOrderByUpdateCounterDesc();
-    
+
     Changelog findTopByUpdatedEntityTypeOrderByUpdateCounterDesc(String updatedEntityType);
 }

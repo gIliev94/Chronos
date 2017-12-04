@@ -3,11 +3,13 @@ package bg.bc.tools.chronos.dataprovider.db.local.repos;
 import java.util.Collection;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 
+@Repository
 public interface LocalBillingRateModifierRepository extends CrudRepository<BillingRateModifier, Long> {
 
     Collection<BillingRateModifier> findByModifierAction(ModifierAction modifierAction);
