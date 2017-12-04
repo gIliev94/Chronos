@@ -1,61 +1,70 @@
 package bc.bg.tools.chronos.configuration;
 
-import java.util.Map;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.jta.JtaTransactionManager;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 
 import bitronix.tm.BitronixTransactionManager;
 import bitronix.tm.TransactionManagerServices;
-import bitronix.tm.resource.common.XAResourceProducer;
 
 @Configuration
 public class CommonDBConfig {
 
+    private static final String TX_INSTANCE_ID = "ChronosTM";
+
     @Bean(name = "btmConfig")
     public bitronix.tm.Configuration btmConfig() {
-	final bitronix.tm.Configuration btmConfig = TransactionManagerServices.getConfiguration();
+	final bitronix.tm.Configuration bitronixTxManagerConfig = TransactionManagerServices.getConfiguration();
+
+	bitronixTxManagerConfig.setServerId(TX_INSTANCE_ID);
+	bitronixTxManagerConfig.setAsynchronous2Pc(false);
+
 	// TODO: Test with/without(suspecting they always register - msg beans)
-	btmConfig.setDisableJmx(true);
-
-	// TODO: Explicit resource loader - does not work properly(path-wise
-	// even)...
-	// btmConfig.setResourceConfigurationFilename(
-	// "C:/Users/aswor/Documents/EclipseWorkspace/chronos/bc-chronos-configuration/src/main/resources/btm.properties");
-
+	bitronixTxManagerConfig.setDisableJmx(true);
 	// TODO: Two LRC sources are prohibited usually - disable this when you
 	// fix impl...
-	btmConfig.setAllowMultipleLrc(true);
+	bitronixTxManagerConfig.setAllowMultipleLrc(true);
 
-	// TODO: Debug wise - remove later...
-	btmConfig.setWarnAboutZeroResourceTransaction(true);
-	btmConfig.setDebugZeroResourceTransaction(true);
+	// TODO: For debugging purposes, may be expensive on production -
+	// consider removing...
+	bitronixTxManagerConfig.setWarnAboutZeroResourceTransaction(true);
+	bitronixTxManagerConfig.setDebugZeroResourceTransaction(true);
 
-	return btmConfig;
+	return bitronixTxManagerConfig;
     }
 
     @Bean(name = "btm")
-    // TODO: Require config bean to be processed beforehand...
     @DependsOn("btmConfig")
     public BitronixTransactionManager btm() {
-	final BitronixTransactionManager btm = TransactionManagerServices.getTransactionManager();
-
-	// TODO: Debug print - remove later...
-	final Map<String, XAResourceProducer> initialResources = TransactionManagerServices.getResourceLoader()
-		.getResources();
-	System.err.println("INIT RESOURCES: " + initialResources);
-
-	return btm;
+	final BitronixTransactionManager bitronixTxManager = TransactionManagerServices.getTransactionManager();
+	return bitronixTxManager;
     }
+
+    // Translates JPA Exceptions to Spring data access runtime exceptions
+    // (https://stackoverflow.com/a/43585486)
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor jpaExceptionTranslator() {
+	final PersistenceExceptionTranslationPostProcessor excTranslator = new PersistenceExceptionTranslationPostProcessor();
+	excTranslator.setFrozen(true);
+	excTranslator.setOpaque(true);
+	// excTranslator.setProxyTargetClass(proxyTargetClass);
+
+	return excTranslator;
+    }
+
+    // TODO: Consider using this validation technique:
+    // http://www.baeldung.com/javax-validation
+    // https://stackoverflow.com/questions/23604540/spring-boot-how-to-properly-inject-javax-validation-validator
+    // @Bean
+    // public Validator entityValidator() {
+    // return Validation.buildDefaultValidatorFactory().getValidator();
+    // }
 
     // TODO: Common transaction manager - figure out how to autouse OR get
     // UserTransaction impl...
     // Does not seem to make a difference whether I intialize it or not...
-    
+
     // @Bean(name = "transactionManager")
     // @Primary
     // public PlatformTransactionManager localTransactionManager() {

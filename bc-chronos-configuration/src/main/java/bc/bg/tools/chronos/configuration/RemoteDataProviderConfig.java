@@ -21,7 +21,6 @@ import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteProjectSer
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteRoleService;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.impl.RemoteTaskService;
 
-//TODO: Test w/wo lazy init...
 @Lazy
 @Configuration
 public class RemoteDataProviderConfig {
@@ -75,27 +74,4 @@ public class RemoteDataProviderConfig {
     public IRemoteRoleService roleService() {
 	return new RemoteRoleService();
     }
-
-    // TODO: Configure this properly
-    // http://www.javaworld.com/article/2077714/java-web-development/xa-transactions-using-spring.html?page=3
-
-    // @Bean(name = "remoteCustTransactionProxy")
-    // @DependsOn("transactionManager")
-    // @Scope(proxyMode = ScopedProxyMode.INTERFACES)
-    // public TransactionProxyFactoryBean remoteCustTransactionProxy() {
-    // TransactionProxyFactoryBean abstractProxy = new
-    // TransactionProxyFactoryBean();
-    // abstractProxy.setTransactionManager(localTransactionManager());
-    // abstractProxy.setTarget(customerService());
-    // // abstractProxy.setProxyTargetClass(true);
-    //
-    // Properties properties = new Properties();
-    // properties.setProperty("get", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("find", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("is", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("*", "PROPAGATION_REQUIRED");
-    // abstractProxy.setTransactionAttributes(properties);
-    //
-    // return abstractProxy;
-    // }
 }

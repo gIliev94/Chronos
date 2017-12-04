@@ -10,24 +10,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import bitronix.tm.TransactionManagerServices;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-//@SpringBootApplication(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
-//@EnableAutoConfiguration(exclude = { RemoteDBConfig.class, RemoteDataProviderConfig.class })
+//TODO: NEED? Add views package here when implemented
+//@ComponentScan({"bc.bg.tools.chronos.endpoint.ui"})
+
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableTransactionManagement
-// TODO: NEED? Add views package here when implemented
-// @ComponentScan({"bc.bg.tools.chronos.endpoint.ui"})
-
-// TODO: NEED? Full configuration of DBs +
-// bc.bg.tools.chronos.configuration.ChronosMultitenancyResolver
-
-// @Import(value = { LocalDBConfig.class, LocalDataProviderConfig.class,
-// RemoteDBConfig.class,
-// RemoteDataProviderConfig.class, I18nConfig.class, UIConfig.class })
 @Import(value = { CommonDBConfig.class, // nl
 	LocalDBConfig.class, LocalDataProviderConfig.class, // nl
 	RemoteDBConfig.class, RemoteDataProviderConfig.class, // nl
@@ -45,15 +36,21 @@ public class ChronosApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 	// TODO: NEED? Register shutdown hook to close this shit...
-	final ConfigurableApplicationContext context = SpringApplication.run(ChronosApplication.class, new String[0]);
-	final UIConfig uiConfiguration = context.getBean(UIConfig.class);
+	final ConfigurableApplicationContext appContext = SpringApplication.run(ChronosApplication.class);
+	// final ConfigurableApplicationContext appContext =
+	// SpringApplication.run(ChronosApplication.class,
+	// new String[0]);
 
-	uiConfiguration.showStartScreen(primaryStage, context);
+	final UIConfig uiConfiguration = appContext.getBean(UIConfig.class);
+	uiConfiguration.showStartScreen(primaryStage, appContext);
     }
 
     @PreDestroy
     public void destroy() {
+	// TODO:
 	System.err.println("Pre-destroy beans - do something before garbage collection?");
-	LOGGER.info("Pre-destroy beans - do something before garbage collection?");
+	if (LOGGER.isInfoEnabled()) {
+	    LOGGER.info("Pre-destroy beans - do something before garbage collection?");
+	}
     }
 }

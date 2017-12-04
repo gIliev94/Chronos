@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Lazy;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.login.LoginController;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
-import bc.bg.tools.chronos.endpoint.ui.sample.SampleController;
 import bc.bg.tools.chronos.endpoint.ui.tab.performers.PerformersController;
 import bc.bg.tools.chronos.endpoint.ui.tab.reporting.RecentReportActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.tab.reporting.ReportActionPanelController;
@@ -23,7 +22,6 @@ import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -67,26 +65,7 @@ public class UIConfig {
 	// primaryStage.sizeToScene();
 	// primaryStage.setMaximized(true);
 	primaryStage.show();
-
-	// TODO: Remove later - JavaFx demo(private method below as well)...
-	// testSample(primaryStage);
     }
-
-    @SuppressWarnings("unused")
-    private void testSample(Stage primaryStage) {
-	try {
-	    final FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Sample.fxml"));
-	    final BorderPane root = loader.load();
-	    final SampleController controller = loader.getController();
-
-	    final Scene scene = new Scene(root, 300, controller.getWindowHeight());
-	    primaryStage.setScene(scene);
-	    primaryStage.show();
-	} catch (Exception e) {
-	    ExceptionUtils.printRootCauseStackTrace(e);
-	}
-    }
-    //
 
     @Bean
     public MainViewController mainViewController() {

@@ -26,29 +26,11 @@ import bg.bc.tools.chronos.dataprovider.db.local.services.impl.LocalTaskService;
 import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import bg.bc.tools.chronos.dataprovider.utilities.DataSynchronizer;
 
-//TODO: Test w/wo lazy init...
 @Lazy
 @Configuration
 public class LocalDataProviderConfig {
     // TODO: Bad attempt of inheritance - remove later...
     // extends LocalDBConfig {
-
-    // TODO: Intercept service calls(is this an obsolete approach??)
-    // http://web.archive.org/web/20150520175202/https://docs.codehaus.org/display/BTM/Spring+Framework2x#SpringFramework2x-Step6:Configuredeclarativetransactionmanagement
-    // http://web.archive.org/web/20150504022713/http://docs.spring.io/spring/docs/2.5.x/api/org/springframework/transaction/interceptor/TransactionProxyFactoryBean.html
-    // @Bean(name = "txInterceptor")
-    // @DependsOn("transactionManager")
-    // private TransactionProxyFactoryBean txInterceptor(){
-    // TransactionProxyFactoryBean interceptor = new
-    // TransactionProxyFactoryBean();
-    //
-    // Properties txProps = new Properties();
-    // txProps.setProperty("*", "PROPAGATION_REQUIRED, -Exception");
-    // interceptor.setTransactionAttributes(txProps);
-    // interceptor.setTarget(customerService());
-    //
-    // return interceptor;
-    // }
 
     @Bean(name = "localCategoryService")
     @DependsOn("transactionManager")
@@ -115,35 +97,4 @@ public class LocalDataProviderConfig {
     public DataSynchronizer dataSynchronizer() {
 	return new DataSynchronizer();
     }
-
-    // TODO: Move maybe...
-    // @Bean(name = "globalDataCreator")
-    // @DependsOn("transactionManager")
-    // public DataCreator globalDataCreator() {
-    // return new DataCreator(false);
-    // }
-    //
-
-    // TODO: Configure this properly
-    // http://www.javaworld.com/article/2077714/java-web-development/xa-transactions-using-spring.html?page=3
-
-    // @Bean(name = "localCustTransactionProxy")
-    // @DependsOn("transactionManager")
-    // @Scope(proxyMode = ScopedProxyMode.INTERFACES)
-    // public TransactionProxyFactoryBean localCustTransactionProxy() {
-    // TransactionProxyFactoryBean abstractProxy = new
-    // TransactionProxyFactoryBean();
-    // abstractProxy.setTransactionManager(localTransactionManager());
-    // abstractProxy.setTarget(customerService());
-    // // abstractProxy.setProxyTargetClass(true);
-    //
-    // Properties properties = new Properties();
-    // properties.setProperty("get", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("find", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("is", "PROPAGATION_SUPPORTS,readOnly");
-    // properties.setProperty("*", "PROPAGATION_REQUIRED");
-    // abstractProxy.setTransactionAttributes(properties);
-    //
-    // return abstractProxy;
-    // }
 }
