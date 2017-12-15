@@ -122,11 +122,11 @@ public class RemoteDBConfig {
 	// poolingDataSrcBean.setAcquisitionInterval(0);
 
 	// TODO: Test without Pooling data source(just JTDS for SQL Server)...
-	// return jtdsRemoteDataSource();
+	return jtdsRemoteDataSource();
 	// OR
 	// return new BitronixXADataSourceWrapper(jtdsRemoteDataSource());
 
-	return poolingDataSrc;
+	// return poolingDataSrc;
 
     }
 
@@ -156,7 +156,7 @@ public class RemoteDBConfig {
 	jtdsDataSrc.setPortNumber(1433);
 	jtdsDataSrc.setServerName("localhost");
 	// jtdsDataSrc.setServerName("DESKTOP-HHOD44I\\SQLEXPRESS");
-	jtdsDataSrc.setInstance("DESKTOP-HHOD44I\\SQLEXPRESS");
+	jtdsDataSrc.setInstance("BC-FSTRUM");
 
 	jtdsDataSrc.setUser(env.getProperty(PROP_DB_REMOTE_JDBC_USER));
 	jtdsDataSrc.setPassword(env.getProperty(PROP_DB_REMOTE_JDBC_PASS));
@@ -165,6 +165,7 @@ public class RemoteDBConfig {
 	jtdsDataSrc.setLastUpdateCount(true);
 	jtdsDataSrc.setAutoCommit(true);
 	jtdsDataSrc.setXaEmulation(true);
+	jtdsDataSrc.setAppName("Chronos");
 	// jtdsDataSrc.set...
 
 	return jtdsDataSrc;

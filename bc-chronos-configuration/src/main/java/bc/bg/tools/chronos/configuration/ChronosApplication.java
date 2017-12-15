@@ -35,11 +35,9 @@ public class ChronosApplication extends Application {
     // place to initialize Spring app context...
     @Override
     public void start(Stage primaryStage) throws Exception {
-	// TODO: NEED? Register shutdown hook to close this shit...
 	final ConfigurableApplicationContext appContext = SpringApplication.run(ChronosApplication.class);
-	// final ConfigurableApplicationContext appContext =
-	// SpringApplication.run(ChronosApplication.class,
-	// new String[0]);
+	// TODO: NEED? Register shutdown hook to close this shit...
+	appContext.registerShutdownHook();
 
 	final UIConfig uiConfiguration = appContext.getBean(UIConfig.class);
 	uiConfiguration.showStartScreen(primaryStage, appContext);
@@ -47,7 +45,7 @@ public class ChronosApplication extends Application {
 
     @PreDestroy
     public void destroy() {
-	// TODO:
+	// TODO: Do something here or???
 	System.err.println("Pre-destroy beans - do something before garbage collection?");
 	if (LOGGER.isInfoEnabled()) {
 	    LOGGER.info("Pre-destroy beans - do something before garbage collection?");
