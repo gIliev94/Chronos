@@ -8,25 +8,18 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity(name = "Booking")
-public class Booking implements Serializable {
+public class Booking extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Column(unique = true, nullable = false)
-    private String syncKey;
-
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Column(unique = false, nullable = true)
     private String description;
@@ -39,22 +32,26 @@ public class Booking implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    // TODO: Change to DOUBLE
     @Column(unique = false, nullable = false)
-    private long hoursSpent;
+    private double hoursSpent;
+
+    @Column(unique = true, nullable = false)
+    private String deviceName;
 
     @ManyToOne(optional = false)
-    // , cascade = CascadeType.ALL)O
+    // , cascade = CascadeType.ALL)
+    // , fetch = FetchType.LAZY)
     // @JoinColumn(name = "performer_id")
     private Performer performer;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
-    // , orphanRemoval = true , fetch = FetchType.LAZY)
-    private Role role;
+    // , fetch = FetchType.LAZY)
+    private BillingRole billingRole;
 
     @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
+    // , fetch = FetchType.LAZY)
     // @JoinColumn(name = "task_id")
     private Task task;
 
@@ -64,29 +61,14 @@ public class Booking implements Serializable {
     // @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     // , orphanRemoval = true,fetch = FetchType.LAZY)
-    private Collection<BillingRateModifier> billingRateModifiers;
+    private Collection<BillingRateModifier> billingRateModifiers = new ArrayList<>(0);
 
+    // TODO: Need???
     // @Column(unique = false, nullable = false)
     // private boolean isOvertime;
     //
     // @Column(unique = false, nullable = false)
     // private boolean isEffectivelyStopped;
-
-    public String getSyncKey() {
-	return syncKey;
-    }
-
-    public void setSyncKey(String syncKey) {
-	this.syncKey = syncKey;
-    }
-
-    public long getId() {
-	return id;
-    }
-
-    public void setId(long id) {
-	this.id = id;
-    }
 
     public String getDescription() {
 	return description;
@@ -112,12 +94,20 @@ public class Booking implements Serializable {
 	this.endTime = endTime;
     }
 
-    public long getHoursSpent() {
+    public double getHoursSpent() {
 	return hoursSpent;
     }
 
-    public void setHoursSpent(long hoursSpent) {
+    public void setHoursSpent(double hoursSpent) {
 	this.hoursSpent = hoursSpent;
+    }
+
+    public String getDeviceName() {
+	return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+	this.deviceName = deviceName;
     }
 
     public Performer getPerformer() {
@@ -128,12 +118,12 @@ public class Booking implements Serializable {
 	this.performer = performer;
     }
 
-    public Role getRole() {
-	return role;
+    public BillingRole getBillingRole() {
+	return billingRole;
     }
 
-    public void setRole(Role role) {
-	this.role = role;
+    public void setBillingRole(BillingRole billingRole) {
+	this.billingRole = billingRole;
     }
 
     public Task getTask() {
@@ -144,6 +134,7 @@ public class Booking implements Serializable {
 	this.task = task;
     }
 
+    // TODO: Need???
     // public boolean isOvertime() {
     // return isOvertime;
     // }
@@ -168,13 +159,42 @@ public class Booking implements Serializable {
 	this.billingRateModifiers = billingRateModifiers;
     }
 
-    public void addBillingRateModifier(BillingRateModifier billingRateModifier) {
-	billingRateModifier.setBooking(this);
-
-	if (getBillingRateModifiers() == null) {
-	    setBillingRateModifiers(new ArrayList<BillingRateModifier>());
+    // TODO: TEST...
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
 	}
+	if (other == this) {
+	    return true;
+	}
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof Booking)) {
+	// return false;
+	// }
 
-	getBillingRateModifiers().add(billingRateModifier);
+	final Booking booking = (Booking) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(booking.getDeviceName(), getDeviceName()) // nl
+		.append(booking.getPerformer(), getPerformer()) // nl
+		.append(booking.getBillingRole(), getBillingRole()) // nl
+		.append(booking.getTask(), getTask()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getDeviceName()) // nl
+		.append(getPerformer()) // nl
+		.append(getBillingRole()) // nl
+		.append(getTask()) // nl
+		.hashCode();
     }
 }

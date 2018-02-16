@@ -10,14 +10,21 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity(name = "Task")
-public class Task extends CategoricalEntity implements Serializable {
+public class Task extends CategoricalEntity
+	// TODO: M2A attempt...
+	// extends CategoricalEntityAlt
+	implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Column(unique = false, nullable = false)
     private long hoursEstimated;
 
+    // TODO: Consider carefully fetch / cascade types...
     @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
     // , fetch = FetchType.LAZY)
@@ -25,7 +32,8 @@ public class Task extends CategoricalEntity implements Serializable {
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     // ,orphanRemoval = true, fetch = FetchType.LAZY)
-    private Collection<Booking> bookings;
+    private Collection<Booking> bookings = new ArrayList<>(0);
+    //
 
     public long getHoursEstimated() {
 	return hoursEstimated;
@@ -51,13 +59,36 @@ public class Task extends CategoricalEntity implements Serializable {
 	return bookings;
     }
 
-    public void addBooking(Booking booking) {
-	booking.setTask(this);
-
-	if (getBookings() == null) {
-	    setBookings(new ArrayList<Booking>());
+    // TODO: TEST...
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
 	}
+	if (other == this) {
+	    return true;
+	}
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof Task)) {
+	// return false;
+	// }
 
-	getBookings().add(booking);
+	final Task task = (Task) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(task.getProject(), getProject()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getProject()) // nl
+		.hashCode();
     }
 }

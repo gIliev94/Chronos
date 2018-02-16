@@ -1,33 +1,22 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity(name = "Category")
-public class Category implements Serializable {
+public class Category extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Column(unique = true, nullable = false)
-    private String syncKey;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -35,27 +24,20 @@ public class Category implements Serializable {
     @Column(unique = false, nullable = false)
     private int sortOrder;
 
-    // TODO: Fix annotation fields at some point...
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    // ,orphanRemoval = true)
-    private Collection<CategoricalEntity> categoricalEntities;
+    // TODO: M2A attempt..
+    // @ManyToAny(metaDef = "CategoricalEntityMetaDef", metaColumn =
+    // @Column(name = "categoricalEntity_type"))
+    // @Cascade({ org.hibernate.annotations.CascadeType.ALL })
+    // @JoinTable(name = "Category_CategoricalEntities", joinColumns =
+    // @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name
+    // = "categoricalEntity_id"))
+    // private Set<ICategoricalEntity> categoricalEntities = new HashSet<>(0);
 
-    public String getSyncKey() {
-	return syncKey;
-    }
-
-    public void setSyncKey(String syncKey) {
-	this.syncKey = syncKey;
-    }
-
-    public long getId() {
-	return id;
-    }
-
-    public void setId(long id) {
-	this.id = id;
-    }
+    // Consider adding CascadeType.REFRESH or maybe @Fetch(value =
+    // FetchMode.SUBSELECT)
+    // https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<CategoricalEntity> categoricalEntities = new HashSet<>(0);
 
     public String getName() {
 	return name;
@@ -73,50 +55,69 @@ public class Category implements Serializable {
 	this.sortOrder = sortOrder;
     }
 
-    public Collection<CategoricalEntity> getCategoricalEntities() {
-	return categoricalEntities = categoricalEntities != null ? categoricalEntities
-		: new ArrayList<CategoricalEntity>();
+    // TODO: M2A attempt...
+    // public Set<ICategoricalEntity> getCategoricalEntities() {
+    // return categoricalEntities;
+    // }
+    //
+    // public void setCategoricalEntities(Set<ICategoricalEntity>
+    // categoricalEntities) {
+    // this.categoricalEntities = categoricalEntities;
+    // }
+
+    public Set<CategoricalEntity> getCategoricalEntities() {
+	return categoricalEntities;
     }
 
-    public void setCategoricalEntities(Collection<CategoricalEntity> categoricalEntities) {
+    public void setCategoricalEntities(Set<CategoricalEntity> categoricalEntities) {
 	this.categoricalEntities = categoricalEntities;
     }
 
-    // TODO: Consistency method??
-    // public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
-    // categoricalEntity.setCategory(this);
-    //
-    // if (getCategoricalEntities() == null) {
-    // setCategoricalEntities(new ArrayList<CategoricalEntity>());
-    // }
-    //
-    // getCategoricalEntities().add(categoricalEntity);
-    // }
-
+    // TODO: Consistency methods (keep bidirectional entities up-to-date)
+    // (https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/)
+    // always use with M2M and possibly M2O / O2M bidirectional...
     public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
-	addCategoricalEntity(categoricalEntity, true);
-    }
-
-    void addCategoricalEntity(CategoricalEntity categoricalEntity, boolean set) {
-	if (categoricalEntity != null) {
-	    if (getCategoricalEntities().contains(categoricalEntity)) {
-		((List<CategoricalEntity>) getCategoricalEntities()).set(
-			((List<CategoricalEntity>) getCategoricalEntities()).indexOf(categoricalEntity),
-			categoricalEntity);
-	    } else {
-		getCategoricalEntities().add(categoricalEntity);
-	    }
-	    if (set) {
-		categoricalEntity.setCategory(this, false);
-	    }
-	}
+	categoricalEntities.add(categoricalEntity);
+	categoricalEntity.getCategories().add(this);
     }
 
     public void removeCategoricalEntity(CategoricalEntity categoricalEntity) {
-	getCategoricalEntities().remove(categoricalEntity);
-	categoricalEntity.setCategory(null);
+	categoricalEntities.remove(categoricalEntity);
+	categoricalEntity.getCategories().remove(this);
     }
-    //
+
+    // TODO: TEST...
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
+	}
+	if (other == this) {
+	    return true;
+	}
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof Category)) {
+	// return false;
+	// }
+
+	final Category category = (Category) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(category.getName(), getName()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getName()) // nl
+		.hashCode();
+    }
 
     @Override
     public String toString() {

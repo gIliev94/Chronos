@@ -2,8 +2,6 @@ package bg.bc.tools.chronos.dataprovider.db.entities.mapping;
 
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -18,14 +16,13 @@ import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.ModifierAction;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
 //TODO: Refactor null handling
@@ -43,7 +40,7 @@ public final class DomainToDbMapper {
 	}
 
 	final Customer dbCustomer = new Customer();
-	dbCustomer.setSyncKey(domainCustomer.getSyncKey());
+	// dbCustomer.setSyncKey(domainCustomer.getSyncKey());
 	// dbCustomer.setId(domainCustomer.getId());
 	dbCustomer.setName(domainCustomer.getName());
 	dbCustomer.setDescription(domainCustomer.getDescription());
@@ -60,7 +57,7 @@ public final class DomainToDbMapper {
 	}
 
 	final Project dbProject = new Project();
-	dbProject.setSyncKey(domainProject.getSyncKey());
+	// dbProject.setSyncKey(domainProject.getSyncKey());
 	// dbProject.setId(domainProject.getId());
 	dbProject.setName(domainProject.getName());
 	dbProject.setDescription(domainProject.getDescription());
@@ -81,7 +78,7 @@ public final class DomainToDbMapper {
 	}
 
 	final Task dbTask = new Task();
-	dbTask.setSyncKey(domainTask.getSyncKey());
+	// dbTask.setSyncKey(domainTask.getSyncKey());
 	// dbTask.setId(domainTask.getId());
 	dbTask.setName(domainTask.getName());
 	dbTask.setDescription(domainTask.getDescription());
@@ -100,20 +97,21 @@ public final class DomainToDbMapper {
 	}
 
 	final Performer dbPerformer = new Performer();
-	dbPerformer.setSyncKey(domainPerformer.getSyncKey());
+	// dbPerformer.setSyncKey(domainPerformer.getSyncKey());
 	// dbPerformer.setId(domainPerformer.getId());
-	dbPerformer.setHandle(domainPerformer.getHandle());
-	dbPerformer.setPassword(domainPerformer.getPassword());
-	dbPerformer.setName(domainPerformer.getName());
-	dbPerformer.setEmail(domainPerformer.getEmail());
-	dbPerformer.setLogged(domainPerformer.isLogged());
-	dbPerformer.setPrimaryDeviceName(domainPerformer.getPrimaryDeviceName());
+	// dbPerformer.setHandle(domainPerformer.getHandle());
+	// dbPerformer.setPassword(domainPerformer.getPassword());
+	// dbPerformer.setName(domainPerformer.getName());
+	// dbPerformer.setEmail(domainPerformer.getEmail());
+	// dbPerformer.setLogged(domainPerformer.isLogged());
+	// dbPerformer.setPrimaryDeviceName(domainPerformer.getPrimaryDeviceName());
 
-	final List<Priviledge> dbPriviledges = domainPerformer.getPriviledges().stream() // nl
-		.map(p -> p.name()) // nl
-		.map(Priviledge::valueOf) // nl
-		.collect(Collectors.toList());
-	dbPerformer.setPriviledges(dbPriviledges);
+	// final List<Privilege> dbPriviledges =
+	// domainPerformer.getPriviledges().stream() // nl
+	// .map(p -> p.name()) // nl
+	// .map(Privilege::valueOf) // nl
+	// .collect(Collectors.toList());
+	// dbPerformer.setPriviledges(dbPriviledges);
 
 	// final Collection<DPriviledge> priviledges =
 	// domainPerformer.getPriviledges();
@@ -131,7 +129,7 @@ public final class DomainToDbMapper {
 	}
 
 	final Booking dbBooking = new Booking();
-	dbBooking.setSyncKey(domainBooking.getSyncKey());
+	// dbBooking.setSyncKey(domainBooking.getSyncKey());
 	// dbBooking.setId(domainBooking.getId());
 	dbBooking.setDescription(domainBooking.getDescription());
 	dbBooking.setStartTime(Date.from(domainBooking.getStartTime().atZone(ZoneId.systemDefault()).toInstant()));
@@ -146,14 +144,14 @@ public final class DomainToDbMapper {
 	return dbBooking;
     }
 
-    public static Role domainToDbRole(DRole domainRole) {
+    public static BillingRole domainToDbRole(DRole domainRole) {
 	if (domainRole == null) {
 	    LOGGER.error("No domain entity(null)!");
 	    return null;
 	}
 
-	final Role dbRole = new Role();
-	dbRole.setSyncKey(domainRole.getSyncKey());
+	final BillingRole dbRole = new BillingRole();
+	// dbRole.setSyncKey(domainRole.getSyncKey());
 	// dbRole.setId(domainRole.getId());
 	dbRole.setName(domainRole.getName());
 	dbRole.setBillingRate(domainRole.getBillingRate());
@@ -173,7 +171,7 @@ public final class DomainToDbMapper {
 	}
 
 	final Category dbCategory = new Category();
-	dbCategory.setSyncKey(domainCategory.getSyncKey());
+	// dbCategory.setSyncKey(domainCategory.getSyncKey());
 	// dbCategory.setId(domainCategory.getId());
 	dbCategory.setName(domainCategory.getName());
 	dbCategory.setSortOrder(domainCategory.getSortOrder());
@@ -188,7 +186,7 @@ public final class DomainToDbMapper {
 	}
 
 	final BillingRateModifier dbBillingRateModifier = new BillingRateModifier();
-	dbBillingRateModifier.setSyncKey(domainBillingRateModifier.getSyncKey());
+	// dbBillingRateModifier.setSyncKey(domainBillingRateModifier.getSyncKey());
 	// dbBillingRateModifier.setId(domainBillingRateModifier.getId());
 	dbBillingRateModifier
 		.setModifierAction(ModifierAction.valueOf(domainBillingRateModifier.getModifierAction().name()));

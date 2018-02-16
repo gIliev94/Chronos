@@ -2,17 +2,14 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity(name = "BillingRateModifier")
-public class BillingRateModifier implements Serializable {
+public class BillingRateModifier extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,13 +21,6 @@ public class BillingRateModifier implements Serializable {
 	PERCENT
     }
 
-    @Column(unique = true, nullable = false)
-    private String syncKey;
-
-    @Id
-    @GeneratedValue
-    private long id;
-
     @Enumerated(EnumType.STRING)
     private ModifierAction modifierAction;
 
@@ -40,22 +30,6 @@ public class BillingRateModifier implements Serializable {
     @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
     private Booking booking;
-
-    public String getSyncKey() {
-	return syncKey;
-    }
-
-    public void setSyncKey(String syncKey) {
-	this.syncKey = syncKey;
-    }
-
-    public long getId() {
-	return id;
-    }
-
-    public void setId(long id) {
-	this.id = id;
-    }
 
     public ModifierAction getModifierAction() {
 	return modifierAction;
@@ -79,5 +53,10 @@ public class BillingRateModifier implements Serializable {
 
     public void setBooking(Booking booking) {
 	this.booking = booking;
+    }
+
+    @Override
+    public String toString() {
+	return modifierAction + " :: [" + modifierValue + "]";
     }
 }

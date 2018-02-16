@@ -1,170 +1,97 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity(name = "Performer")
-public class Performer implements Serializable {
+public class Performer extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // TODO: Typo - correct is Privilege
-    public enum Priviledge {
-	READ, // nl
-	WRITE, // nl
-	MERGE, // nl
-	DELETE, // nl
-	FORCESYNC, // nl
-	ALL
-    }
+    // TODO: Consider cascade / fetch types...
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "appUser_id")
+    private User user;
 
-    @Column(unique = true, nullable = false)
-    private String syncKey;
-
-    @Id
-    @GeneratedValue
-    private long id;
-
-    @Column(unique = false, nullable = true)
-    private String name;
-
-    @Column(unique = true, nullable = false)
-    private String handle;
-
-    // TODO: Remove password entirely - Windows SSO + check username only...
-    @Column(unique = false, nullable = false)
-    private char[] password;
-
-    @Column(unique = true, nullable = true)
-    private String email;
-
-    @Column(unique = true, nullable = false)
-    private String primaryDeviceName;
-
-    @Column(unique = false, nullable = false)
-    private boolean isLogged;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    // @CollectionTable()
-    @Enumerated(EnumType.STRING)
-    private Collection<Priviledge> priviledges;
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    private BillingRole billingRole;
 
     @OneToMany(mappedBy = "performer", cascade = CascadeType.ALL)
     // ,orphanRemoval = true, fetch = FetchType.LAZY)
-    private Collection<Booking> bookings;
+    private Set<Booking> bookings;
+    //
 
-    public String getSyncKey() {
-	return syncKey;
+    public BillingRole getBillingRole() {
+	return billingRole;
     }
 
-    public void setSyncKey(String syncKey) {
-	this.syncKey = syncKey;
+    public void setBillingRole(BillingRole billingRole) {
+	this.billingRole = billingRole;
     }
 
-    public long getId() {
-	return id;
+    public User getUser() {
+	return user;
     }
 
-    public void setId(long id) {
-	this.id = id;
+    public void setUser(User user) {
+	this.user = user;
     }
 
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public String getHandle() {
-	return handle;
-    }
-
-    public void setHandle(String handle) {
-	this.handle = handle;
-    }
-
-    public char[] getPassword() {
-	return password;
-    }
-
-    public void setPassword(char[] password) {
-	this.password = password;
-    }
-
-    public String getEmail() {
-	return email;
-    }
-
-    public void setEmail(String email) {
-	this.email = email;
-    }
-
-    public String getPrimaryDeviceName() {
-	return primaryDeviceName;
-    }
-
-    public void setPrimaryDeviceName(String primaryDeviceName) {
-	this.primaryDeviceName = primaryDeviceName;
-    }
-
-    public boolean isLogged() {
-	return isLogged;
-    }
-
-    public void setLogged(boolean isLogged) {
-	this.isLogged = isLogged;
-    }
-
-    public Collection<Priviledge> getPriviledges() {
-	return priviledges;
-    }
-
-    public void addPriviledge(Priviledge priviledge) {
-	if (getPriviledges() == null) {
-	    setPriviledges(new ArrayList<Priviledge>());
-	}
-
-	getPriviledges().add(priviledge);
-    }
-
-    public void setPriviledges(Collection<Priviledge> priviledges) {
-	this.priviledges = priviledges;
-    }
-
-    public Collection<Booking> getBookings() {
+    public Set<Booking> getBookings() {
 	return bookings;
     }
 
-    public void setBookings(Collection<Booking> bookings) {
+    public void setBookings(Set<Booking> bookings) {
 	this.bookings = bookings;
     }
 
-    public void addBooking(Booking booking) {
-	booking.setPerformer(this);
-
-	if (getBookings() == null) {
-	    setBookings(new ArrayList<Booking>());
+    // TODO: TEST...
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
 	}
+	if (other == this) {
+	    return true;
+	}
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof Performer)) {
+	// return false;
+	// }
 
-	getBookings().add(booking);
+	final Performer performer = (Performer) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(performer.getBillingRole(), getBillingRole()) // nl
+		.append(performer.getUser(), getUser()) // nlnl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getBillingRole()) // nl
+		.append(getUser()) // nl
+		.hashCode();
     }
 
     @Override
     public String toString() {
-	return handle + "[" + name + "]";
+	return "[" + billingRole + "] :: " + user;
     }
 }

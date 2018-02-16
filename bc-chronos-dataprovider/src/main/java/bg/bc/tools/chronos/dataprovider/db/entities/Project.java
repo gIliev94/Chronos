@@ -9,18 +9,27 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity(name = "Project")
-public class Project extends CategoricalEntity implements Serializable {
+public class Project extends CategoricalEntity
+	// TODO: M2A attempt...
+	// extends CategoricalEntityAlt
+	implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // TODO: Consider carefully fetch / cascade types...
     @ManyToOne(optional = false)
     // , fetch = FetchType.LAZY)
     private Customer customer;
 
+    // TODO: Consider switching to Set collection...
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     // , orphanRemoval = true, fetch = FetchType.LAZY)
-    private Collection<Task> tasks;
+    private Collection<Task> tasks = new ArrayList<>(0);
+    //
 
     public Customer getCustomer() {
 	return customer;
@@ -38,13 +47,36 @@ public class Project extends CategoricalEntity implements Serializable {
 	this.tasks = tasks;
     }
 
-    public void addTask(Task task) {
-	task.setProject(this);
-
-	if (getTasks() == null) {
-	    setTasks(new ArrayList<Task>());
+    // TODO: TEST...
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
 	}
+	if (other == this) {
+	    return true;
+	}
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof Project)) {
+	// return false;
+	// }
 
-	getTasks().add(task);
+	final Project project = (Project) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(project.getCustomer(), getCustomer()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getCustomer()) // nl
+		.hashCode();
     }
 }
