@@ -1,7 +1,5 @@
 package bc.bg.tools.chronos.configuration.tests.remote.crud;
 
-import java.util.UUID;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -35,15 +33,15 @@ public class CustomerRemoteCrudTest extends AbstractJUnit4SpringContextTests {
     @BeforeClass
     public static void initialize() {
 	TEST_CUSTOMER = new Customer();
-	TEST_CUSTOMER.setSyncKey(UUID.randomUUID().toString());
+	// TEST_CUSTOMER.setSyncKey(UUID.randomUUID().toString());
 	TEST_CUSTOMER.setName("Georgi Iliev");
 	TEST_CUSTOMER.setDescription("A test customer...");
 
 	DEFAULT_CATEGORY = new Category();
-	DEFAULT_CATEGORY.setSyncKey(UUID.randomUUID().toString());
+	// DEFAULT_CATEGORY.setSyncKey(UUID.randomUUID().toString());
 	DEFAULT_CATEGORY.setName("DEFAULT");
 	DEFAULT_CATEGORY.setSortOrder(1);
-	DEFAULT_CATEGORY.addCategoricalEntity(TEST_CUSTOMER);
+	DEFAULT_CATEGORY.getCategoricalEntities().add(TEST_CUSTOMER);
     }
 
     @AfterClass

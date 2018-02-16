@@ -39,7 +39,7 @@ public class CustomerLocalCrudTest extends AbstractJUnit4SpringContextTests {
 	DEFAULT_CATEGORY = new Category();
 	DEFAULT_CATEGORY.setName("DEFAULT");
 	DEFAULT_CATEGORY.setSortOrder(1);
-	DEFAULT_CATEGORY.addCategoricalEntity(TEST_CUSTOMER);
+	DEFAULT_CATEGORY.getCategoricalEntities().add(TEST_CUSTOMER);
     }
 
     @AfterClass
