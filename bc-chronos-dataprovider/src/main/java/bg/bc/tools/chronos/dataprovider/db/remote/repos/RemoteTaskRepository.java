@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 
@@ -16,17 +15,30 @@ public interface RemoteTaskRepository extends CrudRepository<Task, Long> {
 
     Collection<Task> findByNameIgnoreCaseContaining(String name);
 
-    Collection<Task> findByCategory(Category category);
+    Collection<Task> findDistinctByNameIgnoreCaseContaining(String name);
 
-    Collection<Task> findByCategoryIn(Collection<Category> categories);
+    // Collection<Task> findByCategory(Category category);
+    //
+    // Collection<Task> findDistinctByCategory(Category category);
+    //
+    // Collection<Task> findByCategoryIn(Collection<Category> categories);
+    //
+    // Collection<Task> findDistinctByCategoryIn(Collection<Category>
+    // categories);
 
     Collection<Task> findByHoursEstimatedBetween(long hoursEstimatedLower, long hoursEstimatedUpper);
 
+    Collection<Task> findDistinctByHoursEstimatedBetween(long hoursEstimatedLower, long hoursEstimatedUpper);
+
     Collection<Task> findByHoursEstimatedLessThan(long hoursEstimatedLessThan);
+
+    Collection<Task> findDistinctByHoursEstimatedLessThan(long hoursEstimatedLessThan);
 
     Collection<Task> findByHoursEstimatedGreaterThan(long hoursEstimatedGreaterThan);
 
+    Collection<Task> findDistinctByHoursEstimatedGreaterThan(long hoursEstimatedGreaterThan);
+
     Collection<Task> findByProject(Project project);
 
-    Task findBySyncKey(String syncKey);
+    Collection<Task> findDistinctByProject(Project project);
 }

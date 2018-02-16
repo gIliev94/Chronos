@@ -17,7 +17,7 @@ import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier.Modifier
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;

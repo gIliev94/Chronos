@@ -18,7 +18,7 @@ import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
@@ -87,9 +87,9 @@ public class RemoteBookingService implements IRemoteBookingService {
     @Override
     public List<DBooking> getBookings(DPerformer performer, DRole role) {
 	final Performer dbPerformer = DomainToDbMapper.domainToDbPerformer(performer);
-	final Role dbRole = DomainToDbMapper.domainToDbRole(role);
+	final BillingRole dbRole = DomainToDbMapper.domainToDbRole(role);
 
-	return bookingRepo.findByPerformerAndRole(dbPerformer, dbRole).stream() // nl
+	return bookingRepo.findByPerformerAndBillingRole(dbPerformer, dbRole).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }

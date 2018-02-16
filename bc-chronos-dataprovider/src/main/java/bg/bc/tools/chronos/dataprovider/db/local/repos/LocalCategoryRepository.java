@@ -9,6 +9,4 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 public interface LocalCategoryRepository extends CrudRepository<Category, Long> {
 
     Category findByName(String name);
-
-    Category findBySyncKey(String syncKey);
 }

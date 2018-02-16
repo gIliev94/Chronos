@@ -57,14 +57,14 @@ public class LocalTaskService implements ILocalTaskService {
 
 	    final Task dbTask = DomainToDbMapper.domainToDbTask(task);
 	    dbTask.setProject(dbProject);
-	    dbTask.setCategory(dbCategory);
+	    // dbTask.setCategory(dbCategory);
 
 	    final Task managedNewTask = transactionTemplate.execute(t -> taskRepo.save(dbTask));
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
 	    changeLog.setDeviceName(EntityHelper.getDeviceName());
-	    changeLog.setUpdatedEntityKey(managedNewTask.getSyncKey());
+	    // changeLog.setUpdatedEntityKey(managedNewTask.getSyncKey());
 	    changelogRepo.save(changeLog);
 
 	    return DbToDomainMapper.dbToDomainTask(managedNewTask);
@@ -102,9 +102,11 @@ public class LocalTaskService implements ILocalTaskService {
     public List<DTask> getTasks(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return taskRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainTask) // nl
-		.collect(Collectors.toList());
+	// return taskRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainTask) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -112,10 +114,12 @@ public class LocalTaskService implements ILocalTaskService {
 	final List<Category> dbCategories = categories.stream() // nl
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
+	//
+	// return taskRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainTask) // nl
+	// .collect(Collectors.toList());
 
-	return taskRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainTask) // nl
-		.collect(Collectors.toList());
+	return null;
     }
 
     @Override

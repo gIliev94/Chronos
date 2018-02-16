@@ -65,9 +65,11 @@ public class RemoteTaskService implements IRemoteTaskService {
     public List<DTask> getTasks(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return taskRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainTask) // nl
-		.collect(Collectors.toList());
+	// return taskRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainTask) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -76,9 +78,11 @@ public class RemoteTaskService implements IRemoteTaskService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return taskRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainTask) // nl
-		.collect(Collectors.toList());
+	// return taskRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainTask) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override

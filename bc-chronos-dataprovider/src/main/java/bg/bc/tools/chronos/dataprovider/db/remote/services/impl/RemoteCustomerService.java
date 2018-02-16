@@ -63,9 +63,11 @@ public class RemoteCustomerService implements IRemoteCustomerService {
     public List<DCustomer> getCustomers(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return customerRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCustomer) // nl
-		.collect(Collectors.toList());
+	// return customerRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainCustomer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -74,9 +76,11 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return customerRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCustomer) // nl
-		.collect(Collectors.toList());
+	// return customerRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainCustomer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -128,8 +132,8 @@ public class RemoteCustomerService implements IRemoteCustomerService {
 	try {
 	    final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	    customerRepo.findByCategory(dbCategory) // nl
-		    .forEach(c -> removeCustomer(c.getId()));
+	    // customerRepo.findByCategory(dbCategory) // nl
+	    // .forEach(c -> removeCustomer(c.getId()));
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

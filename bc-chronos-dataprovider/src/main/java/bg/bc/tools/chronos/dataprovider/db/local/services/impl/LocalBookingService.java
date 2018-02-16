@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -19,20 +18,18 @@ import bg.bc.tools.chronos.core.entities.DBooking;
 import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.core.entities.DTask;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
-import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalBookingService;
-import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
 public class LocalBookingService implements ILocalBookingService {
 
@@ -42,7 +39,7 @@ public class LocalBookingService implements ILocalBookingService {
     private LocalBookingRepository bookingRepo;
 
     @Autowired
-    private LocalRoleRepository roleRepo;
+    private LocalBillingRoleRepository roleRepo;
 
     @Autowired
     private LocalPerformerRepository performerRepo;
@@ -61,44 +58,51 @@ public class LocalBookingService implements ILocalBookingService {
 
     @Override
     public DBooking addBooking(DBooking booking) {
-	// TODO: Impl at later stage
-	// final HolidayManager holidayManager = HolidayManager
-	// .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
-	// final Set<Holiday> holidays =
-	// holidayManager.getHolidays(booking.getStartTime().toLocalDate(),
-	// booking.getEndTime().toLocalDate());
+	// // TODO: Impl at later stage
+	// // final HolidayManager holidayManager = HolidayManager
+	// // .getInstance(ManagerParameters.create(HolidayCalendar.BULGARIA));
+	// // final Set<Holiday> holidays =
+	// // holidayManager.getHolidays(booking.getStartTime().toLocalDate(),
+	// // booking.getEndTime().toLocalDate());
+	// //
+	// // booking.setOvertime(!holidays.isEmpty());
+	// // booking.setEffectivelyStopped(false);
 	//
-	// booking.setOvertime(!holidays.isEmpty());
-	// booking.setEffectivelyStopped(false);
+	// booking.setSyncKey(UUID.randomUUID().toString());
+	//
+	// try {
+	// final Task dbTask = transactionTemplate.execute(txDef ->
+	// taskRepo.findByName(booking.getTask().getName()));
+	//
+	// final BillingRole dbRole = transactionTemplate.execute(txDef ->
+	// roleRepo.findByName(booking.getRole().getName()));
+	//
+	// final Performer dbPeformer = transactionTemplate
+	// .execute(txDef ->
+	// performerRepo.findByHandle(booking.getPerformer().getHandle()));
+	//
+	// final Booking dbBooking =
+	// DomainToDbMapper.domainToDbBooking(booking);
+	// dbBooking.setTask(dbTask);
+	// dbBooking.setRole(dbRole);
+	// dbBooking.setPerformer(dbPeformer);
+	//
+	// final Booking managedNewBooking = transactionTemplate.execute(t ->
+	// bookingRepo.save(dbBooking));
+	//
+	// final Changelog changeLog = new Changelog();
+	// changeLog.setChangeTime(Calendar.getInstance().getTime());
+	// changeLog.setDeviceName(EntityHelper.getDeviceName());
+	//// changeLog.setUpdatedEntityKey(managedNewBooking.getSyncKey());
+	// changelogRepo.save(changeLog);
+	//
+	// return DbToDomainMapper.dbToDomainBooking(managedNewBooking);
+	// } catch (Exception e) {
+	// LOGGER.error(e);
+	// throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
+	// }
 
-	booking.setSyncKey(UUID.randomUUID().toString());
-
-	try {
-	    final Task dbTask = transactionTemplate.execute(txDef -> taskRepo.findByName(booking.getTask().getName()));
-
-	    final Role dbRole = transactionTemplate.execute(txDef -> roleRepo.findByName(booking.getRole().getName()));
-
-	    final Performer dbPeformer = transactionTemplate
-		    .execute(txDef -> performerRepo.findByHandle(booking.getPerformer().getHandle()));
-
-	    final Booking dbBooking = DomainToDbMapper.domainToDbBooking(booking);
-	    dbBooking.setTask(dbTask);
-	    dbBooking.setRole(dbRole);
-	    dbBooking.setPerformer(dbPeformer);
-
-	    final Booking managedNewBooking = transactionTemplate.execute(t -> bookingRepo.save(dbBooking));
-
-	    final Changelog changeLog = new Changelog();
-	    changeLog.setChangeTime(Calendar.getInstance().getTime());
-	    changeLog.setDeviceName(EntityHelper.getDeviceName());
-	    changeLog.setUpdatedEntityKey(managedNewBooking.getSyncKey());
-	    changelogRepo.save(changeLog);
-
-	    return DbToDomainMapper.dbToDomainBooking(managedNewBooking);
-	} catch (Exception e) {
-	    LOGGER.error(e);
-	    throw new RuntimeException("IMPLEMENT CUSTOM EXCEPTION", e);
-	}
+	return null;
     }
 
     @Override
@@ -133,9 +137,9 @@ public class LocalBookingService implements ILocalBookingService {
     @Override
     public List<DBooking> getBookings(DPerformer performer, DRole role) {
 	final Performer dbPerformer = DomainToDbMapper.domainToDbPerformer(performer);
-	final Role dbRole = DomainToDbMapper.domainToDbRole(role);
+	final BillingRole dbRole = DomainToDbMapper.domainToDbRole(role);
 
-	return bookingRepo.findByPerformerAndRole(dbPerformer, dbRole).stream() // nl
+	return bookingRepo.findDistinctByPerformerAndBillingRole(dbPerformer, dbRole).stream() // nl
 		.map(DbToDomainMapper::dbToDomainBooking) // nl
 		.collect(Collectors.toList());
     }

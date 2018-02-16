@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 
 @Repository
@@ -15,9 +14,14 @@ public interface LocalCustomerRepository extends CrudRepository<Customer, Long> 
 
     Collection<Customer> findByNameIgnoreCaseContaining(String name);
 
-    Collection<Customer> findByCategory(Category category);
+    Collection<Customer> findDistinctByNameIgnoreCaseContaining(String name);
 
-    Collection<Customer> findByCategoryIn(Collection<Category> categories);
-
-    Customer findBySyncKey(String syncKey);
+    // Collection<Customer> findByCategory(Category category);
+    //
+    // Collection<Customer> findDistinctByCategory(Category category);
+    //
+    // Collection<Customer> findByCategoryIn(Collection<Category> categories);
+    //
+    // Collection<Customer> findDistinctByCategoryIn(Collection<Category>
+    // categories);
 }

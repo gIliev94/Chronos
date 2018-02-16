@@ -12,7 +12,6 @@ import bg.bc.tools.chronos.core.entities.DPerformer;
 import bg.bc.tools.chronos.core.entities.DPerformer.DPriviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
@@ -39,9 +38,9 @@ public class LocalPerformerService implements ILocalPerformerService {
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
 	    changeLog.setDeviceName(EntityHelper.getDeviceName());
-	    changeLog.setUpdatedEntityKey(managedNewPerformer.getSyncKey());
+	    // changeLog.setUpdatedEntityKey(managedNewPerformer.getSyncKey());
 	    changelogRepo.save(changeLog);
-	    
+
 	    return DbToDomainMapper.dbToDomainPerformer(managedNewPerformer);
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -57,12 +56,16 @@ public class LocalPerformerService implements ILocalPerformerService {
 
     @Override
     public DPerformer getPerformer(String handle) {
-	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+	// return
+	// DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+	return null;
     }
 
     @Override
     public DPerformer getPerformerByEmail(String email) {
-	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
+	// return
+	// DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
+	return null;
     }
 
     @Override
@@ -74,35 +77,46 @@ public class LocalPerformerService implements ILocalPerformerService {
 
     @Override
     public List<DPerformer> getPerformers(String name) {
-	return performerRepo.findByName(name).stream() // nl
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	// return performerRepo.findByName(name).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
     public List<DPerformer> getLoggedPerformers() {
-	return performerRepo.findByIsLoggedTrue().stream() // nlS
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	// return performerRepo.findByIsLoggedTrue().stream() // nlS
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
     public List<DPerformer> getPerformers(DPriviledge priviledge) {
-	return performerRepo.findByPriviledgesContaining(Priviledge.valueOf(priviledge.name())).stream()
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	// return
+	// performerRepo.findByPriviledgesContaining(Priviledge.valueOf(priviledge.name())).stream()
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
     public List<DPerformer> getPerformers(List<DPriviledge> priviledges) {
-	final List<Priviledge> dbPriviledges = priviledges.stream() // nl
-		.map(p -> p.name()) // nl
-		.map(Priviledge::valueOf) // nl
-		.collect(Collectors.toList());
+	// final List<Priviledge> dbPriviledges = priviledges.stream() // nl
+	// .map(p -> p.name()) // nl
+	// .map(Priviledge::valueOf) // nl
+	// .collect(Collectors.toList());
+	//
+	// return
+	// performerRepo.findDistinctByPriviledgesIn(dbPriviledges).stream() //
+	// nl
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
 
-	return performerRepo.findDistinctByPriviledgesIn(dbPriviledges).stream() // nl
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	return null;
     }
 
     @Override
@@ -144,13 +158,13 @@ public class LocalPerformerService implements ILocalPerformerService {
 
     @Override
     public boolean removePerformer(String handle) {
-	final Performer dbPerformer = performerRepo.findByHandle(handle);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+	// final Performer dbPerformer = performerRepo.findByHandle(handle);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(null));
     }
 
     @Override
     public boolean removePerformerByEmail(String email) {
-	final Performer dbPerformer = performerRepo.findByEmail(email);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+	// final Performer dbPerformer = performerRepo.findByEmail(email);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(null));
     }
 }

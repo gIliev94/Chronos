@@ -74,9 +74,11 @@ public class RemoteProjectService implements IRemoteProjectService {
     public List<DProject> getProjects(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return projectRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainProject) // nl
-		.collect(Collectors.toList());
+	// return projectRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainProject) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -85,9 +87,11 @@ public class RemoteProjectService implements IRemoteProjectService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return projectRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainProject) // nl
-		.collect(Collectors.toList());
+	// return projectRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainProject) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override

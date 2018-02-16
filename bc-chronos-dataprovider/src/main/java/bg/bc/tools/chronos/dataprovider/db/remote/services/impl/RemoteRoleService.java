@@ -11,10 +11,10 @@ import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.services.ifc.IRemoteRoleService;
 
 public class RemoteRoleService implements IRemoteRoleService {
@@ -22,7 +22,7 @@ public class RemoteRoleService implements IRemoteRoleService {
     private static final Logger LOGGER = Logger.getLogger(RemoteRoleService.class);
 
     @Autowired
-    private RemoteRoleRepository roleRepo;
+    private RemoteBillingRoleRepository roleRepo;
 
     @Override
     public DRole addRole(DRole role) {
@@ -49,13 +49,16 @@ public class RemoteRoleService implements IRemoteRoleService {
 
     @Override
     public DRole getRole(DBooking booking) {
-	final Booking dbBooking = DomainToDbMapper.domainToDbBooking(booking);
-	return DbToDomainMapper.dbToDomainRole(roleRepo.findByBooking(dbBooking));
+	// final Booking dbBooking =
+	// DomainToDbMapper.domainToDbBooking(booking);
+	// return DbToDomainMapper.dbToDomainRole(roleRepo.findByBooking(null));
+
+	return null;
     }
 
     @Override
     public List<DRole> getRoles() {
-	return ((List<Role>) roleRepo.findAll()).stream() // nl
+	return ((List<BillingRole>) roleRepo.findAll()).stream() // nl
 		.map(DbToDomainMapper::dbToDomainRole) // nl
 		.collect(Collectors.toList());
     }
@@ -114,9 +117,10 @@ public class RemoteRoleService implements IRemoteRoleService {
     public boolean updateRole(DRole role) {
 	try {
 	    if (roleRepo.exists(role.getId())) {
-		LOGGER.info("Updating entity :: " + Role.class.getSimpleName() + " :: " + role.getName());
+		LOGGER.info("Updating entity :: " + BillingRole.class.getSimpleName() + " :: " + role.getName());
 	    } else {
-		LOGGER.info("No entity found to update :: " + Role.class.getSimpleName() + " :: " + role.getName());
+		LOGGER.info(
+			"No entity found to update :: " + BillingRole.class.getSimpleName() + " :: " + role.getName());
 	    }
 
 	    roleRepo.save(DomainToDbMapper.domainToDbRole(role));
@@ -131,7 +135,7 @@ public class RemoteRoleService implements IRemoteRoleService {
 
     @Override
     public boolean removeRole(long id) {
-	final Role dbRole = roleRepo.findOne(id);
+	final BillingRole dbRole = roleRepo.findOne(id);
 	return removeRole(DbToDomainMapper.dbToDomainRole(dbRole));
     }
 

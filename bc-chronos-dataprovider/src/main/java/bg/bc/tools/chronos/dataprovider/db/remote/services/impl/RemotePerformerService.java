@@ -42,12 +42,16 @@ public class RemotePerformerService implements IRemotePerformerService {
 
     @Override
     public DPerformer getPerformer(String handle) {
-	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+	// return
+	// DbToDomainMapper.dbToDomainPerformer(performerRepo.findByHandle(handle));
+	return null;
     }
 
     @Override
     public DPerformer getPerformerByEmail(String email) {
-	return DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
+	// return
+	// DbToDomainMapper.dbToDomainPerformer(performerRepo.findByEmail(email));
+	return null;
     }
 
     @Override
@@ -59,16 +63,20 @@ public class RemotePerformerService implements IRemotePerformerService {
 
     @Override
     public List<DPerformer> getPerformers(String name) {
-	return performerRepo.findByName(name).stream() // nl
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	// return performerRepo.findByName(name).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
     public List<DPerformer> getLoggedPerformers() {
-	return performerRepo.findByIsLoggedTrue().stream() // nlS
-		.map(DbToDomainMapper::dbToDomainPerformer) // nl
-		.collect(Collectors.toList());
+	// return performerRepo.findByIsLoggedTrue().stream() // nlS
+	// .map(DbToDomainMapper::dbToDomainPerformer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -111,14 +119,14 @@ public class RemotePerformerService implements IRemotePerformerService {
 
     @Override
     public boolean removePerformer(String handle) {
-	final Performer dbPerformer = performerRepo.findByHandle(handle);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+	// final Performer dbPerformer = performerRepo.findByHandle(handle);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(null));
     }
 
     @Override
     public boolean removePerformerByEmail(String email) {
-	final Performer dbPerformer = performerRepo.findByEmail(email);
-	return removePerformer(DbToDomainMapper.dbToDomainPerformer(dbPerformer));
+	// final Performer dbPerformer = performerRepo.findByEmail(email);
+	return removePerformer(DbToDomainMapper.dbToDomainPerformer(null));
     }
 
     @Override

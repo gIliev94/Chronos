@@ -1,9 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.local.services.impl;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -13,7 +11,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import bg.bc.tools.chronos.core.entities.DCategory;
 import bg.bc.tools.chronos.core.entities.DCustomer;
-import bg.bc.tools.chronos.core.entities.DObject;
 import bg.bc.tools.chronos.core.entities.DProject;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
@@ -74,7 +71,7 @@ public class LocalProjectService implements ILocalProjectService {
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
 	    changeLog.setDeviceName(EntityHelper.getDeviceName());
-	    changeLog.setUpdatedEntityKey(managedNewProject.getSyncKey());
+	    // changeLog.setUpdatedEntityKey(managedNewProject.getSyncKey());
 	    changelogRepo.save(changeLog);
 
 	    return DbToDomainMapper.dbToDomainProject(managedNewProject);
@@ -90,7 +87,7 @@ public class LocalProjectService implements ILocalProjectService {
 	final Customer refCustomer = customerRepo.findByName(project.getCustomer().getName());
 
 	final Project dbProject = DomainToDbMapper.domainToDbProject(project);
-	dbProject.setCategory(refCategory);
+	// dbProject.setCategory(refCategory);
 	dbProject.setCustomer(refCustomer);
 
 	return DbToDomainMapper.dbToDomainProject(dbProject);
@@ -133,9 +130,11 @@ public class LocalProjectService implements ILocalProjectService {
     public List<DProject> getProjects(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return projectRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainProject) // nl
-		.collect(Collectors.toList());
+	// return projectRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainProject) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -144,9 +143,11 @@ public class LocalProjectService implements ILocalProjectService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return projectRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainProject) // nl
-		.collect(Collectors.toList());
+	// return projectRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainProject) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override

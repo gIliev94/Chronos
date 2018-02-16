@@ -17,13 +17,13 @@ import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Changelog;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DbToDomainMapper;
 import bg.bc.tools.chronos.dataprovider.db.entities.mapping.DomainToDbMapper;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBookingRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.services.ifc.ILocalRoleService;
 import bg.bc.tools.chronos.dataprovider.utilities.EntityHelper;
 
@@ -32,7 +32,7 @@ public class LocalRoleService implements ILocalRoleService {
     private static final Logger LOGGER = Logger.getLogger(LocalRoleService.class);
 
     @Autowired
-    private LocalRoleRepository roleRepo;
+    private LocalBillingRoleRepository roleRepo;
 
     @Autowired
     private LocalCategoryRepository categoryRepo;
@@ -93,13 +93,17 @@ public class LocalRoleService implements ILocalRoleService {
 
     @Override
     public DRole getRole(DBooking booking) {
-	final Booking dbBooking = DomainToDbMapper.domainToDbBooking(booking);
-	return DbToDomainMapper.dbToDomainRole(roleRepo.findByBooking(dbBooking));
+	// final Booking dbBooking =
+	// DomainToDbMapper.domainToDbBooking(booking);
+	// return
+	// DbToDomainMapper.dbToDomainRole(roleRepo.findByBooking(dbBooking));
+
+	return null;
     }
 
     @Override
     public List<DRole> getRoles() {
-	return ((List<Role>) roleRepo.findAll()).stream() // nl
+	return ((List<BillingRole>) roleRepo.findAll()).stream() // nl
 		.map(DbToDomainMapper::dbToDomainRole) // nl
 		.collect(Collectors.toList());
     }
@@ -158,11 +162,12 @@ public class LocalRoleService implements ILocalRoleService {
     public boolean updateRole(DRole role) {
 	try {
 	    if (roleRepo.exists(role.getId())) {
-		LOGGER.info("Updating entity :: " + Role.class.getSimpleName() + " :: " + role.getName());
+		LOGGER.info("Updating entity :: " + BillingRole.class.getSimpleName() + " :: " + role.getName());
 		role.setSyncKey(UUID.randomUUID().toString());
 		roleRepo.save(DomainToDbMapper.domainToDbRole(role));
 	    } else {
-		LOGGER.info("No entity found to update :: " + Role.class.getSimpleName() + " :: " + role.getName());
+		LOGGER.info(
+			"No entity found to update :: " + BillingRole.class.getSimpleName() + " :: " + role.getName());
 	    }
 	} catch (Exception e) {
 	    LOGGER.error(e);
@@ -174,7 +179,7 @@ public class LocalRoleService implements ILocalRoleService {
 
     @Override
     public boolean removeRole(long id) {
-	final Role dbRole = roleRepo.findOne(id);
+	final BillingRole dbRole = roleRepo.findOne(id);
 	return removeRole(DbToDomainMapper.dbToDomainRole(dbRole));
     }
 

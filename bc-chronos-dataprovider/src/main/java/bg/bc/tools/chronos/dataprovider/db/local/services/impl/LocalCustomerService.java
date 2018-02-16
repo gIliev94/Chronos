@@ -77,14 +77,14 @@ public class LocalCustomerService implements ILocalCustomerService {
 	    // customerRepo.save(dbCustomer);
 
 	    final Customer rawCustomer = DomainToDbMapper.domainToDbCustomer(customer);
-	    rawCustomer.setCategory(DomainToDbMapper.domainToDbCategory(customer.getCategory()));
-	    
+	    // rawCustomer.setCategory(DomainToDbMapper.domainToDbCategory(customer.getCategory()));
+
 	    final Customer managedNewCustomer = customerRepo.save(rawCustomer);
 
 	    final Changelog changeLog = new Changelog();
 	    changeLog.setChangeTime(Calendar.getInstance().getTime());
 	    changeLog.setDeviceName(EntityHelper.getDeviceName());
-	    changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
+	    // changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
 	    changelogRepo.save(changeLog);
 
 	    return DbToDomainMapper.dbToDomainCustomer(managedNewCustomer);
@@ -97,9 +97,9 @@ public class LocalCustomerService implements ILocalCustomerService {
     @Override
     public DCustomer fetchReferencedEntities(DCustomer customer, Function<DCategory, Void> refCategorySetter) {
 	final Category refCategory = categoryRepo.findByName(customer.getCategory().getName());
-	
+
 	final Customer dbCustomer = DomainToDbMapper.domainToDbCustomer(customer);
-	dbCustomer.setCategory(refCategory);
+	// dbCustomer.setCategory(refCategory);
 
 	return DbToDomainMapper.dbToDomainCustomer(dbCustomer);
     }
@@ -112,13 +112,13 @@ public class LocalCustomerService implements ILocalCustomerService {
 	categoryRepo.save(managedRefCategory);
 
 	final Customer managedNewCustomer = DomainToDbMapper.domainToDbCustomer(newCustomer);
-	managedNewCustomer.setCategory(managedRefCategory);
+	// managedNewCustomer.setCategory(managedRefCategory);
 	customerRepo.save(managedNewCustomer);
 
 	final Changelog changeLog = new Changelog();
 	changeLog.setChangeTime(Calendar.getInstance().getTime());
 	changeLog.setDeviceName(EntityHelper.getDeviceName());
-	changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
+	// changeLog.setUpdatedEntityKey(managedNewCustomer.getSyncKey());
 	changelogRepo.save(changeLog);
 
 	return DbToDomainMapper.dbToDomainCustomer(managedNewCustomer);
@@ -158,9 +158,11 @@ public class LocalCustomerService implements ILocalCustomerService {
     public List<DCustomer> getCustomers(DCategory category) {
 	final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	return customerRepo.findByCategory(dbCategory).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCustomer) // nl
-		.collect(Collectors.toList());
+	// return customerRepo.findByCategory(dbCategory).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainCustomer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -169,9 +171,11 @@ public class LocalCustomerService implements ILocalCustomerService {
 		.map(DomainToDbMapper::domainToDbCategory) // nl
 		.collect(Collectors.toList());
 
-	return customerRepo.findByCategoryIn(dbCategories).stream() // nl
-		.map(DbToDomainMapper::dbToDomainCustomer) // nl
-		.collect(Collectors.toList());
+	// return customerRepo.findByCategoryIn(dbCategories).stream() // nl
+	// .map(DbToDomainMapper::dbToDomainCustomer) // nl
+	// .collect(Collectors.toList());
+
+	return null;
     }
 
     @Override
@@ -222,8 +226,8 @@ public class LocalCustomerService implements ILocalCustomerService {
 	try {
 	    final Category dbCategory = DomainToDbMapper.domainToDbCategory(category);
 
-	    customerRepo.findByCategory(dbCategory) // nl
-		    .forEach(c -> removeCustomer(c.getId()));
+	    // customerRepo.findByCategory(dbCategory) // nl
+	    // .forEach(c -> removeCustomer(c.getId()));
 	} catch (Exception e) {
 	    LOGGER.error(e);
 	    return false;

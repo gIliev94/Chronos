@@ -14,18 +14,31 @@ public interface RemoteBillingRateModifierRepository extends CrudRepository<Bill
 
     Collection<BillingRateModifier> findByModifierAction(ModifierAction modifierAction);
 
+    Collection<BillingRateModifier> findDistinctByModifierAction(ModifierAction modifierAction);
+
     Collection<BillingRateModifier> findByModifierActionIn(Collection<ModifierAction> modifierAction);
+
+    Collection<BillingRateModifier> findDistinctByModifierActionIn(Collection<ModifierAction> modifierAction);
 
     Collection<BillingRateModifier> findByModifierValue(double modifierValue);
 
+    Collection<BillingRateModifier> findDistinctByModifierValue(double modifierValue);
+
     Collection<BillingRateModifier> findByModifierValueLessThan(double lessThanModifierValue);
 
+    Collection<BillingRateModifier> findDistinctByModifierValueLessThan(double lessThanModifierValue);
+
     Collection<BillingRateModifier> findByModifierValueGreaterThan(double greaterThanModifierValue);
+
+    Collection<BillingRateModifier> findDistinctByModifierValueGreaterThan(double greaterThanModifierValue);
 
     Collection<BillingRateModifier> findByModifierValueBetween(double lessThanModifierValue,
 	    double greaterThanModifierValue);
 
+    Collection<BillingRateModifier> findDistinctByModifierValueBetween(double lessThanModifierValue,
+	    double greaterThanModifierValue);
+
     Collection<BillingRateModifier> findByBooking(Booking booking);
 
-    BillingRateModifier findBySyncKey(String syncKey);
+    Collection<BillingRateModifier> findDistinctByBooking(Booking booking);
 }
