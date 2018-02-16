@@ -15,13 +15,13 @@ import bc.bg.tools.chronos.endpoint.ui.actions.EntityActionInfo;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoricalEntityActionModel;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.BillingRateModifier;
+import bg.bc.tools.chronos.dataprovider.db.entities.BillingRole;
 import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
+import bg.bc.tools.chronos.dataprovider.db.entities.Privilege.UserPrivilege;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
-import bg.bc.tools.chronos.dataprovider.db.entities.Role;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import javafx.fxml.FXML;
@@ -122,9 +122,10 @@ public class AddEntityController implements Initializable {
 	    parentEntity = Optional.ofNullable(((Task) childEntity).getProject());
 	} else if (Booking.class.isAssignableFrom(entityClass)) {
 	    parentEntity = Optional.ofNullable(((Booking) childEntity).getTask());
-	} else if (Role.class.isAssignableFrom(entityClass)) {
+	} else if (BillingRole.class.isAssignableFrom(entityClass)) {
 	    // TODO: Not sure about this relation...
-	    parentEntity = Optional.ofNullable(((Role) childEntity).getBooking());
+	    // parentEntity = Optional.ofNullable(((Role)
+	    // childEntity).getBooking());
 	} else if (BillingRateModifier.class.isAssignableFrom(entityClass)) {
 	    parentEntity = Optional.ofNullable(((BillingRateModifier) childEntity).getBooking());
 	}
@@ -167,7 +168,7 @@ public class AddEntityController implements Initializable {
 		// NOP - nothing additional
 	    } else if (Task.class.isAssignableFrom(entityClass)) {
 		//
-	    } else if (Role.class.isAssignableFrom(entityClass)) {
+	    } else if (BillingRole.class.isAssignableFrom(entityClass)) {
 		//
 	    }
 
@@ -205,7 +206,7 @@ public class AddEntityController implements Initializable {
     private void initActions() {
 	final EntityActionInfo actionInfoAddEntity = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.READ) // nl
+		.requiredPriviledges(UserPrivilege.READ) // nl
 		.actionButton(btnAdd) // nl
 		// .preActions(this::merge) // nl
 		.action(this::add); // nl
@@ -213,7 +214,7 @@ public class AddEntityController implements Initializable {
 
 	final EntityActionInfo actionInfoCancelEntity = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.READ) // nl
+		.requiredPriviledges(UserPrivilege.READ) // nl
 		.actionButton(btnCancel) // nl
 		// .preActions(this::merge) // nl
 		.action(this::cancel); // nl

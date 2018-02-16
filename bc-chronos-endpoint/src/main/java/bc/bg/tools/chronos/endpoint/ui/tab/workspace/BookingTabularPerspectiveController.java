@@ -615,8 +615,8 @@ public class BookingTabularPerspectiveController implements Initializable {
 	public BookingTableEntry(final Booking booking) {
 	    this.booking = booking;
 
-	    performerHandle = this.booking.getPerformer().getHandle();
-	    roleName = this.booking.getRole().getName();
+	    performerHandle = this.booking.getPerformer().getUser().getAbbreviation();
+	    roleName = this.booking.getBillingRole().getName();
 	    taskName = this.booking.getTask().getName();
 
 	    determineDuration();
@@ -652,7 +652,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 	}
 
 	private void determineBillingRate() {
-	    double billingRate = booking.getRole().getBillingRate();
+	    double billingRate = booking.getBillingRole().getBillingRate();
 
 	    final Collection<BillingRateModifier> billingRateModifiers = booking.getBillingRateModifiers();
 	    for (BillingRateModifier mod : billingRateModifiers) {
@@ -699,7 +699,7 @@ public class BookingTabularPerspectiveController implements Initializable {
 	    return durationStr;
 	}
 
-	public long getHoursSpent() {
+	public double getHoursSpent() {
 	    return booking.getHoursSpent();
 	}
 

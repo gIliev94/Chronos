@@ -11,7 +11,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import bc.bg.tools.chronos.endpoint.ui.actions.EntityActionInfo;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
+import bg.bc.tools.chronos.dataprovider.db.entities.Privilege.UserPrivilege;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
@@ -127,14 +127,14 @@ public abstract class CategoricalEntityActionPanelController implements Initiali
     protected void initActions() {
 	final EntityActionInfo entityActionRefresh = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.READ) // nl
+		.requiredPriviledges(UserPrivilege.READ) // nl
 		.actionButton(btnRefresh) // nl
 		.action(this::refresh) // nl
 		.postActions(this::refreshDetails);
 
 	final EntityActionInfo entityActionAddChild = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.WRITE) // nl
+		.requiredPriviledges(UserPrivilege.WRITE) // nl
 		.actionButton(btnAddChild) // nl
 		.preActions(this::refresh, this::refreshDetails) // nl
 		.action(this::addChild) // nl
@@ -142,7 +142,7 @@ public abstract class CategoricalEntityActionPanelController implements Initiali
 
 	final EntityActionInfo entityActionModify = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.WRITE) // nl
+		.requiredPriviledges(UserPrivilege.WRITE) // nl
 		.actionButton(btnModify) // nl
 		.preActions(this::refresh, this::refreshDetails) // nl
 		.action(this::modify) // nl
@@ -150,7 +150,7 @@ public abstract class CategoricalEntityActionPanelController implements Initiali
 
 	final EntityActionInfo entityActionMerge = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.WRITE, Priviledge.MERGE) // nl
+		.requiredPriviledges(UserPrivilege.WRITE, UserPrivilege.MERGE) // nl
 		.actionButton(btnMerge) // nl
 		.preActions(this::refresh, this::refreshDetails) // nl
 		.action(this::merge) // nl
@@ -158,7 +158,7 @@ public abstract class CategoricalEntityActionPanelController implements Initiali
 
 	final EntityActionInfo entityActionHide = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.READ) // nl
+		.requiredPriviledges(UserPrivilege.READ) // nl
 		.actionButton(btnHide) // nl
 		.preActions(this::refresh, this::refreshDetails) // nl
 		.action(this::hide) // nl
@@ -166,7 +166,7 @@ public abstract class CategoricalEntityActionPanelController implements Initiali
 
 	final EntityActionInfo entityActionRemove = new EntityActionInfo() // nl
 		.performer(actionModel.getLoggedUser()) // nl
-		.requiredPriviledges(Priviledge.DELETE) // nl
+		.requiredPriviledges(UserPrivilege.DELETE) // nl
 		.actionButton(btnRemove) // nl
 		.preActions(this::refresh, this::refreshDetails) // nl
 		.action(this::hide) // nl

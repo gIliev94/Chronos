@@ -3,7 +3,7 @@ package bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical;
 import java.io.Serializable;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.User;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
@@ -38,7 +38,7 @@ public interface ICategoricalEntityActionModel {
     /**
      * @return The currently logged in user.
      */
-    Performer getLoggedUser();
+    User getLoggedUser();
 
     // TODO: User or not ???
 

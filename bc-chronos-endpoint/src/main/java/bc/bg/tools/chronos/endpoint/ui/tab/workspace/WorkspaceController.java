@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -23,11 +23,12 @@ import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoricalEnt
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.CategoryActionPanelController;
 import bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical.ICategoricalEntityActionModel;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
+import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
+import bg.bc.tools.chronos.dataprovider.db.entities.User;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
@@ -57,7 +58,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 /**
@@ -132,13 +132,13 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
     @FXML
     private BookingTabularPerspectiveController bookingsTabularPerspectiveController;
 
-    private Performer loggedPerformer;
+    private User loggedPerformer;
 
-    public Performer getLoggedPerformer() {
+    public User getLoggedPerformer() {
 	return loggedPerformer;
     }
 
-    public void setLoggedPerformer(Performer loggedPerformer) {
+    public void setLoggedPerformer(User loggedPerformer) {
 	this.loggedPerformer = loggedPerformer;
     }
 
@@ -443,14 +443,19 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
 
 		final Category catObj = (Category) catNode.getValue();
 
+		final Set<CategoricalEntity> categoricalEntities = catObj.getCategoricalEntities();
+
 		// TODO: Refactor
 		Collection<?> subEntities = null;
 		if (Objects.equals(tree.getId(), "treeCustomers")) {
-		    subEntities = customerRepo.findByCategory(catObj);
+		    subEntities = categoricalEntities.stream().filter(ce -> ce instanceof Customer)
+			    .collect(Collectors.toSet());
 		} else if (Objects.equals(tree.getId(), "treeProjects")) {
-		    subEntities = projectRepo.findByCategory(catObj);
+		    subEntities = categoricalEntities.stream().filter(ce -> ce instanceof Project)
+			    .collect(Collectors.toSet());
 		} else if (Objects.equals(tree.getId(), "treeTasks")) {
-		    subEntities = taskRepo.findByCategory(catObj);
+		    subEntities = categoricalEntities.stream().filter(ce -> ce instanceof Task)
+			    .collect(Collectors.toSet());
 		}
 		subEntities.stream() // nl
 			.map(TreeItem<Object>::new) // nl
@@ -613,7 +618,7 @@ public class WorkspaceController implements Initializable, ICategoricalEntityAct
     }
 
     @Override
-    public Performer getLoggedUser() {
+    public User getLoggedUser() {
 	return loggedPerformer;
     }
 

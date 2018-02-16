@@ -1,15 +1,14 @@
 package bc.bg.tools.chronos.endpoint.ui.main;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.TimerTask;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.derby.jdbc.EmbeddedXADataSource;
 import org.apache.log4j.Logger;
@@ -20,8 +19,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import bc.bg.tools.chronos.endpoint.ui.tab.workspace.WorkspaceController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
-import bg.bc.tools.chronos.dataprovider.db.entities.Performer.Priviledge;
+import bg.bc.tools.chronos.dataprovider.db.entities.Privilege;
+import bg.bc.tools.chronos.dataprovider.db.entities.Privilege.UserPrivilege;
+import bg.bc.tools.chronos.dataprovider.db.entities.User;
+import bg.bc.tools.chronos.dataprovider.db.entities.UserGroup;
 import bg.bc.tools.chronos.dataprovider.i18n.IMessageService;
 import bitronix.tm.resource.jdbc.lrc.LrcXADataSource;
 import javafx.application.Platform;
@@ -127,7 +128,7 @@ public class MainViewController implements Initializable {
     // The primary stage to use when swapping UI windows OR log out...
     private Stage primaryStage;
 
-    private Performer loggedPerformer;
+    private User loggedPerformer;
 
     public Stage getPrimaryStage() {
 	return primaryStage;
@@ -148,11 +149,11 @@ public class MainViewController implements Initializable {
 	subformWorkspaceController.setPrimaryStage(primaryStage);
     }
 
-    public Performer getLoggedPerformer() {
+    public User getLoggedPerformer() {
 	return loggedPerformer;
     }
 
-    public void setLoggedPerformer(Performer loggedPerformer) {
+    public void setLoggedPerformer(User loggedPerformer) {
 	this.loggedPerformer = loggedPerformer;
 	LOGGER.info("Logged in as :: " + loggedPerformer);
 
@@ -160,7 +161,7 @@ public class MainViewController implements Initializable {
 	subformWorkspaceController.setLoggedPerformer(loggedPerformer);
     }
 
-    public void loginAs(Performer loggedPerformer) {
+    public void loginAs(User loggedPerformer) {
 	setLoggedPerformer(loggedPerformer);
 
 	// Display login label
@@ -171,10 +172,13 @@ public class MainViewController implements Initializable {
 
     // TODO: Hide inaccessible UI (tabs, menu items, etc...)
     @SuppressWarnings("unchecked")
-    protected void hideIncacessibleComponents(Performer loggedPerformer) {
-	final Collection<Priviledge> performerPrivileges = loggedPerformer.getPriviledges();
+    protected void hideIncacessibleComponents(User loggedPerformer) {
+	// TODO:
+	final Collection<UserPrivilege> performerPrivileges = loggedPerformer.getUserGroups().stream()
+		.map(UserGroup::getPrivileges).flatMap(set -> Stream.of(set)).map(o -> (Privilege) o)
+		.map(Privilege::getPrivilege).collect(Collectors.toSet());
 	tabPaneMain.getTabs().forEach(tab -> {
-	    tab.setDisable(!(performerPrivileges.containsAll((List<Priviledge>) tab.getUserData())));
+	    tab.setDisable(!(performerPrivileges.containsAll((List<UserPrivilege>) tab.getUserData())));
 	});
 
 	// TODO: Remove
@@ -289,12 +293,12 @@ public class MainViewController implements Initializable {
 
     // TODO: Refactor hidden panes...
     protected void initTabAccess() {
-	tabWorkspace.setUserData(Arrays.asList(Priviledge.READ));
-	tabPerformers.setUserData(Arrays.asList(Priviledge.READ, Priviledge.WRITE));
-	tabRoles.setUserData(Arrays.asList(Priviledge.READ, Priviledge.WRITE));
-	tabReporting.setUserData(Arrays.asList(Priviledge.READ));
-	tabStatistics.setUserData(Arrays.asList(Priviledge.READ, Priviledge.WRITE));
-	tabSynchronization.setUserData(Arrays.asList(Priviledge.READ));
+	tabWorkspace.setUserData(Arrays.asList(UserPrivilege.READ));
+	tabPerformers.setUserData(Arrays.asList(UserPrivilege.READ, UserPrivilege.WRITE));
+	tabRoles.setUserData(Arrays.asList(UserPrivilege.READ, UserPrivilege.WRITE));
+	tabReporting.setUserData(Arrays.asList(UserPrivilege.READ));
+	tabStatistics.setUserData(Arrays.asList(UserPrivilege.READ, UserPrivilege.WRITE));
+	tabSynchronization.setUserData(Arrays.asList(UserPrivilege.READ));
     }
 
     // https://github.com/tomoTaka01/FileTreeViewSample/blob/master/src/filetreeviewsample/FileTreeViewSample.java

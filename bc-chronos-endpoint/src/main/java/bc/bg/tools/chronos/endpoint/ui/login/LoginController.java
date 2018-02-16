@@ -14,7 +14,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 import bc.bg.tools.chronos.endpoint.ui.main.MainViewController;
 import bc.bg.tools.chronos.endpoint.ui.utils.UIHelper;
 import bg.bc.tools.chronos.dataprovider.db.entities.Performer;
+import bg.bc.tools.chronos.dataprovider.db.entities.User;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalUserRepository;
 import bg.bc.tools.chronos.dataprovider.utilities.DataCreator;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -56,6 +58,9 @@ public class LoginController implements ILoginModel {
 
     @Autowired
     private LocalPerformerRepository performerRepo;
+
+    @Autowired
+    private LocalUserRepository userRepo;
 
     @Autowired
     private ApplicationContext context;
@@ -123,8 +128,8 @@ public class LoginController implements ILoginModel {
     void performLogin(ActionEvent loginBtnClickedEvt) {
 	final String username = userField.getText();
 
-	final Performer user = transactionTemplate.execute(txStatus -> {
-	    return performerRepo.findByHandle(username);
+	final User user = transactionTemplate.execute(txStatus -> {
+	    return userRepo.findByAbbreviation(username);
 	});
 
 	if (user == null) {
@@ -134,13 +139,8 @@ public class LoginController implements ILoginModel {
 	    UIHelper.showErrorDialog(i18n(MSG_ID_ERR_INVALID_PASS, username));
 	    return;
 	} else {
-	    final Performer persistedUser = transactionTemplate.execute(txStatus -> {
-		user.setLogged(true);
-		return performerRepo.save(user);
-	    });
-
 	    final Boolean wasMainViewDisplayed = transactionTemplate.execute(txStatus -> {
-		return displayMainWindow(persistedUser);
+		return displayMainWindow(user);
 	    });
 	    if (!wasMainViewDisplayed) {
 		UIHelper.showErrorDialog(
@@ -149,7 +149,7 @@ public class LoginController implements ILoginModel {
 	}
     }
 
-    protected Boolean displayMainWindow(final Performer user) {
+    protected Boolean displayMainWindow(final User user) {
 	final FXMLLoader uiLoader = UIHelper.getWindowLoaderFor(UIHelper.Defaults.APP_MAIN_WINDOW,
 		UIHelper.Defaults.APP_I18N_EN, context::getBean);
 

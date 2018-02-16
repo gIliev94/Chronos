@@ -3,11 +3,16 @@ package bc.bg.tools.chronos.endpoint.ui.actions.entity.categorical;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
+import bg.bc.tools.chronos.dataprovider.db.entities.tbd.ICategoricalEntity;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.Pair;
@@ -41,22 +46,26 @@ public class CategoryActionPanelController extends CategoricalEntityActionPanelC
 	    final Pair<Class<? extends Serializable>, TreeView<Object>> selectedTreeCtx = actionModel
 		    .getSelectedTreeContext();
 
-	    Optional<Collection<?>> childNodeEntities = Optional.empty();
+	    final Set<CategoricalEntity> categoricalEntities = refreshedCategory.getCategoricalEntities();
 
 	    final Class<? extends Serializable> selectedTreeClass = selectedTreeCtx.getKey();
+
+	    // TODO: Refactor
+	    Stream<CategoricalEntity> filteredEntitiesStream = categoricalEntities.stream();
 	    if (Customer.class.isAssignableFrom(selectedTreeClass)) {
-		childNodeEntities = Optional.ofNullable(customerRepo.findByCategory(refreshedCategory));
+		filteredEntitiesStream = filteredEntitiesStream.filter(e -> e instanceof Customer);
 	    } else if (Project.class.isAssignableFrom(selectedTreeClass)) {
-		childNodeEntities = Optional.ofNullable(projectRepo.findByCategory(refreshedCategory));
+		filteredEntitiesStream = filteredEntitiesStream.filter(e -> e instanceof Project);
 	    } else if (Task.class.isAssignableFrom(selectedTreeClass)) {
-		childNodeEntities = Optional.ofNullable(taskRepo.findByCategory(refreshedCategory));
+		filteredEntitiesStream = filteredEntitiesStream.filter(e -> e instanceof Task);
 	    }
 
-	    childNodeEntities.ifPresent(children -> {
-		selectedCategoryNode.getChildren().clear();
-		children.stream().map(TreeItem<Object>::new) // nl
-			.forEach(selectedCategoryNode.getChildren()::add);
-	    });
+	    Optional.ofNullable(filteredEntitiesStream.collect(Collectors.toSet())) // nl
+		    .ifPresent(children -> {
+			selectedCategoryNode.getChildren().clear();
+			children.stream().map(TreeItem<Object>::new) // nl
+				.forEach(selectedCategoryNode.getChildren()::add);
+		    });
 
 	    return (Void) null;
 	});

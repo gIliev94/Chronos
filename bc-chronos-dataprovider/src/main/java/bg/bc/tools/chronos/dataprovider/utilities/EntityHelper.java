@@ -16,7 +16,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 
 /**

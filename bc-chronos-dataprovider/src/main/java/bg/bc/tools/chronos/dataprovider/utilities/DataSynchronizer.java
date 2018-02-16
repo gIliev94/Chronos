@@ -27,7 +27,7 @@ import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalChangelogRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalPerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
-import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBillingRateModifierRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBookingRepository;
@@ -36,7 +36,7 @@ import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteChangelogRepositor
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteCustomerRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemotePerformerRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteProjectRepository;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteRoleRepository;
+import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteBillingRoleRepository;
 import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteTaskRepository;
 
 public class DataSynchronizer {
@@ -74,11 +74,15 @@ public class DataSynchronizer {
 		final CrudRepository remoteRepo) {
 	    final String key = change.getUpdatedEntityKey();
 
-	    if (this.equals(SyncDirection.LOCAL_TO_REMOTE)) {
-		return ((LocalCategoryRepository) localRepo).findBySyncKey(key);
-	    } else {
-		return ((RemoteCategoryRepository) remoteRepo).findBySyncKey(key);
-	    }
+	    // TODO: invalid due to latest refactor - db schema overhaul...
+	    // if (this.equals(SyncDirection.LOCAL_TO_REMOTE)) {
+	    // return ((LocalCategoryRepository) localRepo).findBySyncKey(key);
+	    // } else {
+	    // return ((RemoteCategoryRepository)
+	    // remoteRepo).findBySyncKey(key);
+	    // }
+
+	    return null;
 
 	    // final String entityType = change.getUpdatedEntityType();
 	    // switch (entityType) {
@@ -178,7 +182,7 @@ public class DataSynchronizer {
 	    private LocalPerformerRepository localPerformerRepo;
 
 	    @Autowired
-	    private LocalRoleRepository localRoleRepo;
+	    private LocalBillingRoleRepository localRoleRepo;
 
 	    @Autowired
 	    private RemoteCategoryRepository remoteCategoryRepo;
@@ -202,7 +206,7 @@ public class DataSynchronizer {
 	    private RemotePerformerRepository remotePerformerRepo;
 
 	    @Autowired
-	    private RemoteRoleRepository remoteRoleRepo;
+	    private RemoteBillingRoleRepository remoteRoleRepo;
 
 	    @PostConstruct
 	    public void postConstruct() {
@@ -380,13 +384,16 @@ public class DataSynchronizer {
 	    // changes.stream().map(remoteChangelogRepo::save).count();
 	    // });
 
-	    chagesToSync = chngToSyncStream // nl
-		    .map(cat -> localChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) // nl
-		    .collect(Collectors.toList());
-	    chagesToSync.stream() // nl
-		    .flatMap(o -> o.stream()) // nl
-		    .map(this::cloneChangelog) // nl
-		    .forEach(remoteChangelogRepo::save);
+	    // TODO: REFACTORED STRUCTURE
+	    // chagesToSync = chngToSyncStream // nl
+	    // .map(cat ->
+	    // localChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) //
+	    // nl
+	    // .collect(Collectors.toList());
+	    // chagesToSync.stream() // nl
+	    // .flatMap(o -> o.stream()) // nl
+	    // .map(this::cloneChangelog) // nl
+	    // .forEach(remoteChangelogRepo::save);
 
 	    break;
 
@@ -394,9 +401,12 @@ public class DataSynchronizer {
 	    categoriesToSyncStream = categoriesToSyncStream // nl
 		    .map(localCategoryRepo::save); // nl
 
-	    chagesToSync = chngToSyncStream // nl
-		    .map(cat -> remoteChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) // nl
-		    .collect(Collectors.toList());
+	    // TODO: REFACTORED STRUCTURE
+	    // chagesToSync = chngToSyncStream // nl
+	    // .map(cat ->
+	    // remoteChangelogRepo.findByUpdatedEntityKey(cat.getSyncKey())) //
+	    // nl
+	    // .collect(Collectors.toList());
 	    chagesToSync.stream() // nl
 		    .flatMap(o -> o.stream()) // nl
 		    .map(this::cloneChangelog) // nl
@@ -444,7 +454,7 @@ public class DataSynchronizer {
 	// clone.setId(id); // NO ID(PK) SET
 	clone.setName(original.getName());
 	clone.setSortOrder(original.getSortOrder());
-	clone.setSyncKey(original.getSyncKey());
+	// clone.setSyncKey(original.getSyncKey());
 
 	return clone;
     }
