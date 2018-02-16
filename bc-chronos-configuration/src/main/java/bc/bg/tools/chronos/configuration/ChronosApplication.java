@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-//TODO: NEED? Add views package here when implemented
-//@ComponentScan({"bc.bg.tools.chronos.endpoint.ui"})
-
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableTransactionManagement
@@ -27,7 +24,7 @@ public class ChronosApplication extends Application {
 
     private static final Logger LOGGER = Logger.getLogger(ChronosApplication.class);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
 	launch(args);
     }
 
@@ -39,8 +36,8 @@ public class ChronosApplication extends Application {
 	// TODO: NEED? Register shutdown hook to close this shit...
 	appContext.registerShutdownHook();
 
-	final UIConfig uiConfiguration = appContext.getBean(UIConfig.class);
-	uiConfiguration.showStartScreen(primaryStage, appContext);
+	// final UIConfig uiConfiguration = appContext.getBean(UIConfig.class);
+	// uiConfiguration.showStartScreen(primaryStage, appContext);
     }
 
     @PreDestroy

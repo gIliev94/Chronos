@@ -148,8 +148,9 @@ public class RemoteDBConfig {
     // https://sourceforge.net/p/jtds/discussion/104389/thread/1de4dd1f/
     // https://gist.github.com/aziz781/1321979
     // https://stackoverflow.com/questions/1080354/how-do-you-configure-a-datasource-in-java-to-connect-to-ms-sql-server
-    @Lazy
-    @Bean
+    
+    // @Lazy
+    // @Bean
     public JtdsDataSource jtdsRemoteDataSource() {
 	final JtdsDataSource jtdsDataSrc = new JtdsDataSource();
 	jtdsDataSrc.setDatabaseName("Chronos");

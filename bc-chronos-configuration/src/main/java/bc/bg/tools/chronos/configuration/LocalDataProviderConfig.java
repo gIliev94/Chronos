@@ -86,6 +86,7 @@ public class LocalDataProviderConfig {
 	return new LocalChangelogService();
     }
 
+    // TODO: For demo purposes only - remove later...
     @Bean(name = "localDataCreator")
     @DependsOn("transactionManager")
     public DataCreator localDataCreator() {
@@ -97,4 +98,5 @@ public class LocalDataProviderConfig {
     public DataSynchronizer dataSynchronizer() {
 	return new DataSynchronizer();
     }
+    //
 }

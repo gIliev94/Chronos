@@ -59,7 +59,7 @@ public class I18nConfig {
      */
     protected Locale tryFindInstalledLocale(Locale locale) {
 	final Locale[] installedLocales = Locale.getAvailableLocales();
-	for (Locale installedLocale : installedLocales) {
+	for (final Locale installedLocale : installedLocales) {
 	    if (Objects.equals(installedLocale.getCountry(), locale.getCountry())) {
 		return installedLocale;
 	    }
