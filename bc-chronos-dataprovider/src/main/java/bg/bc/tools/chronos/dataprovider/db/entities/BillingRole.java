@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity(name = "BillingRole")
-public class BillingRole extends SynchronizableEntity implements Serializable {
+public class BillingRole extends GenericEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

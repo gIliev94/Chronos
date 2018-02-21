@@ -8,21 +8,39 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity(name = "Category")
-public class Category extends SynchronizableEntity implements Serializable {
+public class Category extends GenericEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    // TODO: Alphabetized or add time stamp column to enforce sorting by order
+    // of creation...
+    /**
+     * Constant for special sort order => PREPEND such Categories to the START
+     * of the displayed list.
+     */
+    public static final int SORT_ORDER_UNSORTED_PREPENDED = -1;
+
+    /**
+     * Constant for special sort order => APPEND such Categories to the END of
+     * the displayed list.
+     */
+    public static final int SORT_ORDER_UNSORTED_APPENDED = 0;
 
     @Column(unique = true, nullable = false)
     private String name;
 
     @Column(unique = false, nullable = false)
-    private int sortOrder;
+    private int sortOrder = SORT_ORDER_UNSORTED_APPENDED;
+
+    // TODO: Consider adding description field...
 
     // TODO: M2A attempt..
     // @ManyToAny(metaDef = "CategoricalEntityMetaDef", metaColumn =
@@ -33,10 +51,16 @@ public class Category extends SynchronizableEntity implements Serializable {
     // = "categoricalEntity_id"))
     // private Set<ICategoricalEntity> categoricalEntities = new HashSet<>(0);
 
-    // Consider adding CascadeType.REFRESH or maybe @Fetch(value =
-    // FetchMode.SUBSELECT)
+    // // Consider adding CascadeType.REFRESH or maybe @Fetch(value =
+    // // FetchMode.SUBSELECT)
+    // //
     // https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    // @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER, cascade = {
+    // CascadeType.PERSIST, CascadeType.MERGE })
+    
+    //TODO: Reverese the ownership of the M2M relationship for AppUser / AppUserGroup
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "Category_CategoricalEntity", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "categoricalEntity_id"))
     private Set<CategoricalEntity> categoricalEntities = new HashSet<>(0);
 
     public String getName() {

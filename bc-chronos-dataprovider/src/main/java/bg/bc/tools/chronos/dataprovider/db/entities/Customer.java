@@ -29,4 +29,26 @@ public class Customer extends CategoricalEntity
     public void setProjects(Collection<Project> projects) {
 	this.projects = projects;
     }
+
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafePerson.java
+    public void addProject(Project project) {
+	// prevent endless loop
+	if (getProjects().contains(project))
+	    return;
+	// add new project
+	getProjects().add(project);
+	// set myself
+	project.setCustomer(this);
+    }
+
+    public void removeProject(Project project) {
+	// prevent endless loop
+	if (!getProjects().contains(project))
+	    return;
+	// remove the project
+	getProjects().remove(project);
+	// remove myself from the project
+	project.setCustomer(null);
+    }
 }

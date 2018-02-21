@@ -8,6 +8,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
@@ -29,6 +32,25 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public abstract class CategoricalEntity extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    // TODO: Decide generation method - when using with TABLE-PER-CLASS
+    // inheritance DO not use IDENTIY/AUTO:
+    // http://docs.jboss.org/hibernate/stable/annotations/reference/en/html_single/#d0e1168
+    @Id
+    // @GeneratedValue
+    // @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
+    
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long getId() {
+	return id;
+    }
+
+    public void setId(long id) {
+	this.id = id;
+    }
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -37,16 +59,25 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
     private String description;
 
     // TODO: Lazy eval not working properly / cascade also:
+    // //
     // https://vladmihalcea.com/2015/03/05/a-beginners-guide-to-jpa-and-hibernate-cascade-types/
-    // http://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
-    // https://dzone.com/articles/beginner%E2%80%99s-guide-jpa-and
+    // // http://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
+    // // https://dzone.com/articles/beginner%E2%80%99s-guide-jpa-and
+    // //
     // http://www.baeldung.com/hibernate-save-persist-update-merge-saveorupdate
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    // @JoinTable(name = "CatergoricalEntity_Category", joinColumns = {
-    // @JoinColumn(name = "catergoricalEntity_id") }, inverseJoinColumns = {
-    // @JoinColumn(name = "category_id") })
+    // @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE })
+    // // @JoinTable(name = "CatergoricalEntity_Category", joinColumns = {
+    // // @JoinColumn(name = "catergoricalEntity_id") }, inverseJoinColumns = {
+    // // @JoinColumn(name = "category_id") })
+
+    @ManyToMany(mappedBy = "categoricalEntities", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST,
+	    CascadeType.MERGE })
     private Set<Category> categories = new HashSet<>(0);
 
+    // @ManyToMany(mappedBy = "categoricalEntities", fetch = FetchType.EAGER,
+    // cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE })
     public Set<Category> getCategories() {
 	return categories;
     }
@@ -59,6 +90,18 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
 	super();
     }
 
+    // private long id;
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    // public long getId() {
+    // return id;
+    // }
+    //
+    // public void setId(long id) {
+    // this.id = id;
+    // }
+
+    // @Column(unique = true, nullable = false)
     public String getName() {
 	return name;
     }
@@ -67,6 +110,7 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
 	this.name = name;
     }
 
+    // @Column(unique = false, nullable = true)
     public String getDescription() {
 	return description;
     }

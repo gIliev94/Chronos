@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 
 @Entity(name = "BillingRateModifier")
-public class BillingRateModifier extends SynchronizableEntity implements Serializable {
+public class BillingRateModifier extends GenericEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

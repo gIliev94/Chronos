@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity(name = "Performer")
-public class Performer extends SynchronizableEntity implements Serializable {
+public class Performer extends GenericEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

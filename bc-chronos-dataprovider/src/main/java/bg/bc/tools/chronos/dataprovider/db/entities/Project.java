@@ -21,6 +21,8 @@ public class Project extends CategoricalEntity
     private static final long serialVersionUID = 1L;
 
     // TODO: Consider carefully fetch / cascade types...
+    // @ManyToOne(optional = false, cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE })
     @ManyToOne(optional = false)
     // , fetch = FetchType.LAZY)
     private Customer customer;
@@ -35,16 +37,53 @@ public class Project extends CategoricalEntity
 	return customer;
     }
 
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setCustomer(Customer customer) {
 	this.customer = customer;
+
+	// prevent endless loop
+	if (this.customer == null ? customer == null : this.customer.equals(customer))
+	    return;
+	// set new owner
+	Customer currentCustomer = this.customer;
+	this.customer = customer;
+	// remove from the old owner
+	if (currentCustomer != null)
+	    currentCustomer.removeProject(this);
+	// set myself into new owner
+	if (customer != null)
+	    customer.addProject(this);
     }
 
     public Collection<Task> getTasks() {
 	return tasks;
     }
-
+    
     public void setTasks(Collection<Task> tasks) {
 	this.tasks = tasks;
+    }
+
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafePerson.java
+    public void addTask(Task task) {
+	// prevent endless loop
+	if (getTasks().contains(task))
+	    return;
+	// add new task
+	getTasks().add(task);
+	// set myself
+	task.setProject(this);
+    }
+
+    public void removeTask(Task task) {
+	// prevent endless loop
+	if (!getTasks().contains(task))
+	    return;
+	// remove the task
+	getTasks().remove(task);
+	// remove myself from the project
+	task.setProject(null);
     }
 
     // TODO: TEST...

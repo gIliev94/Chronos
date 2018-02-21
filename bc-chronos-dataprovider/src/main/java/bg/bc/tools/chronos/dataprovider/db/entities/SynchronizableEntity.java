@@ -3,9 +3,6 @@ package bg.bc.tools.chronos.dataprovider.db.entities;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 //ALT 1:
@@ -23,33 +20,41 @@ public abstract class SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // TODO: Decide generation method - when using with TABLE-PER-CLASS
-    // inheritance DO not use IDENTIY/AUTO:
+    public static final long NEW_ENTITY_UPDATE_COUNT = 1;
+
+    public static final long NEW_ENTITY_SYNC_COUNT = 0;
+
+    // // TODO: Decide generation method - when using with TABLE-PER-CLASS
+    // // inheritance DO not use IDENTIY/AUTO:
+    // //
     // http://docs.jboss.org/hibernate/stable/annotations/reference/en/html_single/#d0e1168
-    @Id
-    // @GeneratedValue
-    // @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    // @Id
+    // // @GeneratedValue
+    // // @GeneratedValue(strategy= GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    // private long id;
 
     @Column(unique = false, nullable = false)
     // TODO: Generators work only in conjunction with @Id - find a workaround
     // for non-primary columns.
     // @GeneratedValue(strategy = GenerationType.SEQUENCE)
     // @Generated(GenerationTime.ALWAYS)
-    private long updateCounter;
+    private long updateCounter = NEW_ENTITY_UPDATE_COUNT;
 
     @Column(unique = false, nullable = false)
-    private long syncCounter;
+    private long syncCounter = NEW_ENTITY_SYNC_COUNT;
 
-    public long getId() {
-	return id;
-    }
+    // // @Id
+    // // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // public long getId() {
+    // return id;
+    // }
+    //
+    // public void setId(long id) {
+    // this.id = id;
+    // }
 
-    public void setId(long id) {
-	this.id = id;
-    }
-
+    // @Column(unique = false, nullable = false)
     public long getUpdateCounter() {
 	return updateCounter;
     }
@@ -58,11 +63,24 @@ public abstract class SynchronizableEntity implements Serializable {
 	this.updateCounter = updateCounter;
     }
 
+    // @Column(unique = false, nullable = false)
     public long getSyncCounter() {
 	return syncCounter;
     }
 
     public void setSyncCounter(long syncCounter) {
 	this.syncCounter = syncCounter;
+    }
+
+    // TODO: Consider adding methods that operate on counters (is... style
+    // checks) here...
+    // @Transient
+    public final void markUpdated() {
+	updateCounter++;
+    }
+
+    // @Transient
+    public final void markSynchronized() {
+	syncCounter = updateCounter;
     }
 }

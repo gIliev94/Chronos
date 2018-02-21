@@ -21,6 +21,7 @@ public class Task extends CategoricalEntity
 
     private static final long serialVersionUID = 1L;
 
+    // TODO: Possibly make double/decimal...
     @Column(unique = false, nullable = false)
     private long hoursEstimated;
 
@@ -47,8 +48,23 @@ public class Task extends CategoricalEntity
 	return project;
     }
 
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setProject(Project project) {
 	this.project = project;
+
+	// prevent endless loop
+	if (this.project == null ? project == null : this.project.equals(project))
+	    return;
+	// set new owner
+	Project currentProject = this.project;
+	this.project = project;
+	// remove from the old owner
+	if (currentProject != null)
+	    currentProject.removeTask(this);
+	// set myself into new owner
+	if (project != null)
+	    project.addTask(this);
     }
 
     public void setBookings(Collection<Booking> bookings) {

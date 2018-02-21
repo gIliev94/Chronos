@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 //User is a keyword so not possible naming...
 @Entity(name = "AppUser")
-public class User extends SynchronizableEntity implements Serializable {
+public class User extends GenericEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
