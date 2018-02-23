@@ -1,4 +1,4 @@
-package bc.bg.tools.chronos.configuration.tests.local.crud;
+package bc.bg.tools.chronos.configuration.tests.pojo.sync;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,8 +22,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
+import bg.bc.tools.chronos.dataprovider.db.entities.SynchronizableEntity;
 
-public class UploadCustomersTest {
+//@Ignore
+public class UploadEntitiesTest {
+
+    private static final String FIELD_DIFF_FORMAT = "\n\t{0}. Field << {1} >> :: [{2}] => [{3}]";
 
     private static Customer[] customersLocal = null;
     private static Customer[] customersRemote = null;
@@ -40,103 +44,70 @@ public class UploadCustomersTest {
 	customersRemote = null;
     }
 
-    private static final int COUNT_MISSING_ENTITY = 0;
-
-    private static final int COUNT_NEW_ENTITY = 1;
-
-    private static final String FIELD_DIFF_FORMAT = "\n\t{0}. Field << {1} >> :: [{2}] => [{3}]";
-
-    private enum DiffOptions {
-	Overwrite("Overwrite REMOTE"), // nl
-	Skip("Skip update");
-
-	private String displayName;
-
-	private DiffOptions(String displayName) {
-	    this.displayName = displayName;
-	}
-
-	@Override
-	public String toString() {
-	    return displayName;
-	}
-
-	public static DiffOptions valueOfOrdinal(int ordinal) {
-	    DiffOptions[] values = values();
-	    for (DiffOptions option : values) {
-		if (option.ordinal() == ordinal) {
-		    return option;
-		}
-	    }
-
-	    return DiffOptions.Skip;
-	}
-    }
-
     @Before
     public void setUp() throws Exception {
 	// EXISTING entity
 	Customer lc1 = new Customer();
 	lc1.setId(1);
 	lc1.setName("C1");
-	lc1.setUpdateCounter(COUNT_NEW_ENTITY);
-	lc1.setSyncCounter(COUNT_NEW_ENTITY);
+	lc1.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	lc1.setSyncCounter(lc1.getUpdateCounter());
 
 	Customer lc2 = new Customer();
 	lc2.setId(2);
 	lc2.setName("C2");
-	lc2.setUpdateCounter(COUNT_NEW_ENTITY);
-	lc2.setSyncCounter(COUNT_NEW_ENTITY);
+	lc2.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	lc2.setSyncCounter(lc2.getUpdateCounter());
 
 	// UPDATED entity (no conflicts)
 	Customer lc3 = new Customer();
 	lc3.setId(3);
 	lc3.setName("C3");
 	lc3.setDescription("Set description with the update...");
-	lc3.setUpdateCounter(2);
-	lc3.setSyncCounter(COUNT_NEW_ENTITY);
+	lc3.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT + 1);
+	lc3.setSyncCounter(lc3.getUpdateCounter() - 1);
 
 	// UPDATED entity (with conflict for field => description)
 	Customer lc4 = new Customer();
 	lc4.setId(4);
 	lc4.setName("C4");
 	lc4.setDescription("LOCAL description (set by me)");
-	lc4.setUpdateCounter(2);
-	lc4.setSyncCounter(COUNT_NEW_ENTITY);
+	lc4.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT + 1);
+	lc4.setSyncCounter(lc4.getUpdateCounter() - 1);
 
 	// NEW entity
 	Customer lc5 = new Customer();
 	lc5.setId(5);
 	lc5.setName("C5");
-	lc5.setUpdateCounter(COUNT_NEW_ENTITY);
-	lc5.setSyncCounter(COUNT_MISSING_ENTITY);
+	lc5.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	lc5.setSyncCounter(SynchronizableEntity.NEW_ENTITY_SYNC_COUNT);
 
 	customersLocal = new Customer[] { lc1, lc2, lc3, lc4, lc5 };
 
 	Customer rc1 = new Customer();
 	rc1.setId(1);
 	rc1.setName("C1");
-	rc1.setUpdateCounter(COUNT_NEW_ENTITY);
-	rc1.setSyncCounter(COUNT_NEW_ENTITY);
+	rc1.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	rc1.setSyncCounter(rc1.getUpdateCounter());
 
 	Customer rc2 = new Customer();
 	rc2.setId(2);
 	rc2.setName("C2");
-	rc2.setUpdateCounter(COUNT_NEW_ENTITY);
-	rc2.setSyncCounter(COUNT_NEW_ENTITY);
+	rc2.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	rc2.setSyncCounter(rc2.getUpdateCounter());
 
 	Customer rc3 = new Customer();
 	rc3.setId(3);
 	rc3.setName("C3");
-	rc3.setUpdateCounter(COUNT_NEW_ENTITY);
-	rc3.setSyncCounter(COUNT_NEW_ENTITY);
+	rc3.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT);
+	rc3.setSyncCounter(rc3.getUpdateCounter());
 
 	Customer rc4 = new Customer();
 	rc4.setId(4);
 	rc4.setName("C4");
 	rc4.setDescription("REMOTE description (set by someone else)");
-	rc4.setUpdateCounter(2);
-	rc4.setSyncCounter(2);
+	rc4.setUpdateCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT + 1);
+	rc4.setSyncCounter(SynchronizableEntity.NEW_ENTITY_UPDATE_COUNT + 1);
 
 	customersRemote = new Customer[] { rc1, rc2, rc3, rc4 };
     }
@@ -339,5 +310,32 @@ public class UploadCustomersTest {
 
 	refreshedRcList.set(rcIdx, lc);
 	System.out.println("Updating existing REMOTE customer :: [" + foundRc.get() + "]");
+    }
+
+    private enum DiffOptions {
+	Overwrite("Overwrite REMOTE"), // nl
+	Skip("Skip update");
+
+	private String displayName;
+
+	private DiffOptions(String displayName) {
+	    this.displayName = displayName;
+	}
+
+	@Override
+	public String toString() {
+	    return displayName;
+	}
+
+	public static DiffOptions valueOfOrdinal(int ordinal) {
+	    DiffOptions[] values = values();
+	    for (DiffOptions option : values) {
+		if (option.ordinal() == ordinal) {
+		    return option;
+		}
+	    }
+
+	    return DiffOptions.Skip;
+	}
     }
 }

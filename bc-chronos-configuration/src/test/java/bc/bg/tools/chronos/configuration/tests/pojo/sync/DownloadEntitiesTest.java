@@ -1,4 +1,4 @@
-package bc.bg.tools.chronos.configuration.tests.local.crud;
+package bc.bg.tools.chronos.configuration.tests.pojo.sync;
 
 import static org.junit.Assert.*;
 
@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DownloadCustomersTest {
+//@Ignore
+public class DownloadEntitiesTest {
 
+    //TODO: Implement similar to upload test case...
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
     }

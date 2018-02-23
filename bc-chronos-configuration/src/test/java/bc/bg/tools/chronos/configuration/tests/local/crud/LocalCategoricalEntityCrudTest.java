@@ -1,8 +1,12 @@
-package bc.bg.tools.chronos.configuration.tests.remote.crud;
+package bc.bg.tools.chronos.configuration.tests.local.crud;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -19,9 +23,10 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import bc.bg.tools.chronos.configuration.CommonDBConfig;
-import bc.bg.tools.chronos.configuration.RemoteDBConfig;
-import bc.bg.tools.chronos.configuration.RemoteDataProviderConfig;
+import bc.bg.tools.chronos.configuration.LocalDBConfig;
+import bc.bg.tools.chronos.configuration.LocalDataProviderConfig;
 import bc.bg.tools.chronos.configuration.tests.runners.RootCauseSpringJUnit4ClassRunner;
+import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
@@ -29,50 +34,49 @@ import bg.bc.tools.chronos.dataprovider.db.entities.GenericEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Project;
 import bg.bc.tools.chronos.dataprovider.db.entities.SynchronizableEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Task;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteCategoryRepository;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteCustomerRepository;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteProjectRepository;
-import bg.bc.tools.chronos.dataprovider.db.remote.repos.RemoteTaskRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCategoryRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalCustomerRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalProjectRepository;
+import bg.bc.tools.chronos.dataprovider.db.local.repos.LocalTaskRepository;
 
 // TODO: Refactor test methods...
-// TODO: Consider using Spring profile for beans to disable Hibernate 2nd lvl cache...
 @SpringBootApplication
 @RunWith(RootCauseSpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { // nl
 	CommonDBConfig.class, // nl
-	RemoteDBConfig.class, // nl
-	RemoteDataProviderConfig.class // nl
+	LocalDBConfig.class, // nl
+	LocalDataProviderConfig.class // nl
 })
 // @Ignore
-public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContextTests {
+public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextTests {
 
     @Autowired
     private TransactionTemplate transactionTemplate;
 
     // TODO: Replace repo calls with service calls once properly implemented...
     // @Autowired
-    // private IRemoteCategoryService remoteCategoryService;
+    // private ILocalCategoryService localCategoryService;
 
     // @Autowired
-    // private IRemoteCustomerService remoteCustomerService;
+    // private ILocalCustomerService localCustomerService;
 
     // @Autowired
-    // private IRemoteProjectService remoteProjectService;
+    // private ILocalProjectService localProjectService;
 
     // @Autowired
-    // private IRemoteTaskService remoteTaskService;
+    // private ILocalTaskService localTaskService;
 
     @Autowired
-    private RemoteCategoryRepository remoteCategoryRepository;
+    private LocalCategoryRepository localCategoryRepository;
 
     @Autowired
-    private RemoteCustomerRepository remoteCustomerRepository;
+    private LocalCustomerRepository localCustomerRepository;
 
     @Autowired
-    private RemoteProjectRepository remoteProjectRepository;
+    private LocalProjectRepository localProjectRepository;
 
     @Autowired
-    private RemoteTaskRepository remoteTaskRepository;
+    private LocalTaskRepository localTaskRepository;
 
     private Category testCategory;
 
@@ -141,18 +145,18 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
     @Test
     @Ignore
-    public void testRemoteCategoryCRUD() {
+    public void testLocalCategoryCRUD() {
 	// 1. Create
 	// ---------
 	final Category createdCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.save(testCategory);
+	    return localCategoryRepository.save(testCategory);
 	});
 	assertEntityExists(createdCategory, testCategory);
 
 	// 2. Read
 	// ---------
 	final Category readCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.findByName(testCategory.getName());
+	    return localCategoryRepository.findByName(testCategory.getName());
 	});
 	assertEntityExists(readCategory, testCategory);
 
@@ -169,7 +173,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	readCategory.markUpdated();
 
 	final Category updatedCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.save(readCategory);
+	    return localCategoryRepository.save(readCategory);
 	});
 	assertEntityUpdated(updatedCategory, readCategory, originalUpdateCount, originalSortOrder,
 		updatedCategory.getSortOrder());
@@ -178,33 +182,33 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// ---------
 	// Perform deletion by fetched object...
 	transactionTemplate.execute(txStat -> {
-	    remoteCategoryRepository.delete(readCategory);
+	    localCategoryRepository.delete(readCategory);
 	    return null;
 	});
 
 	// Confirm deletion
 	final Category stillExistingCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.findByName(testCategory.getName());
+	    return localCategoryRepository.findByName(testCategory.getName());
 	});
 	assertEntityDeleted(stillExistingCategory, testCategory);
     }
 
     @Test
     @Ignore
-    public void testRemoteCustomerCRUD() {
+    public void testLocalCustomerCRUD() {
 	// 1. Create
 	// ---------
 	testCustomer.addCategory(testCategory);
 
 	final Customer createdCustomer = transactionTemplate.execute(txStat -> {
-	    return remoteCustomerRepository.save(testCustomer);
+	    return localCustomerRepository.save(testCustomer);
 	});
 	assertEntityAndReferencesExist(createdCustomer, testCustomer, testCategory, createdCustomer.getCategories());
 
 	// 2. Read
 	// ---------
 	final Customer readCustomer = transactionTemplate.execute(txStat -> {
-	    return remoteCustomerRepository.findByName(testCustomer.getName());
+	    return localCustomerRepository.findByName(testCustomer.getName());
 	});
 	assertEntityExists(readCustomer, testCustomer);
 
@@ -219,7 +223,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	readCustomer.markUpdated();
 
 	final Customer updatedCustomer = transactionTemplate.execute(txStat -> {
-	    return remoteCustomerRepository.save(readCustomer);
+	    return localCustomerRepository.save(readCustomer);
 	});
 	assertEntityUpdated(updatedCustomer, testCustomer, originalUpdateCount, originalDescription,
 		updatedCustomer.getDescription());
@@ -233,25 +237,25 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	referencedCategory.removeCategoricalEntity(readCustomer);
 
 	final Pair<Category, Customer> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = remoteCategoryRepository.save(referencedCategory);
-	    final Customer customer = remoteCustomerRepository.save(readCustomer);
+	    final Category category = localCategoryRepository.save(referencedCategory);
+	    final Customer customer = localCustomerRepository.save(readCustomer);
 	    return Pair.of(category, customer);
 	});
 
 	transactionTemplate.execute(txStat -> {
-	    remoteCustomerRepository.delete(unlinkedEntities.getSecond());
+	    localCustomerRepository.delete(unlinkedEntities.getSecond());
 	    return null;
 	});
 
 	final Customer stillExistingCustomer = transactionTemplate.execute(txStat -> {
-	    return remoteCustomerRepository.findByName(readCustomer.getName());
+	    return localCustomerRepository.findByName(readCustomer.getName());
 	});
 	assertEntityDeleted(stillExistingCustomer, testCustomer);
     }
 
     @Test
-    @Ignore
-    public void testRemoteProjectCRUD() {
+    // @Ignore
+    public void testLocalProjectCRUD() {
 	// 1. Create
 	// ---------
 	// TODO: opt 1 => not working
@@ -259,11 +263,11 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
 	// final Customer createdCustomer = transactionTemplate.execute(txStat
 	// -> {
-	// return remoteCustomerRepository.save(testCustomer);
+	// return localCustomerRepository.save(testCustomer);
 	// });
-	// Assert.assertNotNull("No Customer created in remote DB for Java
+	// Assert.assertNotNull("No Customer created in local DB for Java
 	// object: " + testCustomer, createdCustomer);
-	// Assert.assertNotEquals("The created Customer in remote DB is not
+	// Assert.assertNotEquals("The created Customer in local DB is not
 	// managed(no PK)!", 0L, createdCustomer.getId());
 	// Assert.assertFalse("The created Customer does not contain the
 	// Catergories referenced(Category " + testCategory + ")!",
@@ -277,11 +281,11 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
 	// final Project createdProject = transactionTemplate.execute(txStat ->
 	// {
-	// return remoteProjectRepository.save(testProject);
+	// return localProjectRepository.save(testProject);
 	// });
-	// Assert.assertNotNull("No Project created in remote DB for Java
+	// Assert.assertNotNull("No Project created in local DB for Java
 	// object: " + testProject, createdProject);
-	// Assert.assertNotEquals("The created Project in remote DB is not
+	// Assert.assertNotEquals("The created Project in local DB is not
 	// managed(no PK)!", 0L, createdProject.getId());
 	// Assert.assertFalse(
 	// "The created Project does not contain the Catergories
@@ -294,7 +298,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	testProject.setCustomer(testCustomer);
 
 	final Project createdProject = transactionTemplate.execute(txStat -> {
-	    return remoteProjectRepository.save(testProject);
+	    return localProjectRepository.save(testProject);
 	});
 	assertEntityAndReferencesExist(createdProject, testProject, testCategory, createdProject.getCategories());
 
@@ -310,15 +314,15 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// final Pair<Customer, Project> persistedEntities =
 	// transactionTemplate.execute(txStat -> {
 	// final Customer customer =
-	// remoteCustomerRepository.save(testCustomer);
-	// final Project project = remoteProjectRepository.save(testProject);
+	// localCustomerRepository.save(testCustomer);
+	// final Project project = localProjectRepository.save(testProject);
 	// return Pair.of(customer, project);
 	// });
 
-	// Assert.assertNotNull("No Customer created in remote DB for Java
+	// Assert.assertNotNull("No Customer created in local DB for Java
 	// object: " + testCustomer,
 	// persistedEntities.getFirst());
-	// Assert.assertNotEquals("The created Customer in remote DB is not
+	// Assert.assertNotEquals("The created Customer in local DB is not
 	// managed(no PK)!", 0L,
 	// persistedEntities.getFirst().getId());
 	// Assert.assertFalse(
@@ -326,10 +330,10 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// referenced(Category " + testCategory + ")!",
 	// persistedEntities.getFirst().getCategories().isEmpty());
 
-	// Assert.assertNotNull("No Project created in remote DB for Java
+	// Assert.assertNotNull("No Project created in local DB for Java
 	// object: " + testProject,
 	// persistedEntities.getSecond());
-	// Assert.assertNotEquals("The created Project in remote DB is not
+	// Assert.assertNotEquals("The created Project in local DB is not
 	// managed(no PK)!", 0L,
 	// persistedEntities.getSecond().getId());
 	// Assert.assertFalse(
@@ -340,7 +344,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// 2. Read
 	// ---------
 	final Project readProject = transactionTemplate.execute(txStat -> {
-	    return remoteProjectRepository.findByName(testProject.getName());
+	    return localProjectRepository.findByName(testProject.getName());
 	});
 	assertEntityExists(readProject, testProject);
 
@@ -355,7 +359,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	readProject.markUpdated();
 
 	final Project updatedProject = transactionTemplate.execute(txStat -> {
-	    return remoteProjectRepository.save(readProject);
+	    return localProjectRepository.save(readProject);
 	});
 	assertEntityUpdated(updatedProject, testProject, originalUpdateCount, originalDescription,
 		updatedProject.getDescription());
@@ -366,28 +370,41 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
 	// Remove links
 	final Category referencedCategory = readProject.getCategories().iterator().next();
-	referencedCategory.removeCategoricalEntity(readProject);
+	// referencedCategory.removeCategoricalEntity(readProject);
+	//
+	// final Pair<Category, Project> unlinkedEntities =
+	// transactionTemplate.execute(txStat -> {
+	// final Category category =
+	// localCategoryRepository.save(referencedCategory);
+	// final Project project = localProjectRepository.save(readProject);
+	// return Pair.of(category, project);
+	// });
+	//
+	// transactionTemplate.execute(txStat -> {
+	// localProjectRepository.delete(unlinkedEntities.getSecond());
+	// return null;
+	// });
+	//
+	// final Project stillExistingProject =
+	// transactionTemplate.execute(txStat -> {
+	// return localProjectRepository.findByName(readProject.getName());
+	// });
+	// assertEntityDeleted(stillExistingProject, testProject);
 
-	final Pair<Category, Project> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = remoteCategoryRepository.save(referencedCategory);
-	    final Project project = remoteProjectRepository.save(readProject);
-	    return Pair.of(category, project);
-	});
+	// TODO: Delete hierarchy...
+	// final Customer rootCustomer = updatedProject.getCustomer();
+	//
+	// transactionTemplate.execute(txStat -> {
+	// Hibernate.initialize(rootCustomer.getProjects());
+	// return null;
+	// });
 
-	transactionTemplate.execute(txStat -> {
-	    remoteProjectRepository.delete(unlinkedEntities.getSecond());
-	    return null;
-	});
-
-	final Project stillExistingProject = transactionTemplate.execute(txStat -> {
-	    return remoteProjectRepository.findByName(readProject.getName());
-	});
-	assertEntityDeleted(stillExistingProject, testProject);
+	deleteCategoricalEntity(referencedCategory, testCategory, referencedCustomer, testCustomer, true);
     }
 
     @Test
     @Ignore
-    public void testRemoteTaskCRUD() {
+    public void testLocalTaskCRUD() {
 	// 1. Create
 	// ---------
 	testCustomer.addCategory(testCategory);
@@ -398,7 +415,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	testTask.setProject(testProject);
 
 	final Task createdTask = transactionTemplate.execute(txStat -> {
-	    return remoteTaskRepository.save(testTask);
+	    return localTaskRepository.save(testTask);
 	});
 	assertEntityAndReferencesExist(createdTask, testTask, testCategory, createdTask.getCategories());
 
@@ -412,7 +429,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// 2. Read
 	// ---------
 	final Task readTask = transactionTemplate.execute(txStat -> {
-	    return remoteTaskRepository.findByName(testTask.getName());
+	    return localTaskRepository.findByName(testTask.getName());
 	});
 	assertEntityExists(readTask, testTask);
 
@@ -427,7 +444,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	readTask.markUpdated();
 
 	final Task updatedTask = transactionTemplate.execute(txStat -> {
-	    return remoteTaskRepository.save(readTask);
+	    return localTaskRepository.save(readTask);
 	});
 	assertEntityUpdated(updatedTask, testTask, originalUpdateCount, originalDescription,
 		updatedTask.getDescription());
@@ -440,32 +457,34 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	referencedCategory.removeCategoricalEntity(readTask);
 
 	final Pair<Category, Task> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = remoteCategoryRepository.save(referencedCategory);
-	    final Task task = remoteTaskRepository.save(readTask);
+	    final Category category = localCategoryRepository.save(referencedCategory);
+	    final Task task = localTaskRepository.save(readTask);
 	    return Pair.of(category, task);
 	});
 
 	transactionTemplate.execute(txStat -> {
-	    remoteTaskRepository.delete(unlinkedEntities.getSecond());
+	    localTaskRepository.delete(unlinkedEntities.getSecond());
 	    return null;
 	});
 
 	final Task stillExistingTask = transactionTemplate.execute(txStat -> {
-	    return remoteTaskRepository.findByName(readTask.getName());
+	    return localTaskRepository.findByName(readTask.getName());
 	});
 	assertEntityDeleted(stillExistingTask, testTask);
+
+	// TODO: Delete task as well...
     }
 
     @Test
     @Ignore
-    public void testRemoteBidirectionalCascade() {
+    public void testLocalBidirectionalCascade() {
 	// 1. Standard(owner) cascade insert: Category (OWNER) => Customer
 	// (INVERSE)
 	// ---------
 	testCategory.addCategoricalEntity(testCustomer);
 
 	final Category createdCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.save(testCategory);
+	    return localCategoryRepository.save(testCategory);
 	});
 	assertEntityAndReferencesExist(createdCategory, testCategory, testCustomer,
 		createdCategory.getCategoricalEntities());
@@ -482,33 +501,33 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	// final Pair<Category, Customer> unlinkedEntities =
 	// transactionTemplate.execute(txStat -> {
 	// final Category category =
-	// remoteCategoryRepository.save(createdCategory);
+	// localCategoryRepository.save(createdCategory);
 	// final Customer customer =
-	// remoteCustomerRepository.save(referencedCustomer);
+	// localCustomerRepository.save(referencedCustomer);
 	// return Pair.of(category, customer);
 	// });
 	//
 	// // 2.2 Delete Customer (NON-OWNER side of the relationship)
 	// transactionTemplate.execute(txStat -> {
-	// remoteCustomerRepository.delete(unlinkedEntities.getSecond());
+	// localCustomerRepository.delete(unlinkedEntities.getSecond());
 	// return null;
 	// });
 	//
 	// final Customer stillExistingCustomer =
 	// transactionTemplate.execute(txStat -> {
 	// return
-	// remoteCustomerRepository.findByName(referencedCustomer.getName());
+	// localCustomerRepository.findByName(referencedCustomer.getName());
 	// });
 	// assertEntityDeleted(stillExistingCustomer, testCustomer);
 	//
 	// // 2.3 Delete Category (OWNER side of the relationship)
 	// transactionTemplate.execute(txStat -> {
-	// remoteCategoryRepository.delete(unlinkedEntities.getFirst());
+	// localCategoryRepository.delete(unlinkedEntities.getFirst());
 	// return null;
 	// });
 	// final Category stillExistingCategory =
 	// transactionTemplate.execute(txStat -> {
-	// return remoteCategoryRepository.findByName(testCategory.getName());
+	// return localCategoryRepository.findByName(testCategory.getName());
 	// });
 	// assertEntityDeleted(stillExistingCategory, testCategory);
 
@@ -517,7 +536,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	testCustomer.addCategory(testCategory);
 
 	final Customer createdCustomer = transactionTemplate.execute(txStat -> {
-	    return remoteCustomerRepository.save(testCustomer);
+	    return localCustomerRepository.save(testCustomer);
 	});
 	assertEntityAndReferencesExist(createdCustomer, testCustomer, testCategory, createdCustomer.getCategories());
 
@@ -529,7 +548,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
     @Test
     @Ignore
-    public void testRemoteHierirachicalFetch() {
+    public void testLocalHierirachicalFetch() {
 	// 1. Create
 	// ---------
 	testCustomer.addCategory(testCategory);
@@ -540,7 +559,7 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	testTask.setProject(testProject);
 
 	final Task createdTask = transactionTemplate.execute(txStat -> {
-	    return remoteTaskRepository.save(testTask);
+	    return localTaskRepository.save(testTask);
 	});
 	assertEntityAndReferencesExist(createdTask, testTask, testCategory, createdTask.getCategories());
 
@@ -553,45 +572,170 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 
 	// 5. Try fetch all entities from Category
 	final Category resultingCategory = transactionTemplate.execute(txStat -> {
-	    return remoteCategoryRepository.findByName(testCategory.getName());
+	    return localCategoryRepository.findByName(testCategory.getName());
 	});
 	assertEntityExists(resultingCategory, testCategory);
 
 	final Set<CategoricalEntity> categoricalEntities = resultingCategory.getCategoricalEntities();
 	Assert.assertFalse(
-		"No Categorical entities found in remote DB for Category  with name: " + testCategory.getName(),
+		"No Categorical entities found in local DB for Category  with name: " + testCategory.getName(),
 		categoricalEntities.isEmpty());
-	Assert.assertTrue("No Customer found in remote DB for Category  with name: " + testCategory.getName(),
+	Assert.assertTrue("No Customer found in local DB for Category  with name: " + testCategory.getName(),
 		categoricalEntities.stream().anyMatch(ce -> ce instanceof Customer));
-	Assert.assertTrue("No Project found in remote DB for Category  with name: " + testCategory.getName(),
+	Assert.assertTrue("No Project found in local DB for Category  with name: " + testCategory.getName(),
 		categoricalEntities.stream().anyMatch(ce -> ce instanceof Project));
-	Assert.assertTrue("No Task found in remote DB for Category  with name: " + testCategory.getName(),
+	Assert.assertTrue("No Task found in local DB for Category  with name: " + testCategory.getName(),
 		categoricalEntities.stream().anyMatch(ce -> ce instanceof Task));
 
 	System.out.println("CATEGORICAL ENTITIES:");
 	categoricalEntities.forEach(ce -> System.out.println(ce.getClass().getSimpleName() + " => " + ce));
 
-	// TODO: still not working
 	// Cleanup created entities - possibly will interfere with next running
 	// test/s
 	// deleteCategoricalEntity(resultingCategory, testCategory, createdTask,
 	// testTask, false);
 	// deleteCategoricalEntity(resultingCategory, testCategory,
 	// referencedProject, testProject, false);
+
+	// Example of cascaded delete (owner) - as opposed to deleting in
+	// reverse dependency order (inverse -> owner)
 	deleteCategoricalEntity(resultingCategory, testCategory, referencedCustomer, testCustomer, true);
+    }
+
+    private void deleteCategoricalEntity(final Category createdCategory, final Category testCategory,
+	    final CategoricalEntity referencedCategoricalEntity, final CategoricalEntity testCategoricalEntity,
+	    boolean deleteCategory) {
+	// 1. Remove links + update entities (foreach)
+
+	// Below methods are interchangeable...
+	// createdCategory.removeCategoricalEntity(referencedCategoricalEntity);
+	referencedCategoricalEntity.removeCategory(createdCategory);
+
+	if (referencedCategoricalEntity instanceof Customer) {
+	    final Customer customer = (Customer) referencedCategoricalEntity;
+
+	    final Collection<Project> projects = customer.getProjects();
+	    projects.forEach(p -> {
+		System.err.println("SEE:" + createdCategory.getCategoricalEntities().contains(p));
+		createdCategory.removeCategoricalEntity(p);
+	    });
+
+	    final List<Task> tasks = projects.stream().flatMap(p -> p.getTasks().stream()).collect(Collectors.toList());
+	    tasks.forEach(t -> createdCategory.removeCategoricalEntity(t));
+	} else if (referencedCategoricalEntity instanceof Project) {
+	    final Project project = (Project) referencedCategoricalEntity;
+
+	    createdCategory.removeCategoricalEntity(project.getCustomer());
+
+	} else if (referencedCategoricalEntity instanceof Task) {
+	    final Task task = (Task) referencedCategoricalEntity;
+
+	    createdCategory.removeCategoricalEntity(task.getProject());
+	}
+
+	final Pair<Category, CategoricalEntity> unlinkedEntities = transactionTemplate.execute(txStat -> {
+	    final Category category = localCategoryRepository.save(createdCategory);
+
+	    CategoricalEntity categoricalEntity = null;
+	    if (referencedCategoricalEntity instanceof Customer) {
+		categoricalEntity = localCustomerRepository.save((Customer) referencedCategoricalEntity);
+	    } else if (referencedCategoricalEntity instanceof Project) {
+		categoricalEntity = localProjectRepository.save((Project) referencedCategoricalEntity);
+	    } else if (referencedCategoricalEntity instanceof Task) {
+		categoricalEntity = localTaskRepository.save((Task) referencedCategoricalEntity);
+	    }
+
+	    return Pair.of(category, categoricalEntity);
+	});
+
+	// final Category unlinkedCategory = unlinkedEntities.getFirst();
+	// final CategoricalEntity unlinkedCategoricalEntity =
+	// unlinkedEntities.getSecond();
+	// if (unlinkedCategoricalEntity instanceof Customer) {
+	// final Customer customer = (Customer) unlinkedCategoricalEntity;
+	//
+	// final Collection<Project> projects = customer.getProjects();
+	// projects.forEach(p -> unlinkedCategory.removeCategoricalEntity(p));
+	//
+	// final List<Task> tasks = projects.stream().flatMap(p ->
+	// p.getTasks().stream()).collect(Collectors.toList());
+	// tasks.forEach(t -> unlinkedCategory.removeCategoricalEntity(t));
+	//
+	// transactionTemplate.execute(txStat -> {
+	// localCategoryRepository.save(unlinkedCategory);
+	//
+	// projects.forEach(p -> localProjectRepository.save(p));
+	// tasks.forEach(t -> localTaskRepository.save(t));
+	//
+	// return null;
+	// });
+	//
+	// } else if (unlinkedCategoricalEntity instanceof Project) {
+	// final Project project = (Project) unlinkedCategoricalEntity;
+	//
+	// unlinkedCategory.removeCategoricalEntity(project.getCustomer());
+	//
+	// } else if (unlinkedCategoricalEntity instanceof Task) {
+	// final Task task = (Task) unlinkedCategoricalEntity;
+	//
+	// unlinkedCategory.removeCategoricalEntity(task.getProject());
+	// }
+
+	// 2. Delete Categorical Entity (NON-OWNER side of the relationship)
+	transactionTemplate.execute(txStat -> {
+	    final CategoricalEntity categoricalEntity = unlinkedEntities.getSecond();
+	    if (referencedCategoricalEntity instanceof Customer) {
+		localCustomerRepository.delete((Customer) categoricalEntity);
+	    } else if (referencedCategoricalEntity instanceof Project) {
+		localProjectRepository.delete((Project) categoricalEntity);
+	    } else if (referencedCategoricalEntity instanceof Task) {
+		localTaskRepository.delete((Task) categoricalEntity);
+	    }
+
+	    return null;
+	});
+
+	final CategoricalEntity stillExistingCategoricalEntity = transactionTemplate.execute(txStat -> {
+	    final String entityName = referencedCategoricalEntity.getName();
+
+	    CategoricalEntity categoricalEntity = null;
+	    if (referencedCategoricalEntity instanceof Customer) {
+		categoricalEntity = localCustomerRepository.findByName(entityName);
+	    } else if (referencedCategoricalEntity instanceof Project) {
+		categoricalEntity = localProjectRepository.findByName(entityName);
+	    } else if (referencedCategoricalEntity instanceof Task) {
+		categoricalEntity = localTaskRepository.findByName(entityName);
+	    }
+
+	    return categoricalEntity;
+	});
+	assertEntityDeleted(stillExistingCategoricalEntity, testCategoricalEntity);
+
+	if (deleteCategory) {
+	    // 3. Delete Category (OWNER side of the relationship)
+	    transactionTemplate.execute(txStat -> {
+		localCategoryRepository.delete(unlinkedEntities.getFirst());
+		return null;
+	    });
+
+	    final Category stillExistingCategory = transactionTemplate.execute(txStat -> {
+		return localCategoryRepository.findByName(testCategory.getName());
+	    });
+	    assertEntityDeleted(stillExistingCategory, testCategory);
+	}
     }
 
     private void assertEntityExists(final SynchronizableEntity persistedEntity, final SynchronizableEntity testEntity) {
 	final String testEntityClass = testEntity.getClass().getSimpleName();
 	Assert.assertNotNull(
-		"No " + testEntityClass + " found/created/updated in remote DB for Java object: " + testEntity,
+		"No " + testEntityClass + " found/created/updated in local DB for Java object: " + testEntity,
 		persistedEntity);
 	// Assert.assertNotEquals("The found/created/updated " + testEntityClass
-	// + " in remote DB is not managed(no PK)!",
+	// + " in local DB is not managed(no PK)!",
 	// 0L, persistedEntity.getId());
 	final long id = persistedEntity instanceof GenericEntity ? ((GenericEntity) persistedEntity).getId()
 		: ((CategoricalEntity) persistedEntity).getId();
-	Assert.assertNotEquals("The found/created/updated " + testEntityClass + " in remote DB is not managed(no PK)!",
+	Assert.assertNotEquals("The found/created/updated " + testEntityClass + " in local DB is not managed(no PK)!",
 		0L, id);
     }
 
@@ -611,81 +755,17 @@ public class RemoteCategoricalEntityCrudTest extends AbstractJUnit4SpringContext
 	assertEntityExists(persistedEntity, testEntity);
 
 	final String testEntityClass = testEntity.getClass().getSimpleName();
-	Assert.assertTrue("The attempted update of " + testEntityClass + " in remote DB failed!",
+	Assert.assertTrue("The attempted update of " + testEntityClass + " in local DB failed!",
 		persistedEntity.getUpdateCounter() > originalUpdateCount);
 	Assert.assertNotEquals(
-		"The changed propery failed to be applied as update of " + testEntityClass + " in remote DB!",
+		"The changed propery failed to be applied as update of " + testEntityClass + " in local DB!",
 		originalPropertyValue, updatedPropertyValue);
     }
 
     private void assertEntityDeleted(final SynchronizableEntity persistedEntity,
 	    final SynchronizableEntity testEntity) {
 	final String testEntityClass = testEntity.getClass().getSimpleName();
-	Assert.assertNull("The attempted deletion of " + testEntityClass + " from remote DB failed!", persistedEntity);
+	Assert.assertNull("The attempted deletion of " + testEntityClass + " from local DB failed!", persistedEntity);
     }
 
-    private void deleteCategoricalEntity(final Category createdCategory, final Category testCategory,
-	    final CategoricalEntity referencedCategoricalEntity, final CategoricalEntity testCategoricalEntity,
-	    boolean deleteCategory) {
-	// 1. Remove links + update entities (foreach)
-	// createdCategory.removeCategoricalEntity(referencedCategoricalEntity);
-	referencedCategoricalEntity.removeCategory(createdCategory);
-
-	final Pair<Category, CategoricalEntity> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = remoteCategoryRepository.save(createdCategory);
-
-	    CategoricalEntity categoricalEntity = null;
-	    if (referencedCategoricalEntity instanceof Customer) {
-		categoricalEntity = remoteCustomerRepository.save((Customer) referencedCategoricalEntity);
-	    } else if (referencedCategoricalEntity instanceof Project) {
-		categoricalEntity = remoteProjectRepository.save((Project) referencedCategoricalEntity);
-	    } else if (referencedCategoricalEntity instanceof Task) {
-		categoricalEntity = remoteTaskRepository.save((Task) referencedCategoricalEntity);
-	    }
-
-	    return Pair.of(category, categoricalEntity);
-	});
-
-	// 2. Delete Categorical Entity (NON-OWNER side of the relationship)
-	transactionTemplate.execute(txStat -> {
-	    if (referencedCategoricalEntity instanceof Customer) {
-		remoteCustomerRepository.delete((Customer) unlinkedEntities.getSecond());
-	    } else if (referencedCategoricalEntity instanceof Project) {
-		remoteProjectRepository.delete((Project) unlinkedEntities.getSecond());
-	    } else if (referencedCategoricalEntity instanceof Task) {
-		remoteTaskRepository.delete((Task) unlinkedEntities.getSecond());
-	    }
-
-	    return null;
-	});
-
-	final CategoricalEntity stillExistingCategoricalEntity = transactionTemplate.execute(txStat -> {
-	    final String entityName = referencedCategoricalEntity.getName();
-
-	    CategoricalEntity categoricalEntity = null;
-	    if (referencedCategoricalEntity instanceof Customer) {
-		categoricalEntity = remoteCustomerRepository.findByName(entityName);
-	    } else if (referencedCategoricalEntity instanceof Project) {
-		categoricalEntity = remoteProjectRepository.findByName(entityName);
-	    } else if (referencedCategoricalEntity instanceof Task) {
-		categoricalEntity = remoteTaskRepository.findByName(entityName);
-	    }
-
-	    return categoricalEntity;
-	});
-	assertEntityDeleted(stillExistingCategoricalEntity, testCategoricalEntity);
-
-	if (deleteCategory) {
-	    // 3. Delete Category (OWNER side of the relationship)
-	    transactionTemplate.execute(txStat -> {
-		remoteCategoryRepository.delete(unlinkedEntities.getFirst());
-		return null;
-	    });
-
-	    final Category stillExistingCategory = transactionTemplate.execute(txStat -> {
-		return remoteCategoryRepository.findByName(testCategory.getName());
-	    });
-	    assertEntityDeleted(stillExistingCategory, testCategory);
-	}
-    }
 }
