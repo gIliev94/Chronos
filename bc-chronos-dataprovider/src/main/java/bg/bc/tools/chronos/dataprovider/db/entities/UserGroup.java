@@ -74,17 +74,17 @@ public class UserGroup extends GenericEntity implements Serializable {
     // TODO: Consistency methods (keep bidirectional entities up-to-date)
     // (https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/)
     // always use with M2M and possibly M2O / O2M bidirectional...
-    public void addUserGroup(User user) {
+    public void addUser(User user) {
 	users.add(user);
 	user.getUserGroups().add(this);
     }
 
-    public void removeUserGroup(User user) {
+    public void removeUser(User user) {
 	users.remove(user);
 	user.getUserGroups().remove(this);
     }
 
-    // TODO: TEST...
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -93,6 +93,8 @@ public class UserGroup extends GenericEntity implements Serializable {
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -106,14 +108,21 @@ public class UserGroup extends GenericEntity implements Serializable {
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
 		.append(userGroup.getName(), getName()) // nl
+		.append(userGroup.getDescription(), getDescription()) // nl
 		.isEquals();
     }
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
 		.append(getName()) // nl
+		.append(getDescription()) // nl
 		.hashCode();
     }
 

@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 //ALT 1:
 //@Entity
 // OPT 1:
@@ -82,5 +85,46 @@ public abstract class SynchronizableEntity implements Serializable {
     // @Transient
     public final void markSynchronized() {
 	syncCounter = updateCounter;
+    }
+
+    // TODO: Consider adding only unique/immutable fields
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
+	}
+	if (other == this) {
+	    return true;
+	}
+	// TODO: instanceof preferred vs getClass, because this is abstract
+	// class
+	// if (other.getClass() != getClass()) {
+	// return false;
+	// }
+	// vs
+	if (!(other instanceof SynchronizableEntity)) {
+	    return false;
+	}
+
+	final SynchronizableEntity synchronizableEntity = (SynchronizableEntity) other;
+
+	return new EqualsBuilder() // nl
+		// TODO: Append super skipped due to being the one from
+		// Object...
+		// .appendSuper(super.equals(other)) // nl
+		.append(synchronizableEntity.getUpdateCounter(), getUpdateCounter()) // nl
+		.append(synchronizableEntity.getSyncCounter(), getSyncCounter()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	return new HashCodeBuilder() // nl
+		// TODO: Append super skipped due to being the one from
+		// Object...
+		// .appendSuper(super.hashCode()) // nl
+		.append(getUpdateCounter()) // nl
+		.append(getSyncCounter()) // nl
+		.hashCode();
     }
 }

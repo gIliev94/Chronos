@@ -26,13 +26,17 @@ public class Task extends CategoricalEntity
     private long hoursEstimated;
 
     // TODO: Consider carefully fetch / cascade types...
+    // @ManyToOne(optional = false)
     @ManyToOne(optional = false)
     // , cascade = CascadeType.ALL)
     // , fetch = FetchType.LAZY)
+    // ,orphanRemoval = true, fetch = FetchType.LAZY)
     private Project project;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    // ,orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OneToMany(mappedBy = "task", cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE,
+    // CascadeType.REMOVE }, orphanRemoval = true)
     private Collection<Booking> bookings = new ArrayList<>(0);
     //
 
@@ -51,8 +55,6 @@ public class Task extends CategoricalEntity
     // TODO:
     // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setProject(Project project) {
-	this.project = project;
-
 	// prevent endless loop
 	if (this.project == null ? project == null : this.project.equals(project))
 	    return;
@@ -75,7 +77,29 @@ public class Task extends CategoricalEntity
 	return bookings;
     }
 
-    // TODO: TEST...
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafePerson.java
+    public void addBooking(Booking booking) {
+	// prevent endless loop
+	if (getBookings().contains(booking))
+	    return;
+	// add new booking
+	getBookings().add(booking);
+	// set myself
+	booking.setTask(this);
+    }
+
+    public void removeBooking(Booking booking) {
+	// prevent endless loop
+	if (!getBookings().contains(booking))
+	    return;
+	// remove the booking
+	getBookings().remove(booking);
+	// remove myself from the project
+	booking.setTask(null);
+    }
+
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -84,6 +108,8 @@ public class Task extends CategoricalEntity
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -96,14 +122,21 @@ public class Task extends CategoricalEntity
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
+		.append(task.getHoursEstimated(), getHoursEstimated()) // nl
 		.append(task.getProject(), getProject()) // nl
 		.isEquals();
     }
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
+		.append(getHoursEstimated()) // nl
 		.append(getProject()) // nl
 		.hashCode();
     }

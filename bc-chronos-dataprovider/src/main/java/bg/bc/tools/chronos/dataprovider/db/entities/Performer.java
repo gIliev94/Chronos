@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,9 +27,9 @@ public class Performer extends GenericEntity implements Serializable {
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private BillingRole billingRole;
 
-    @OneToMany(mappedBy = "performer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "performer", cascade = CascadeType.ALL, orphanRemoval = true)
     // ,orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Booking> bookings;
+    private Set<Booking> bookings = new HashSet<>(0);
     //
 
     public BillingRole getBillingRole() {
@@ -53,6 +54,28 @@ public class Performer extends GenericEntity implements Serializable {
 
     public void setBookings(Set<Booking> bookings) {
 	this.bookings = bookings;
+    }
+
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafePerson.java
+    public void addBooking(Booking booking) {
+	// prevent endless loop
+	if (getBookings().contains(booking))
+	    return;
+	// add new booking
+	getBookings().add(booking);
+	// set myself
+	booking.setPerformer(this);
+    }
+
+    public void removeBooking(Booking booking) {
+	// prevent endless loop
+	if (!getBookings().contains(booking))
+	    return;
+	// remove the booking
+	getBookings().remove(booking);
+	// remove myself from the project
+	booking.setPerformer(null);
     }
 
     // TODO: TEST...

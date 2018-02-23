@@ -17,8 +17,11 @@ public class Customer extends CategoricalEntity
     private static final long serialVersionUID = 1L;
 
     // TODO: Consider carefully fetch / cascade types...
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     // , orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OneToMany(mappedBy = "customer", cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE,
+    // CascadeType.REMOVE }, orphanRemoval = true)
     private Collection<Project> projects = new ArrayList<>(0);
     //
 

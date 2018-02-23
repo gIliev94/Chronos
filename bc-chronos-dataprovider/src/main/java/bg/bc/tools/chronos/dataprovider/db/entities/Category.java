@@ -57,8 +57,9 @@ public class Category extends GenericEntity implements Serializable {
     // https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
     // @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER, cascade = {
     // CascadeType.PERSIST, CascadeType.MERGE })
-    
-    //TODO: Reverese the ownership of the M2M relationship for AppUser / AppUserGroup
+
+    // TODO: Reverese the ownership of the M2M relationship for AppUser /
+    // AppUserGroup
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "Category_CategoricalEntity", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "categoricalEntity_id"))
     private Set<CategoricalEntity> categoricalEntities = new HashSet<>(0);
@@ -101,16 +102,18 @@ public class Category extends GenericEntity implements Serializable {
     // (https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/)
     // always use with M2M and possibly M2O / O2M bidirectional...
     public void addCategoricalEntity(CategoricalEntity categoricalEntity) {
-	categoricalEntities.add(categoricalEntity);
-	categoricalEntity.getCategories().add(this);
+	final boolean add = categoricalEntities.add(categoricalEntity);
+	final boolean add2 = categoricalEntity.getCategories().add(this);
+	System.out.println(add + " " + add2);
     }
 
     public void removeCategoricalEntity(CategoricalEntity categoricalEntity) {
-	categoricalEntities.remove(categoricalEntity);
-	categoricalEntity.getCategories().remove(this);
+	final boolean remove = categoricalEntities.remove(categoricalEntity);
+	final boolean remove2 = categoricalEntity.getCategories().remove(this);
+	System.out.println(remove + " " + remove2);
     }
 
-    // TODO: TEST...
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -119,6 +122,8 @@ public class Category extends GenericEntity implements Serializable {
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -132,14 +137,21 @@ public class Category extends GenericEntity implements Serializable {
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
 		.append(category.getName(), getName()) // nl
+		.append(category.getSortOrder(), getSortOrder()) // nl
 		.isEquals();
     }
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
 		.append(getName()) // nl
+		.append(getSortOrder()) // nl
 		.hashCode();
     }
 

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+//TODO: Remove entirely - old design...
 @Entity(name = "Changelog")
 public class Changelog implements Serializable {
 

@@ -62,6 +62,8 @@ public class User extends GenericEntity implements Serializable {
     // this.performer = performer;
     // }
 
+    // TODO: Consider inversing the ownership like category ->
+    // categoricalEntity...
     // TODO: Consider specifying JoinTable annotation for better naming of
     // generated FK columns ...
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -130,7 +132,7 @@ public class User extends GenericEntity implements Serializable {
 	userGroup.getUsers().remove(this);
     }
 
-    // TODO: TEST...
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -139,6 +141,8 @@ public class User extends GenericEntity implements Serializable {
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -151,6 +155,8 @@ public class User extends GenericEntity implements Serializable {
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
+		.append(user.getFirstName(), getFirstName()) // nl
+		.append(user.getLastName(), getLastName()) // nl
 		.append(user.getAbbreviation(), getAbbreviation()) // nl
 		.append(user.getEmail(), getEmail()) // nl
 		.isEquals();
@@ -158,8 +164,15 @@ public class User extends GenericEntity implements Serializable {
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
+		.append(getFirstName()) // nl
+		.append(getLastName()) // nl
 		.append(getAbbreviation()) // nl
 		.append(getEmail()) // nl
 		.hashCode();

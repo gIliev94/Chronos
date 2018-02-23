@@ -22,14 +22,16 @@ public class Project extends CategoricalEntity
 
     // TODO: Consider carefully fetch / cascade types...
     // @ManyToOne(optional = false, cascade = { CascadeType.PERSIST,
-    // CascadeType.MERGE })
+    // CascadeType.MERGE })// , fetch = FetchType.LAZY)
+    // @ManyToOne(optional = false)
     @ManyToOne(optional = false)
-    // , fetch = FetchType.LAZY)
     private Customer customer;
 
-    // TODO: Consider switching to Set collection...
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    // , orphanRemoval = true, fetch = FetchType.LAZY)
+    // TODO: Consider switching to Set collection and lazy loading...
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OneToMany(mappedBy = "project", cascade = { CascadeType.PERSIST,
+    // CascadeType.MERGE,
+    // CascadeType.REMOVE }, orphanRemoval = true)
     private Collection<Task> tasks = new ArrayList<>(0);
     //
 
@@ -40,8 +42,6 @@ public class Project extends CategoricalEntity
     // TODO:
     // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setCustomer(Customer customer) {
-	this.customer = customer;
-
 	// prevent endless loop
 	if (this.customer == null ? customer == null : this.customer.equals(customer))
 	    return;
@@ -59,7 +59,7 @@ public class Project extends CategoricalEntity
     public Collection<Task> getTasks() {
 	return tasks;
     }
-    
+
     public void setTasks(Collection<Task> tasks) {
 	this.tasks = tasks;
     }
@@ -86,7 +86,7 @@ public class Project extends CategoricalEntity
 	task.setProject(null);
     }
 
-    // TODO: TEST...
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -95,6 +95,8 @@ public class Project extends CategoricalEntity
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -113,6 +115,11 @@ public class Project extends CategoricalEntity
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
 		.append(getCustomer()) // nl

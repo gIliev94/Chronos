@@ -8,6 +8,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 @Entity(name = "BillingRateModifier")
 public class BillingRateModifier extends GenericEntity implements Serializable {
 
@@ -51,8 +54,65 @@ public class BillingRateModifier extends GenericEntity implements Serializable {
 	return booking;
     }
 
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setBooking(Booking booking) {
+	// prevent endless loop
+	if (this.booking == null ? booking == null : this.booking.equals(booking))
+	    return;
+	// set new owner
+	Booking currentBooking = this.booking;
 	this.booking = booking;
+	// remove from the old owner
+	if (currentBooking != null)
+	    currentBooking.removeBillingRateModifier(this);
+	// set myself into new owner
+	if (booking != null)
+	    booking.addBillingRateModifier(this);
+    }
+
+    // TODO: Consider adding only unique/immutable fields
+    @Override
+    public boolean equals(Object other) {
+	if (other == null) {
+	    return false;
+	}
+	if (other == this) {
+	    return true;
+	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
+	if (other.getClass() != getClass()) {
+	    return false;
+	}
+	// // vs
+	// if (!(other instanceof BillingRateModifier)) {
+	// return false;
+	// }
+
+	final BillingRateModifier billingRateModifier = (BillingRateModifier) other;
+
+	return new EqualsBuilder() // nl
+		.appendSuper(super.equals(other)) // nl
+		.append(billingRateModifier.getModifierValue(), getModifierValue()) // nl
+		.append(billingRateModifier.getModifierAction(), getModifierAction()) // nl
+		.append(billingRateModifier.getBooking(), getBooking()) // nl
+		.isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+	return new HashCodeBuilder() // nl
+		.appendSuper(super.hashCode()) // nl
+		.append(getModifierValue()) // nl
+		.append(getModifierAction()) // nl
+		.append(getBooking()) // nl
+		.hashCode();
     }
 
     @Override

@@ -16,7 +16,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 //// ALT 1:
 @Entity
@@ -32,7 +31,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public abstract class CategoricalEntity extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     // TODO: Decide generation method - when using with TABLE-PER-CLASS
     // inheritance DO not use IDENTIY/AUTO:
     // http://docs.jboss.org/hibernate/stable/annotations/reference/en/html_single/#d0e1168
@@ -41,7 +40,7 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
     // @GeneratedValue(strategy= GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    
+
     // @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
@@ -123,16 +122,18 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
     // (https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/)
     // always use with M2M and possibly M2O / O2M bidirectional...
     public void addCategory(Category category) {
-	categories.add(category);
-	category.getCategoricalEntities().add(this);
+	final boolean add = categories.add(category);
+	final boolean add2 = category.getCategoricalEntities().add(this);
+	System.out.println(add + " " + add2);
     }
 
     public void removeCategory(Category category) {
-	categories.remove(category);
-	category.getCategoricalEntities().remove(this);
+	final boolean remove = categories.remove(category);
+	final boolean remove2 = category.getCategoricalEntities().remove(this);
+	System.out.println(remove + " " + remove2);
     }
 
-    // TODO: TEST...
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -141,6 +142,7 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
 	if (other == this) {
 	    return true;
 	}
+	// TODO: instanceof preferred vs getClass, because this is abstract
 	// if (other.getClass() != getClass()) {
 	// return false;
 	// }
@@ -152,17 +154,28 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
 	final CategoricalEntity categoricalEntity = (CategoricalEntity) other;
 
 	return new EqualsBuilder() // nl
-		.appendSuper(super.equals(other)) // nl
+		// .appendSuper(super.equals(other)) // nl
+		.append(categoricalEntity.getId(), getId()) // nl
+		// TODO: Consider class name + name...
 		.append(categoricalEntity.getName(), getName()) // nl
+		// .append(categoricalEntity.getDescription(), getDescription())
+		// // nl
 		.isEquals();
     }
 
     @Override
     public int hashCode() {
-	return new HashCodeBuilder() // nl
-		.appendSuper(super.hashCode()) // nl
-		.append(getName()) // nl
-		.hashCode();
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+	return 31;
+	// return new HashCodeBuilder() // nl
+	// .appendSuper(super.hashCode()) // nl
+	// .append(getId()) // nl
+	// .append(getName()) // nl
+	// .append(getDescription()) // nl
+	// .hashCode();
     }
 
     @Override

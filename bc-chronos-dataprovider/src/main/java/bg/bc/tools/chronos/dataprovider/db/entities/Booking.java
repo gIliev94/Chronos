@@ -19,6 +19,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity(name = "Booking")
 public class Booking extends GenericEntity implements Serializable {
 
+    // TODO: Consider adding fields to mark booking as frozen and maybe indicate
+    // travel expenses in some form...
+
     private static final long serialVersionUID = 1L;
 
     @Column(unique = false, nullable = true)
@@ -59,7 +62,8 @@ public class Booking extends GenericEntity implements Serializable {
     // @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch =
     // FetchType.EAGER)
     // @Fetch(value = FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "booking", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+	    CascadeType.REMOVE }, orphanRemoval = true)
     // , orphanRemoval = true,fetch = FetchType.LAZY)
     private Collection<BillingRateModifier> billingRateModifiers = new ArrayList<>(0);
 
@@ -114,8 +118,21 @@ public class Booking extends GenericEntity implements Serializable {
 	return performer;
     }
 
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setPerformer(Performer performer) {
+	// prevent endless loop
+	if (this.performer == null ? performer == null : this.performer.equals(performer))
+	    return;
+	// set new owner
+	Performer currentPerformer = this.performer;
 	this.performer = performer;
+	// remove from the old owner
+	if (currentPerformer != null)
+	    currentPerformer.removeBooking(this);
+	// set myself into new owner
+	if (performer != null)
+	    performer.addBooking(this);
     }
 
     public BillingRole getBillingRole() {
@@ -130,8 +147,21 @@ public class Booking extends GenericEntity implements Serializable {
 	return task;
     }
 
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafeTwitterAccount.java
     public void setTask(Task task) {
+	// prevent endless loop
+	if (this.task == null ? task == null : this.task.equals(task))
+	    return;
+	// set new owner
+	Task currentTask = this.task;
 	this.task = task;
+	// remove from the old owner
+	if (currentTask != null)
+	    currentTask.removeBooking(this);
+	// set myself into new owner
+	if (task != null)
+	    task.addBooking(this);
     }
 
     // TODO: Need???
@@ -159,7 +189,29 @@ public class Booking extends GenericEntity implements Serializable {
 	this.billingRateModifiers = billingRateModifiers;
     }
 
-    // TODO: TEST...
+    // TODO:
+    // https://github.com/SomMeri/org.meri.jpa.tutorial/blob/master/src/main/java/org/meri/jpa/relationships/entities/bestpractice/SafePerson.java
+    public void addBillingRateModifier(BillingRateModifier billingRateModifier) {
+	// prevent endless loop
+	if (getBillingRateModifiers().contains(billingRateModifier))
+	    return;
+	// add new biliing rate modifier
+	getBillingRateModifiers().add(billingRateModifier);
+	// set myself
+	billingRateModifier.setBooking(this);
+    }
+
+    public void removeBillingRateModifier(BillingRateModifier billingRateModifier) {
+	// prevent endless loop
+	if (!getBillingRateModifiers().contains(billingRateModifier))
+	    return;
+	// remove the task
+	getBillingRateModifiers().remove(billingRateModifier);
+	// remove myself from the project
+	billingRateModifier.setBooking(null);
+    }
+
+    // TODO: Consider adding only unique/immutable fields
     @Override
     public boolean equals(Object other) {
 	if (other == null) {
@@ -168,6 +220,8 @@ public class Booking extends GenericEntity implements Serializable {
 	if (other == this) {
 	    return true;
 	}
+	// TODO: getClass preferred vs instanceof, because this is concrete
+	// class
 	if (other.getClass() != getClass()) {
 	    return false;
 	}
@@ -180,6 +234,10 @@ public class Booking extends GenericEntity implements Serializable {
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
+		.append(booking.getStartTime(), getStartTime()) // nl
+		.append(booking.getEndTime(), getEndTime()) // nl
+		.append(booking.getHoursSpent(), getHoursSpent()) // nl
+		.append(booking.getDescription(), getDescription()) // nl
 		.append(booking.getDeviceName(), getDeviceName()) // nl
 		.append(booking.getPerformer(), getPerformer()) // nl
 		.append(booking.getBillingRole(), getBillingRole()) // nl
@@ -189,8 +247,17 @@ public class Booking extends GenericEntity implements Serializable {
 
     @Override
     public int hashCode() {
+	// TODO: If ONLY generated PK (id) is used in equals() ensure hashCode()
+	// returns consistent value trough all states of an Hibernate entity
+	// life cycle (if there is a natural/business key used in conjunction
+	// with the PK there is no need to do that)
+	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
+		.append(getStartTime()) // nl
+		.append(getEndTime()) // nl
+		.append(getHoursSpent()) // nl
+		.append(getDescription()) // nl
 		.append(getDeviceName()) // nl
 		.append(getPerformer()) // nl
 		.append(getBillingRole()) // nl
