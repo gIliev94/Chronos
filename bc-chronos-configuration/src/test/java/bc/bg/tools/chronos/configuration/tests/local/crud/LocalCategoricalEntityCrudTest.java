@@ -1,18 +1,15 @@
 package bc.bg.tools.chronos.configuration.tests.local.crud;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ import bc.bg.tools.chronos.configuration.CommonDBConfig;
 import bc.bg.tools.chronos.configuration.LocalDBConfig;
 import bc.bg.tools.chronos.configuration.LocalDataProviderConfig;
 import bc.bg.tools.chronos.configuration.tests.runners.RootCauseSpringJUnit4ClassRunner;
-import bg.bc.tools.chronos.dataprovider.db.entities.Booking;
 import bg.bc.tools.chronos.dataprovider.db.entities.CategoricalEntity;
 import bg.bc.tools.chronos.dataprovider.db.entities.Category;
 import bg.bc.tools.chronos.dataprovider.db.entities.Customer;
@@ -144,7 +140,6 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
     }
 
     @Test
-    @Ignore
     public void testLocalCategoryCRUD() {
 	// 1. Create
 	// ---------
@@ -194,7 +189,6 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
     }
 
     @Test
-    @Ignore
     public void testLocalCustomerCRUD() {
 	// 1. Create
 	// ---------
@@ -231,30 +225,18 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 	// 4. Delete
 	// ---------
 	// Perform deletion by fetched object...
-
-	// Remove links
 	final Category referencedCategory = readCustomer.getCategories().iterator().next();
 	referencedCategory.removeCategoricalEntity(readCustomer);
 
-	final Pair<Category, Customer> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = localCategoryRepository.save(referencedCategory);
-	    final Customer customer = localCustomerRepository.save(readCustomer);
-	    return Pair.of(category, customer);
-	});
-
-	transactionTemplate.execute(txStat -> {
-	    localCustomerRepository.delete(unlinkedEntities.getSecond());
-	    return null;
-	});
-
-	final Customer stillExistingCustomer = transactionTemplate.execute(txStat -> {
-	    return localCustomerRepository.findByName(readCustomer.getName());
-	});
-	assertEntityDeleted(stillExistingCustomer, testCustomer);
+	// TODO: Debug why the latter options don`t work...
+	deleteCategoricalEntity(referencedCategory, testCategory, createdCustomer, testCustomer, true);
+	// deleteCategoricalEntity(referencedCategory, testCategory,
+	// readCustomer, testCustomer, true);
+	// deleteCategoricalEntity(referencedCategory, testCategory,
+	// updatedCustomer, testCustomer, true);
     }
 
     @Test
-    // @Ignore
     public void testLocalProjectCRUD() {
 	// 1. Create
 	// ---------
@@ -370,40 +352,12 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 
 	// Remove links
 	final Category referencedCategory = readProject.getCategories().iterator().next();
-	// referencedCategory.removeCategoricalEntity(readProject);
-	//
-	// final Pair<Category, Project> unlinkedEntities =
-	// transactionTemplate.execute(txStat -> {
-	// final Category category =
-	// localCategoryRepository.save(referencedCategory);
-	// final Project project = localProjectRepository.save(readProject);
-	// return Pair.of(category, project);
-	// });
-	//
-	// transactionTemplate.execute(txStat -> {
-	// localProjectRepository.delete(unlinkedEntities.getSecond());
-	// return null;
-	// });
-	//
-	// final Project stillExistingProject =
-	// transactionTemplate.execute(txStat -> {
-	// return localProjectRepository.findByName(readProject.getName());
-	// });
-	// assertEntityDeleted(stillExistingProject, testProject);
 
-	// TODO: Delete hierarchy...
-	// final Customer rootCustomer = updatedProject.getCustomer();
-	//
-	// transactionTemplate.execute(txStat -> {
-	// Hibernate.initialize(rootCustomer.getProjects());
-	// return null;
-	// });
-
+	// Delete hierarchy + category to clear DB for next test...
 	deleteCategoricalEntity(referencedCategory, testCategory, referencedCustomer, testCustomer, true);
     }
 
     @Test
-    @Ignore
     public void testLocalTaskCRUD() {
 	// 1. Create
 	// ---------
@@ -454,29 +408,12 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 
 	// Remove links
 	final Category referencedCategory = readTask.getCategories().iterator().next();
-	referencedCategory.removeCategoricalEntity(readTask);
 
-	final Pair<Category, Task> unlinkedEntities = transactionTemplate.execute(txStat -> {
-	    final Category category = localCategoryRepository.save(referencedCategory);
-	    final Task task = localTaskRepository.save(readTask);
-	    return Pair.of(category, task);
-	});
-
-	transactionTemplate.execute(txStat -> {
-	    localTaskRepository.delete(unlinkedEntities.getSecond());
-	    return null;
-	});
-
-	final Task stillExistingTask = transactionTemplate.execute(txStat -> {
-	    return localTaskRepository.findByName(readTask.getName());
-	});
-	assertEntityDeleted(stillExistingTask, testTask);
-
-	// TODO: Delete task as well...
+	// Delete hierarchy + category to clear DB for next test...
+	deleteCategoricalEntity(referencedCategory, testCategory, referencedCustomer, testCustomer, true);
     }
 
     @Test
-    @Ignore
     public void testLocalBidirectionalCascade() {
 	// 1. Standard(owner) cascade insert: Category (OWNER) => Customer
 	// (INVERSE)
@@ -547,7 +484,7 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
     }
 
     @Test
-    @Ignore
+    // @Ignore
     public void testLocalHierirachicalFetch() {
 	// 1. Create
 	// ---------
@@ -608,8 +545,8 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 	// 1. Remove links + update entities (foreach)
 
 	// Below methods are interchangeable...
-	// createdCategory.removeCategoricalEntity(referencedCategoricalEntity);
-	referencedCategoricalEntity.removeCategory(createdCategory);
+	createdCategory.removeCategoricalEntity(referencedCategoricalEntity);
+	// referencedCategoricalEntity.removeCategory(createdCategory);
 
 	if (referencedCategoricalEntity instanceof Customer) {
 	    final Customer customer = (Customer) referencedCategoricalEntity;
@@ -631,6 +568,7 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 	    final Task task = (Task) referencedCategoricalEntity;
 
 	    createdCategory.removeCategoricalEntity(task.getProject());
+	    createdCategory.removeCategoricalEntity(task.getProject().getCustomer());
 	}
 
 	final Pair<Category, CategoricalEntity> unlinkedEntities = transactionTemplate.execute(txStat -> {
@@ -647,39 +585,6 @@ public class LocalCategoricalEntityCrudTest extends AbstractJUnit4SpringContextT
 
 	    return Pair.of(category, categoricalEntity);
 	});
-
-	// final Category unlinkedCategory = unlinkedEntities.getFirst();
-	// final CategoricalEntity unlinkedCategoricalEntity =
-	// unlinkedEntities.getSecond();
-	// if (unlinkedCategoricalEntity instanceof Customer) {
-	// final Customer customer = (Customer) unlinkedCategoricalEntity;
-	//
-	// final Collection<Project> projects = customer.getProjects();
-	// projects.forEach(p -> unlinkedCategory.removeCategoricalEntity(p));
-	//
-	// final List<Task> tasks = projects.stream().flatMap(p ->
-	// p.getTasks().stream()).collect(Collectors.toList());
-	// tasks.forEach(t -> unlinkedCategory.removeCategoricalEntity(t));
-	//
-	// transactionTemplate.execute(txStat -> {
-	// localCategoryRepository.save(unlinkedCategory);
-	//
-	// projects.forEach(p -> localProjectRepository.save(p));
-	// tasks.forEach(t -> localTaskRepository.save(t));
-	//
-	// return null;
-	// });
-	//
-	// } else if (unlinkedCategoricalEntity instanceof Project) {
-	// final Project project = (Project) unlinkedCategoricalEntity;
-	//
-	// unlinkedCategory.removeCategoricalEntity(project.getCustomer());
-	//
-	// } else if (unlinkedCategoricalEntity instanceof Task) {
-	// final Task task = (Task) unlinkedCategoricalEntity;
-	//
-	// unlinkedCategory.removeCategoricalEntity(task.getProject());
-	// }
 
 	// 2. Delete Categorical Entity (NON-OWNER side of the relationship)
 	transactionTemplate.execute(txStat -> {

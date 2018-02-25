@@ -76,21 +76,6 @@ public class EntityEqualityTest {
 	diffNameCategory.setName("OtherCategory");
 	assertDifferentEntity(testCategory, diffNameCategory, "name", testCategory.getName(),
 		diffNameCategory.getName());
-
-	final Category diffSortOrderCategory = getInitCategory();
-	diffSortOrderCategory.setSortOrder(4);
-	assertDifferentEntity(testCategory, diffSortOrderCategory, "sortOrder", testCategory.getSortOrder(),
-		diffSortOrderCategory.getSortOrder());
-
-	final Category diffUpdateCountCategory = getInitCategory();
-	diffUpdateCountCategory.setUpdateCounter(4);
-	assertDifferentEntity(testCategory, diffUpdateCountCategory, "updateCounter", testCategory.getUpdateCounter(),
-		diffUpdateCountCategory.getUpdateCounter());
-
-	final Category diffSyncCountCategory = getInitCategory();
-	diffSyncCountCategory.setSyncCounter(4);
-	assertDifferentEntity(testCategory, diffSyncCountCategory, "syncCounter", testCategory.getSyncCounter(),
-		diffSyncCountCategory.getSyncCounter());
     }
 
     @Test
@@ -110,21 +95,6 @@ public class EntityEqualityTest {
 	diffNameCustomer.setName("OtherCustomer");
 	assertDifferentEntity(testCustomer, diffNameCustomer, "name", testCustomer.getName(),
 		diffNameCustomer.getName());
-
-	final Customer diffDescriptionCustomer = getInitCustomer(testCategory);
-	diffDescriptionCustomer.setDescription("OtherCustomer description");
-	assertDifferentEntity(testCustomer, diffDescriptionCustomer, "description", testCustomer.getDescription(),
-		diffDescriptionCustomer.getDescription());
-
-	final Customer diffUpdateCountCustomer = getInitCustomer(testCategory);
-	diffUpdateCountCustomer.setUpdateCounter(4);
-	assertDifferentEntity(testCustomer, diffUpdateCountCustomer, "updateCounter", testCustomer.getUpdateCounter(),
-		diffUpdateCountCustomer.getUpdateCounter());
-
-	final Customer diffSyncCountCustomer = getInitCustomer(testCategory);
-	diffSyncCountCustomer.setSyncCounter(4);
-	assertDifferentEntity(testCustomer, diffSyncCountCustomer, "syncCounter", testCustomer.getSyncCounter(),
-		diffSyncCountCustomer.getSyncCounter());
     }
 
     @Test
@@ -145,27 +115,12 @@ public class EntityEqualityTest {
 	diffNameProject.setName("OtherProject");
 	assertDifferentEntity(testProject, diffNameProject, "name", testProject.getName(), diffNameProject.getName());
 
-	final Project diffDescriptionProject = getInitProject(testCustomer, testCategory);
-	diffDescriptionProject.setDescription("OtherProject description");
-	assertDifferentEntity(testProject, diffDescriptionProject, "description", testProject.getDescription(),
-		diffDescriptionProject.getDescription());
-
-	final Project diffUpdateCountProject = getInitProject(testCustomer, testCategory);
-	diffUpdateCountProject.setUpdateCounter(4);
-	assertDifferentEntity(testProject, diffUpdateCountProject, "updateCounter", testProject.getUpdateCounter(),
-		diffUpdateCountProject.getUpdateCounter());
-
-	final Project diffSyncCountProject = getInitProject(testCustomer, testCategory);
-	diffSyncCountProject.setSyncCounter(4);
-	assertDifferentEntity(testProject, diffSyncCountProject, "syncCounter", testProject.getSyncCounter(),
-		diffSyncCountProject.getSyncCounter());
-
-	final Customer diffCustomer = getInitCustomer(testCategory);
+	Customer diffCustomer = getInitCustomer(testCategory);
 	diffCustomer.setName("DifferentCustomer");
 
 	final Project diffParentCustomerProject = getInitProject(diffCustomer, testCategory);
-	assertDifferentEntity(testProject, diffParentCustomerProject, "customer", testProject.getSyncCounter(),
-		diffParentCustomerProject.getSyncCounter());
+	assertDifferentEntity(testProject, diffParentCustomerProject, "customer", testProject.getCustomer(),
+		diffParentCustomerProject.getCustomer());
     }
 
     @Test
@@ -187,32 +142,12 @@ public class EntityEqualityTest {
 	diffNameTask.setName("OtherTask");
 	assertDifferentEntity(testTask, diffNameTask, "name", testTask.getName(), diffNameTask.getName());
 
-	final Task diffDescriptionTask = getInitTask(testProject, testCategory);
-	diffDescriptionTask.setDescription("OtherTask description");
-	assertDifferentEntity(testTask, diffDescriptionTask, "description", testTask.getDescription(),
-		diffDescriptionTask.getDescription());
-
-	final Task diffHoursEstimatedTask = getInitTask(testProject, testCategory);
-	diffHoursEstimatedTask.setHoursEstimated(3);
-	assertDifferentEntity(testTask, diffHoursEstimatedTask, "hoursEstimated", testTask.getHoursEstimated(),
-		diffHoursEstimatedTask.getHoursEstimated());
-
-	final Task diffUpdateCountTask = getInitTask(testProject, testCategory);
-	diffUpdateCountTask.setUpdateCounter(4);
-	assertDifferentEntity(testTask, diffUpdateCountTask, "updateCounter", testTask.getUpdateCounter(),
-		diffUpdateCountTask.getUpdateCounter());
-
-	final Task diffSyncCountTask = getInitTask(testProject, testCategory);
-	diffSyncCountTask.setSyncCounter(4);
-	assertDifferentEntity(testTask, diffSyncCountTask, "syncCounter", testTask.getSyncCounter(),
-		diffSyncCountTask.getSyncCounter());
-
 	final Project diffProject = getInitProject(testCustomer, testCategory);
 	diffProject.setName("DifferentProject");
 
 	final Task diffParentProjectTask = getInitTask(diffProject, testCategory);
-	assertDifferentEntity(testTask, diffParentProjectTask, "project", testTask.getSyncCounter(),
-		diffParentProjectTask.getSyncCounter());
+	assertDifferentEntity(testTask, diffParentProjectTask, "project", testTask.getProject(),
+		diffParentProjectTask.getProject());
     }
 
     @Test
@@ -241,16 +176,6 @@ public class EntityEqualityTest {
 	diffBillingRateBillingRole.setBillingRate(5.5d);
 	assertDifferentEntity(testBillingRole, diffBillingRateBillingRole, "billingRate",
 		testBillingRole.getBillingRate(), diffBillingRateBillingRole.getBillingRate());
-
-	final BillingRole diffUpdateCountBillingRole = getInitBillingRole();
-	diffUpdateCountBillingRole.setUpdateCounter(4);
-	assertDifferentEntity(testBillingRole, diffUpdateCountBillingRole, "updateCounter",
-		testBillingRole.getUpdateCounter(), diffUpdateCountBillingRole.getUpdateCounter());
-
-	final BillingRole diffSyncCountBillingRole = getInitBillingRole();
-	diffSyncCountBillingRole.setSyncCounter(4);
-	assertDifferentEntity(testBillingRole, diffSyncCountBillingRole, "syncCounter",
-		testBillingRole.getSyncCounter(), diffSyncCountBillingRole.getSyncCounter());
     }
 
     @Test
@@ -282,16 +207,6 @@ public class EntityEqualityTest {
 	diffAbbreviationUser.setEmail("otherUsr");
 	assertDifferentEntity(testUser, diffAbbreviationUser, "abbreviation", testUser.getAbbreviation(),
 		diffAbbreviationUser.getAbbreviation());
-
-	final User diffUpdateCountUser = getInitUser();
-	diffUpdateCountUser.setUpdateCounter(4);
-	assertDifferentEntity(testUser, diffUpdateCountUser, "updateCounter", testUser.getUpdateCounter(),
-		diffUpdateCountUser.getUpdateCounter());
-
-	final User diffSyncCountUser = getInitUser();
-	diffSyncCountUser.setSyncCounter(4);
-	assertDifferentEntity(testUser, diffSyncCountUser, "syncCounter", testUser.getSyncCounter(),
-		diffSyncCountUser.getSyncCounter());
     }
 
     @Test
@@ -314,16 +229,6 @@ public class EntityEqualityTest {
 	diffDescriptionUserGroup.setDescription("OtherUserGroupName description");
 	assertDifferentEntity(testUserGroup, diffDescriptionUserGroup, "description",
 		diffDescriptionUserGroup.getDescription(), diffDescriptionUserGroup.getDescription());
-
-	final UserGroup diffUpdateCountUser = getInitUserGroup();
-	diffUpdateCountUser.setUpdateCounter(4);
-	assertDifferentEntity(testUserGroup, diffUpdateCountUser, "updateCounter", testUserGroup.getUpdateCounter(),
-		diffUpdateCountUser.getUpdateCounter());
-
-	final UserGroup diffSyncCountUser = getInitUserGroup();
-	diffSyncCountUser.setSyncCounter(4);
-	assertDifferentEntity(testUserGroup, diffSyncCountUser, "syncCounter", testUserGroup.getSyncCounter(),
-		diffSyncCountUser.getSyncCounter());
     }
 
     @Test
@@ -339,16 +244,6 @@ public class EntityEqualityTest {
 	final Performer diffIdPerformer = getInitPerformer(testUser, testBillingRole);
 	diffIdPerformer.setId(2);
 	assertDifferentEntity(testPerformer, diffIdPerformer, "id", testPerformer.getId(), diffIdPerformer.getId());
-
-	final Performer diffUpdateCountPerformer = getInitPerformer(testUser, testBillingRole);
-	diffUpdateCountPerformer.setUpdateCounter(4);
-	assertDifferentEntity(testPerformer, diffUpdateCountPerformer, "updateCounter",
-		testPerformer.getUpdateCounter(), diffUpdateCountPerformer.getUpdateCounter());
-
-	final Performer diffSyncCountPerformer = getInitPerformer(testUser, testBillingRole);
-	diffSyncCountPerformer.setSyncCounter(4);
-	assertDifferentEntity(testPerformer, diffSyncCountPerformer, "syncCounter", testPerformer.getSyncCounter(),
-		diffSyncCountPerformer.getSyncCounter());
 
 	final User diffUser = getInitUser();
 	diffUser.setFirstName("DifferentFistName");
@@ -385,52 +280,15 @@ public class EntityEqualityTest {
 	diffIdBooking.setId(2);
 	assertDifferentEntity(testBooking, diffIdBooking, "id", testBooking.getId(), diffIdBooking.getId());
 
-	final Booking diffDescriptionBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffDescriptionBooking.setDescription("OtherBooking description");
-	assertDifferentEntity(testBooking, diffDescriptionBooking, "description", testBooking.getDescription(),
-		diffDescriptionBooking.getDescription());
-
-	final Booking diffDeviceNameBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffDeviceNameBooking.setDeviceName("OtherBooking description");
-	assertDifferentEntity(testBooking, diffDeviceNameBooking, "deviceName", testBooking.getDeviceName(),
-		diffDeviceNameBooking.getDeviceName());
-
-	final Booking diffStartTimeBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffStartTimeBooking
-		.setStartTime(Date.from(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant()));
-	assertDifferentEntity(testBooking, diffStartTimeBooking, "startTime", testBooking.getStartTime(),
-		diffStartTimeBooking.getStartTime());
-
-	final Booking diffEndTimeBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffEndTimeBooking
-		.setStartTime(Date.from(LocalDateTime.now().plusHours(7).atZone(ZoneId.systemDefault()).toInstant()));
-	assertDifferentEntity(testBooking, diffEndTimeBooking, "endTime", testBooking.getEndTime(),
-		diffEndTimeBooking.getEndTime());
-
-	final Booking diffHoursSpentBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffHoursSpentBooking.setHoursSpent(6.0d);
-	assertDifferentEntity(testBooking, diffHoursSpentBooking, "hoursSpent", testBooking.getHoursSpent(),
-		diffHoursSpentBooking.getHoursSpent());
-
-	final Booking diffUpdateCountBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffUpdateCountBooking.setUpdateCounter(4);
-	assertDifferentEntity(testBooking, diffUpdateCountBooking, "updateCounter", testBooking.getUpdateCounter(),
-		diffUpdateCountBooking.getUpdateCounter());
-
-	final Booking diffSyncCountBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffSyncCountBooking.setSyncCounter(4);
-	assertDifferentEntity(testBooking, diffSyncCountBooking, "syncCounter", testBooking.getSyncCounter(),
-		diffSyncCountBooking.getSyncCounter());
-
 	final Task diffTask = getInitTask(testProject, testCategory);
-	diffTask.setHoursEstimated(5);
+	diffTask.setName("DifferentTask");
 
 	final Booking diffParentTaskBooking = getInitBooking(diffTask, testPerformer, testBillingRole);
 	assertDifferentEntity(testBooking, diffParentTaskBooking, "task", testBooking.getTask(),
 		diffParentTaskBooking.getTask());
 
 	final Performer diffPerformer = getInitPerformer(testUser, testBillingRole);
-	diffPerformer.setSyncCounter(5);
+	diffPerformer.setId(diffPerformer.getId() + 1);
 
 	final Booking diffParentPerformerBooking = getInitBooking(testTask, diffPerformer, testBillingRole);
 	assertDifferentEntity(testBooking, diffParentPerformerBooking, "performer", testBooking.getPerformer(),
@@ -467,28 +325,8 @@ public class EntityEqualityTest {
 	assertDifferentEntity(testBillingRateModifier, diffIdBillingRateModifier, "id", testBillingRateModifier.getId(),
 		diffIdBillingRateModifier.getId());
 
-	final BillingRateModifier diffModifierActionBillingRateModifier = getInitBillingRateModifier(testBooking);
-	diffModifierActionBillingRateModifier.setModifierAction(ModifierAction.DIVIDE);
-	assertDifferentEntity(testBillingRateModifier, diffModifierActionBillingRateModifier, "modifierAction",
-		testBillingRateModifier.getModifierAction(), diffModifierActionBillingRateModifier.getModifierAction());
-
-	final BillingRateModifier diffModifierValueBillingRateModifier = getInitBillingRateModifier(testBooking);
-	diffModifierValueBillingRateModifier.setModifierValue(9.8d);
-	assertDifferentEntity(testBillingRateModifier, diffModifierValueBillingRateModifier, "modifierValue",
-		testBillingRateModifier.getModifierValue(), diffModifierValueBillingRateModifier.getModifierValue());
-
-	final BillingRateModifier diffUpdateCountBillingRateModifier = getInitBillingRateModifier(testBooking);
-	diffUpdateCountBillingRateModifier.setUpdateCounter(4);
-	assertDifferentEntity(testBillingRateModifier, diffUpdateCountBillingRateModifier, "updateCounter",
-		testBillingRateModifier.getUpdateCounter(), diffUpdateCountBillingRateModifier.getUpdateCounter());
-
-	final BillingRateModifier diffSyncCountBillingRateModifier = getInitBillingRateModifier(testBooking);
-	diffSyncCountBillingRateModifier.setSyncCounter(4);
-	assertDifferentEntity(testBillingRateModifier, diffSyncCountBillingRateModifier, "syncCounter",
-		testBillingRateModifier.getSyncCounter(), diffSyncCountBillingRateModifier.getSyncCounter());
-
 	final Booking diffBooking = getInitBooking(testTask, testPerformer, testBillingRole);
-	diffBooking.setDescription("DifferentBooking");
+	diffBooking.setId(diffBooking.getId() + 1);
 
 	final BillingRateModifier diffParentBookingBillingRateModifier = getInitBillingRateModifier(diffBooking);
 	assertDifferentEntity(testBillingRateModifier, diffParentBookingBillingRateModifier, "booking",
