@@ -38,7 +38,7 @@ public class Booking extends GenericEntity implements Serializable {
     @Column(unique = false, nullable = false)
     private double hoursSpent;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String deviceName;
 
     @ManyToOne(optional = false)
@@ -234,11 +234,6 @@ public class Booking extends GenericEntity implements Serializable {
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
-		.append(booking.getStartTime(), getStartTime()) // nl
-		.append(booking.getEndTime(), getEndTime()) // nl
-		.append(booking.getHoursSpent(), getHoursSpent()) // nl
-		.append(booking.getDescription(), getDescription()) // nl
-		.append(booking.getDeviceName(), getDeviceName()) // nl
 		.append(booking.getPerformer(), getPerformer()) // nl
 		.append(booking.getBillingRole(), getBillingRole()) // nl
 		.append(booking.getTask(), getTask()) // nl
@@ -254,11 +249,6 @@ public class Booking extends GenericEntity implements Serializable {
 	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
-		.append(getStartTime()) // nl
-		.append(getEndTime()) // nl
-		.append(getHoursSpent()) // nl
-		.append(getDescription()) // nl
-		.append(getDeviceName()) // nl
 		.append(getPerformer()) // nl
 		.append(getBillingRole()) // nl
 		.append(getTask()) // nl

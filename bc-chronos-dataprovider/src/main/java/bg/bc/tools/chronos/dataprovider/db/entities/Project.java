@@ -106,6 +106,8 @@ public class Project extends CategoricalEntity
 	// }
 
 	final Project project = (Project) other;
+	
+	System.out.println("IN PROJECT equals: "+super.equals(other)+" "+project.getCustomer().equals(getCustomer()));	
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl

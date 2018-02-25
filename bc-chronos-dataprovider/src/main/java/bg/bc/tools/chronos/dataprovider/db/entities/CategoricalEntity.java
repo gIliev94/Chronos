@@ -1,6 +1,7 @@
 package bg.bc.tools.chronos.dataprovider.db.entities;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,21 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 public abstract class CategoricalEntity extends SynchronizableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Used by equals() method implementation to uniquely distinguish between
+     * categorical entities(in the rare case they are named the same):
+     * 
+     * <p>
+     * Expected format:
+     * 
+     * <pre>
+     * ConcreteClass.concreteEntityName
+     * </pre>
+     * 
+     * </p>
+     */
+    private static final String CATEGORICAL_EQUALITY_TEMPLATE = "{0}.{1}";
 
     // TODO: Decide generation method - when using with TABLE-PER-CLASS
     // inheritance DO not use IDENTIY/AUTO:
@@ -156,10 +172,9 @@ public abstract class CategoricalEntity extends SynchronizableEntity implements 
 	return new EqualsBuilder() // nl
 		// .appendSuper(super.equals(other)) // nl
 		.append(categoricalEntity.getId(), getId()) // nl
-		// TODO: Consider class name + name...
-		.append(categoricalEntity.getName(), getName()) // nl
-		// .append(categoricalEntity.getDescription(), getDescription())
-		// // nl
+		.append(MessageFormat.format(CATEGORICAL_EQUALITY_TEMPLATE,
+			categoricalEntity.getClass().getSimpleName(), categoricalEntity.getName()),
+			MessageFormat.format(CATEGORICAL_EQUALITY_TEMPLATE, getClass().getSimpleName(), getName())) // nl
 		.isEquals();
     }
 

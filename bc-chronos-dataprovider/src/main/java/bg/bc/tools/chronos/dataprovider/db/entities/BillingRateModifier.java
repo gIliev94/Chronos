@@ -94,8 +94,6 @@ public class BillingRateModifier extends GenericEntity implements Serializable {
 
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
-		.append(billingRateModifier.getModifierValue(), getModifierValue()) // nl
-		.append(billingRateModifier.getModifierAction(), getModifierAction()) // nl
 		.append(billingRateModifier.getBooking(), getBooking()) // nl
 		.isEquals();
     }
@@ -109,8 +107,6 @@ public class BillingRateModifier extends GenericEntity implements Serializable {
 	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
-		.append(getModifierValue()) // nl
-		.append(getModifierAction()) // nl
 		.append(getBooking()) // nl
 		.hashCode();
     }

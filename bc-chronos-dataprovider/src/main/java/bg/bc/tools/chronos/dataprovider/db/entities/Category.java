@@ -137,7 +137,6 @@ public class Category extends GenericEntity implements Serializable {
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
 		.append(category.getName(), getName()) // nl
-		.append(category.getSortOrder(), getSortOrder()) // nl
 		.isEquals();
     }
 
@@ -151,7 +150,6 @@ public class Category extends GenericEntity implements Serializable {
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
 		.append(getName()) // nl
-		.append(getSortOrder()) // nl
 		.hashCode();
     }
 

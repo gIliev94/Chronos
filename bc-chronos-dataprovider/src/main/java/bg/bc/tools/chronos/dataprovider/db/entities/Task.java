@@ -120,9 +120,10 @@ public class Task extends CategoricalEntity
 
 	final Task task = (Task) other;
 
+	System.out.println("IN TASK equals: " + super.equals(other) + " " + task.getProject().equals(getProject()));
+
 	return new EqualsBuilder() // nl
 		.appendSuper(super.equals(other)) // nl
-		.append(task.getHoursEstimated(), getHoursEstimated()) // nl
 		.append(task.getProject(), getProject()) // nl
 		.isEquals();
     }
@@ -136,7 +137,6 @@ public class Task extends CategoricalEntity
 	// https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
 	return new HashCodeBuilder() // nl
 		.appendSuper(super.hashCode()) // nl
-		.append(getHoursEstimated()) // nl
 		.append(getProject()) // nl
 		.hashCode();
     }
